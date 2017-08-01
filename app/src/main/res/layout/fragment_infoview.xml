@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+        android:id="@+id/InfoContainer"
+    android:elevation="20dp"
+    >
+
+
+
+<LinearLayout
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:showDividers="beginning"
+    android:layout_marginTop="25dp"
+    android:padding="15dp"
+
+    android:gravity="bottom"
+
+    android:background="@color/windowBackground">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+            <TextView
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text=""
+                android:id="@+id/iName" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text=""
+                android:id="@+id/iAdresse" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text=""
+                android:layout_weight="1"
+                android:id="@+id/iAnschluesse" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text=""
+                android:id="@+id/iVerbundPreis" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text=""
+                android:id="@+id/iUpdated"
+                android:gravity="bottom|right" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text=""
+                android:id="@+id/iSaeulenid"
+                android:visibility="gone" />
+
+        </LinearLayout>
+
+
+
+    </LinearLayout>
+
+
+</LinearLayout>
+    <TextView
+        android:text="@string/ifault_report"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/ifault_report"
+        android:padding="2dp"
+        android:textColor="@color/textColorPrimaryInverse"
+        android:background="@color/color_fault"
+        android:layout_gravity="bottom"
+        android:visibility="gone" />
+
+
+    <RelativeLayout
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:paddingBottom="5dp"
+android:clipToPadding="false">
+<android.support.design.widget.FloatingActionButton
+    android:id="@+id/fab_directions"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:src="@drawable/ic_action_directions"
+
+    android:layout_marginRight="25dp"
+    android:elevation="16dp"
+    app:elevation="16dp"
+    app:pressedTranslationZ="12dp"
+    app:backgroundTint="@color/colorAccent"
+    app:rippleColor="@color/white"
+    android:layout_alignParentTop="true"
+    android:layout_alignParentRight="true"
+    app:borderWidth="0dp"
+    app:fabSize="normal"
+    android:visibility="visible"
+    />
+</RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/loadingPanel"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center" >
+
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminate="true" />
+    </RelativeLayout>
+</FrameLayout>

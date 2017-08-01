@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name" translatable="false">Wattfinder</string>
+    <string name="title_activity_maps" translatable="false">Wattfinder</string>
+
+
+
+
+    <!-- Menü -->
+    <string name="menu_currentlocation">Jump to current position</string>
+    <string name="menu_searchdialog">Search near address</string>
+    <string name="menu_configuration">Filter settings</string>
+    <string name="menu_clearrecents">Clear search history</string>
+    <string name="search_hint">Search around address...</string>
+    <string name="search_label">Wattfinder Chargepoints</string>
+    <string name="filterTitel">Set filter options:</string>
+    <string name="filterKostenlos">free of charge</string>
+    <string name="filterBarrierefrei">open access - no registration needed</string>
+    <string name="filter247">24/7 access</string>
+    <string name="filterKostenlosParken">free parking</string>
+    <string name="filterBestaetigt">Only validated entries</string>
+    <string name="filterOhneStoerung">Hide entries with current errors</string>
+    <string name="filterHotels">Hotels</string>
+    <string name="filterRestaurants">Restaurants</string>
+    <string name="filterSteckerTitel">Plugs:</string>
+    <string name="filterLadekartenTitel">Cards:</string>
+    <string name="filterVerbundTitel">Carriers:</string>
+    <string name="filterAlle">all</string>
+    <string name="done">Done</string>
+    <string name="browser">Open in browser</string>
+    <string name="detailsBetreiber">Carrier</string>
+    <string name="details_rating">rating</string>
+    <string name="plural">s</string>
+    <string name="details_network">Network</string>
+    <string name="details_costs">Costs:</string>
+    <string name="details_parking">Parking:</string>
+    <string name="details_plugs">Plugs:</string>
+    <string name="details_opening">Opening hours:</string>
+    <string name="details_ladeweile">Pastime:</string>
+    <string name="details_hinweise">General information:</string>
+    <string name="details_disturbance">Temporary disturbance:</string>
+    <string name="details_compatibility">Compatibility:</string>
+    <string name="filterPreset">Preset:</string>
+    <string name="filter_neuesprofil">Add preset</string>
+    <string name="filter_standardprofil">Default</string>
+    <string name="search_title">Wattfinder Search</string>
+    <string name="filter_neuesprofil_hint">Type new profile name</string>
+    <string name="crash_toast_text">Crash reported</string>
+    <string name="SaveFilterError">Filter values could not be saved.</string>
+    <string name="filterPresets">Presets</string>
+    <string name="filterBasic">Basic</string>
+    <string name="Backstackexit">Press back again to exit Wattfinder!</string>
+    <string name="fpowerlabel">Minimum power:</string>
+    <string name="filter_selectall">Select all</string>
+    <string name="details_position">Location description</string>
+    <string name="details_verified">Verified chargepoint</string>
+    <string name="details_barrierfree">barrierfree charging</string>
+    <string name="details_freecharging">free charging</string>
+    <string name="details_freeparking">free parking</string>
+    <string name="details_operator">Operator:</string>
+    <string name="details_247">available 24/7</string>
+    <string name="monday">"monday: "</string>
+    <string name="thursday">"thursday: "</string>
+    <string name="wednesday">"wednesday: "</string>
+    <string name="tuesday">"tuesday: "</string>
+    <string name="friday">"friday: "</string>
+    <string name="saturday">"saturday: "</string>
+    <string name="sunday">"sunday: "</string>
+    <string name="infoUpdated">via goingelectric.de, refreshed at</string>
+    <string name="closed">closed</string>
+    <string name="filter_openednow">Open now</string>
+    <string name="filter_opananytime">no specific opening hours</string>
+    <string name="preset_edit">Rename preset</string>
+    <string name="preset_rename_msg">Please edit the preset title</string>
+    <string name="dialog_change">Done</string>
+    <string name="dialog_cancel">Cancel</string>
+    <string name="dialog_create">Create</string>
+    <string name="dialog_delete">Delete preset</string>
+    <string name="ifault_report">Caution! Temporary fault reported for this chargepoint!</string>
+    <string name="dialog_text1">Welcome to the new Wattfinder app,\n
+    we are now using the new official API by goingelectric.de to retrieve the chargepoint data. As Wattfinder only displays the data collected by goingelectric.de all your thanks and love for
+    the data should go to them. Errors and ideas according the data should do also. Wattfinder only filters and displays the data.\n\n
+    Please not the following:\n\n
+    1. Wattfinder does not and will never collect, save or transmit any individual-related data.\n\n
+    2. Wattfinder does transmit filtering options, location data and search queries to goingelectric.de an if necessary to Google Maps API.\n\n
+    3. Please check the seperate termas and conditions of Google Maps if they use your personal data.\n\n
+    4. Wattfinder does transmit -- stricly anonymously -- the total count of API requests for further development purposes.</string>
+    <string name="close">Close</string>
+    <string name="skipMessage">Don\'t show again</string>
+    <string name="mapviewlarge">Stopped loading chargepoints. Map too big.</string>
+    <string name="nonetworkavailable">There is no network available. Please ensure you have an internet connection and restart the app.</string>
+    <string name="error_network_title">Network Error</string>
+    <string name="error_network_notconn">No internet connection available! Please check if Wifi or mobile data has internet access!</string>
+    <string name="also">also show</string>
+    <string name="only">only</string>
+    <string name="filterKartenaktiv">Cards/Carriers selected. \"open access\" filter shows additional chargepoints</string>
+    <string name="filterkeineKarten">No Cards/Carriers checked, e.g. all will be shown (if you don\'t check \"open access\")</string>
+
+</resources>

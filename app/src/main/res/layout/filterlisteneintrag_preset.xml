@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:padding="6dip">
+
+        <RadioButton
+            android:id="@+id/preset_checkBox1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_marginTop="8dp"
+            android:longClickable="true"
+            android:layout_centerVertical="true" />
+
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/preset_action_edit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_action_edit_blue"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="25dp"
+        android:elevation="0dp"
+
+        app:elevation="0dp"
+        app:pressedTranslationZ="4dp"
+        app:backgroundTint="@color/common_action_bar_splitter"
+        app:rippleColor="@color/rand"
+        app:borderWidth="1dp"
+        app:fabSize="mini"
+
+        android:visibility="visible"
+        android:layout_centerVertical="true" />
+
+</RelativeLayout>

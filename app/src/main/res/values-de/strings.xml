@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+
+    <!-- Menü -->
+    <string name="menu_currentlocation">Aktuelle Position</string>
+    <string name="menu_searchdialog">Suche nach Adresse</string>
+    <string name="menu_configuration">Filtereinstellungen</string>
+    <string name="menu_clearrecents">Suchhistorie löschen</string>
+    <string name="search_hint">Suche in der Nähe von...</string>
+    <string name="search_label">Wattfinder Stromtankstellen</string>
+    <string name="done">Fertig</string>
+    <string name="browser">Im Browser öffnen</string>
+    <string name="filterTitel">Filtereinstellungen</string>
+    <string name="filterKostenlos">kostenlose Stromtankstellen</string>
+    <string name="filterBarrierefrei">barrierefrei - ohne Registrierung oder Vertrag nutzbar</string>
+    <string name="filter247">24/7 nutzbar</string>
+    <string name="filterKostenlosParken">kostenlos parken</string>
+    <string name="filterBestaetigt">Einträge mit bestätigter Funktion</string>
+    <string name="filterOhneStoerung">Einträge mit Störungsmeldung ausblenden</string>
+    <string name="filterHotels">Hotels</string>
+    <string name="filterRestaurants">Restaurants</string>
+    <string name="filterSteckerTitel">Ladestecker:</string>
+    <string name="filterLadekartenTitel">Ladekarten:</string>
+    <string name="filterVerbundTitel">Ladeverbund:</string>
+    <string name="filterAlle">alle</string>
+    <string name="detailsBetreiber">Betreiber</string>
+    <string name="details_rating">abgegebene Stimme</string>
+    <string name="plural">n</string>
+    <string name="details_network">Verbund</string>
+    <string name="details_costs">Kosten:</string>
+    <string name="details_parking">Parken:</string>
+    <string name="details_plugs">Ladestecker:</string>
+    <string name="details_opening">Öffnungszeiten:</string>
+    <string name="details_ladeweile">Ladeweile:</string>
+    <string name="details_hinweise">Allgemeine Hinweise:</string>
+    <string name="details_disturbance">Temporäre Störung:</string>
+    <string name="details_compatibility">Kompatibilität:</string>
+    <string name="filterPreset">Profil:</string>
+    <string name="filter_neuesprofil">Profil hinzufügen</string>
+    <string name="filter_standardprofil">Standard</string>
+    <string name="search_title">Wattfinder Suche</string>
+    <string name="filter_neuesprofil_hint">Neues Profil eingeben</string>
+    <string name="crash_toast_text">Crash Report gesendet.</string>
+    <string name="SaveFilterError">Filtereinstellungen konnten nicht gespeichert werden.</string>
+    <string name="filterBasic">Allgemein</string>
+    <string name="filterPresets">Profile</string>
+    <string name="Backstackexit">Nochmal \"Zurück\" drücken um Wattfinder zu schließen.</string>
+    <string name="fpowerlabel">Min. Leistung:</string>
+    <string name="filter_selectall">alle auswählen</string>
+    <string name="details_position" >Position/Lage</string>
+    <string name="details_verified">Verifiziert</string>
+    <string name="details_barrierfree">Barrierefreies Laden</string>
+    <string name="details_freeparking">Kostenloses Parken</string>
+    <string name="details_freecharging">Kostenloses Laden</string>
+    <string name="details_operator">Betreiber:</string>
+    <string name="details_247">24/7 geöffnet</string>
+    <string name="friday">"Freitag: "</string>
+    <string name="monday">"Montag: "</string>
+    <string name="saturday">"Samstag: "</string>
+    <string name="sunday">"Sonntag: "</string>
+    <string name="thursday">Donnerstag:</string>
+    <string name="tuesday">"Dienstag: "</string>
+    <string name="wednesday">"Mittwoch: "</string>
+    <string name="infoUpdated">"via goingelectric.de, aktualisiert um "</string>
+    <string name="closed">geschlossen</string>
+    <string name="filter_opananytime">beliebige Öffnungszeiten</string>
+    <string name="filter_openednow">Jetzt geöffnet</string>
+    <string name="preset_edit">Profil umbenennen</string>
+    <string name="preset_rename_msg">Bezeichnung des Profils ändern:</string>
+    <string name="dialog_change">Ändern</string>
+    <string name="dialog_cancel">Abbrechen</string>
+    <string name="dialog_create">Erstellen</string>
+    <string name="dialog_delete">Profil löschen</string>
+    <string name="ifault_report">Achtung! Temporäre Störung für diese Säule gemeldet!</string>
+    <string name="close">Schließen</string>
+    <string name="skipMessage">Nicht wieder anzeigen</string>
+    <string name="dialog_text1">Willkommen zur neuen Wattfinder-App,\n
+    die App nutzt jetzt die neue offizielle GoingElectric-API um die Ladesäulendaten abzurufen. Da Wattfinder die Daten nur filtert und anzeigt, bitte ich alles Lob und Dank
+    für die eigentlichen Daten an die Community von goingelectric.de zu geben. Fehler und Verbesserungsvorschläge, die die eigentlichen Daten betreffen allerdings auch.
+    Wie gesagt, Wattfinder filtert nur und zeigt an.\n\n
+    Einige wichtige Hinweise:\n\n
+    1. Wattfinder sammelt, speichert und überträgt keine personenbezogenen Daten und wird dies auch nie tun.\n\n
+    2. Wattfinder überträgt Standortdaten, Filtereinstellungen und Suchbegriffe an goingelectric.de und ggf. an Google Maps.\n\n
+    3. Ob Google Maps Daten speichert oder verarbeitet muss bitte den separaten Bedingungen von Google Maps entnommen werden.\n\n
+    4. Wattfinder überträgt - streng anonym - die Gesamtzahl API-Abfragen, für zukünftige Weiterentwicklungen.
+    </string>
+    <string name="mapviewlarge">Keine Ladesäulen abgerufen. Kartenausschnitt zu groß.</string>
+    <string name="nonetworkavailable">Keine Netzwerkverbindung aktiv. Bitte stellen Sie sicher, dass Sie mit dem Internet verbunden sind und starten Sie die App erneut.</string>
+    <string name="error_network_title">Netzwerkfehler</string>
+    <string name="error_network_notconn">Keine Internetverbindung verfügbar. Bitte stellen Sie sicher dass das Handy mit dem Internet verbunden ist!</string>
+    <string name="also">auch</string>
+    <string name="only">nur</string>
+    <string name="filterKartenaktiv">Karten/Verbünde ausgewählt. \"barrierefrei\" zeigt zusätzliche Ladesäulen an</string>
+    <string name="filterkeineKarten">Keine Karten/Verbünde gewählt, d.h. es werden alle angezeigt (wenn nicht \"barrierefrei\" gewählt wird)</string>
+</resources>

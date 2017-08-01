@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="MyLightTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorAccent">@color/colorAccent</item>
+
+        <item name="android:textColorPrimary">@color/textColorPrimaryInverse</item>
+        <item name="android:statusBarColor">?attr/colorAccent</item>
+        <item name="android:textColorSecondary">@color/colorTextsec</item>
+        <item name="android:textColorPrimaryInverse">@color/textColorPrimary</item>
+    </style>
+</resources>

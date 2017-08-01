@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<searchable
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:label="@string/search_label"
+    android:hint="@string/search_hint"
+    android:includeInGlobalSearch="false"
+    android:searchSuggestThreshold="3"
+    android:searchSuggestAuthority="de.teammartens.android.wattfinder.model.mSuggestionsProvider"
+    android:searchSuggestSelection=" ?"
+    android:voiceSearchMode=
+        "showVoiceSearchButton|launchRecognizer"
+    >
+</searchable>

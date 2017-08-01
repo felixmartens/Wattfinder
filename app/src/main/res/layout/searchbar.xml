@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="60dp"
+        android:elevation="8dp"
+        android:background="@color/white"
+        android:orientation="horizontal"
+        android:layout_gravity="center_horizontal"
+        android:id="@+id/SearchViewContainer"
+        android:layout_alignParentTop="true">
+
+
+        <ImageView
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/icon"
+            android:scaleType="fitXY" />
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <de.teammartens.android.wattfinder.model.ArrayAdapterSearchView
+                android:id="@+id/map_search"
+                android:title="@string/menu_searchdialog"
+                android:icon="@drawable/icon_mono"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:searchIcon="@drawable/icon_mono"
+                android:iconifiedByDefault="true"
+                android:searchHintIcon="@drawable/icon_mono"
+                android:closeIcon="@drawable/icon_mono"
+
+                />
+
+        </FrameLayout>
+
+    </LinearLayout>
