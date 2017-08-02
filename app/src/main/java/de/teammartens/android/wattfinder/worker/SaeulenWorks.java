@@ -85,7 +85,7 @@ public class SaeulenWorks {
         //nur wenn Map auch sichtbar ist:
         Fragment f =  KartenActivity.fragmentManager.findFragmentById(R.id.map);
         Configuration config = KartenActivity.getInstance().getResources().getConfiguration();
-        if (config.orientation != config.ORIENTATION_PORTRAIT||!KartenActivity.isFilterVisibile()){
+        if (config.orientation != config.ORIENTATION_PORTRAIT||!AnimationWorker.isFilterVisibile()){
                    if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG, "LadeMarker");
              LatLngBounds llB = KartenActivity.mMap.getProjection().getVisibleRegion().latLngBounds;
              ladeMarker(llB.southwest.latitude,llB.southwest.longitude,llB.northeast.latitude,llB.northeast.longitude, "reloadMarker",0);
@@ -120,8 +120,11 @@ public class SaeulenWorks {
         }
 
         if(GeoWorks.getMapZoom()<GeoWorks.MAX_ZOOM){
-            T.makeText(KartenActivity.getInstance(), KartenActivity.getInstance().getString(R.string.mapviewlarge),Toast.LENGTH_LONG).show();
+
+
+            if (GeoWorks.getMapZoom()>0)T.makeText(KartenActivity.getInstance(), KartenActivity.getInstance().getString(R.string.mapviewlarge),Toast.LENGTH_LONG).show();
             if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG, "Suche Säulen abgebrochen. Kartenausschnitt zu groß. "+GeoWorks.getMapZoom());
+
             return;
         }
 
@@ -152,10 +155,10 @@ public class SaeulenWorks {
 
                     RQ_PENDING = false;
                     NetWorker.resetRETRY();
-                    KartenActivity.hide_mapLoading();
+                    AnimationWorker.hide_mapLoading();
                     try {
                         if (jResponse.getString("status").contentEquals("ok")) {
-                            KartenActivity.hideStartup();
+                            AnimationWorker.hideStartup();
                             if (LogWorker.isVERBOSE())
                                 LogWorker.d(LOG_TAG, "Response erhalten, starte AsyncTask");
                             letzterAbrufBeiLLB = new LatLngBounds(new LatLng(swlat, swlng), new LatLng(nwlat, nwlng));
@@ -210,7 +213,7 @@ public class SaeulenWorks {
                     KartenActivity.getInstance().addToRequestQueue(pRequest,RQ_TAG);
                     RQ_PENDING = true;RQ_URL=url;
 
-                    KartenActivity.show_mapLoading();
+                    AnimationWorker.show_mapLoading();
                 } else if (LogWorker.isVERBOSE())
                     LogWorker.d(LOG_TAG, "Request dropped, hashs&LLB matching.");
 
@@ -351,8 +354,8 @@ public class SaeulenWorks {
                 MiniInfoFragment.setzeSaeule(item.getID(), item);
                 //GeoWorks.animateClick();
                 GeoWorks.movemapPosition(item.getPosition(),"MarkerClick");
-                if(KartenActivity.isFilterVisibile()) KartenActivity.toggleFilter();
-                if(!KartenActivity.isDetailsVisibile())KartenActivity.show_info();else KartenActivity.hide_info();
+                if(AnimationWorker.isFilterVisibile()) AnimationWorker.toggleFilter();
+                if(!AnimationWorker.isDetailsVisibile())AnimationWorker.show_info();else AnimationWorker.hide_info();
 
 
 
@@ -474,7 +477,7 @@ public class SaeulenWorks {
 
             LatLng mLatLng = cameraPosition.target;
             if (LogWorker.isVERBOSE())
-                LogWorker.d(LOG_TAG, "onCameraChange: Versetzt:" + GeoWorks.isPositionversetzt() + " Detailsvisible:" + KartenActivity.isDetailsVisibile() + " MapZoom" + GeoWorks.getMapZoom() + " cpZoom" + cameraPosition.zoom);
+                LogWorker.d(LOG_TAG, "onCameraChange: Versetzt:" + GeoWorks.isPositionversetzt() + " Detailsvisible:" + AnimationWorker.isDetailsVisibile() + " MapZoom" + GeoWorks.getMapZoom() + " cpZoom" + cameraPosition.zoom);
 
             //Wenn Versatz dann vorher rausrechnen
             if (GeoWorks.validLatLng(mLatLng)) {
@@ -483,7 +486,7 @@ public class SaeulenWorks {
                        //(GeoWorks.isPositionversetzt() ? GeoWorks.VersatzBerechnen(mLatLng, true) : mLatLng),
                         mLatLng,
                         //wenn DetailsVisible dann mapZoom nicht ändern
-                        KartenActivity.isDetailsVisibile() ? GeoWorks.getMapZoom() : cameraPosition.zoom);
+                        AnimationWorker.isDetailsVisibile() ? GeoWorks.getMapZoom() : cameraPosition.zoom);
                 Location L = new Location("APP");
                 Location D = new Location("APP");
                 L.setLatitude(mLatLng.latitude);

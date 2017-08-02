@@ -16,6 +16,7 @@ import com.google.android.gms.maps.model.LatLng;
 import de.teammartens.android.wattfinder.KartenActivity;
 import de.teammartens.android.wattfinder.R;
 import de.teammartens.android.wattfinder.model.Saeule;
+import de.teammartens.android.wattfinder.worker.AnimationWorker;
 
 /**
  * Created by felix on 10.11.14.
@@ -42,7 +43,7 @@ public class MiniInfoFragment extends Fragment {
 
 
                     DetailsFragment.setzeSaeule(mID,mPos,mTitel);
-                    KartenActivity.toggleDetails();
+                    AnimationWorker.toggleDetails();
 
                 }
             });
@@ -109,7 +110,7 @@ public void onPause(){
            // float f = (infoView.getHeight()/KartenActivity.getDisplayH())*1.0f;
            // if (LogWorker.isVERBOSE())LogWorker.d(LOG_TAG,"hole Info "+ (mSaeule!=null?mSaeule.getName():"") +" H:"+infoView.getHeight() +" f:"+f);
             KartenActivity.setMapPaddingY(infoView.getHeight());
-           if (KartenActivity.isDetailsVisibile())
+           if (AnimationWorker.isDetailsVisibile())
                 DetailsFragment.setzeSaeule(mID, mPos, mTitel);
 
 

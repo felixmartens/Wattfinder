@@ -17,6 +17,7 @@ import android.widget.LinearLayout;
 import de.teammartens.android.wattfinder.KartenActivity;
 import de.teammartens.android.wattfinder.R;
 import de.teammartens.android.wattfinder.fragments.ImageZoomFragment;
+import de.teammartens.android.wattfinder.worker.AnimationWorker;
 import de.teammartens.android.wattfinder.worker.ImageWorker;
 import de.teammartens.android.wattfinder.worker.LogWorker;
 
@@ -88,7 +89,7 @@ public class ImagePagerAdapter extends PagerAdapter implements View.OnClickListe
 
                             if (LogWorker.isVERBOSE())
                                 LogWorker.d(LOG_TAG, "Pager clicked HD:" + HD + " via updateItem");
-                            KartenActivity.show_imagezoom();
+                            AnimationWorker.show_imagezoom();
                         }
                     });
                 }
@@ -125,7 +126,7 @@ public class ImagePagerAdapter extends PagerAdapter implements View.OnClickListe
 
                     if (LogWorker.isVERBOSE())
                         LogWorker.d(LOG_TAG, "Pager clicked HD:" + HD + " via updateItem");
-                    KartenActivity.show_imagezoom();
+                    AnimationWorker.show_imagezoom();
                 }
             });
         }
@@ -190,7 +191,7 @@ private  void setScaleType(int position){
 
 public void onClick(View v){
     if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG,"Pager clicked HD:"+HD+"via this");
-    if(!HD)KartenActivity.show_imagezoom();
+    if(!HD)AnimationWorker.show_imagezoom();
 }
 
 }

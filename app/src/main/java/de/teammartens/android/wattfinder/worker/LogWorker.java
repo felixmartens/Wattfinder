@@ -41,7 +41,7 @@ public class LogWorker {
     public static void setVERBOSE(boolean VERBOSE) {
         LogWorker.VERBOSE = VERBOSE;
         d(LOG_TAG,"LogVerbose set to "+VERBOSE);
-        KartenActivity.show_debug();
+        AnimationWorker.show_debug();
     }
 
 

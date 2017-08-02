@@ -35,6 +35,7 @@ import java.util.Locale;
 import de.teammartens.android.wattfinder.KartenActivity;
 import de.teammartens.android.wattfinder.R;
 import de.teammartens.android.wattfinder.model.ImagePagerAdapter;
+import de.teammartens.android.wattfinder.worker.AnimationWorker;
 import de.teammartens.android.wattfinder.worker.GeoWorks;
 import de.teammartens.android.wattfinder.worker.ImageWorker;
 import de.teammartens.android.wattfinder.worker.LogWorker;
@@ -146,7 +147,8 @@ mContext =this.getContext();
 
     public void onResume(){
         super.onResume();
-        KartenActivity.hide_mapSearch();
+        AnimationWorker.hide_mapSearch();
+        AnimationWorker.hide_fabs();
     }
 
 

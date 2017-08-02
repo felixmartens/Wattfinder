@@ -12,11 +12,15 @@
     android:focusableInTouchMode="true">
 
 
-<LinearLayout
+<RelativeLayout
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
+
+
+    <include layout="@layout/searchbar"
+        android:visibility="gone"
+        android:id="@+id/searchContainer"/>
     <TextView
         android:text="DEBUG"
         android:layout_width="match_parent"
@@ -25,31 +29,29 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:id="@+id/debugHeader"
-        android:layout_weight="2"
 
+        android:layout_above="@id/searchContainer"
         android:background="@color/colorDebug" />
-
-    <include layout="@layout/searchbar"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="fill_parent"
-        android:layout_weight="1"
+        android:layout_height="match_parent"
+
         android:tag="default"
         android:id="@+id/mapContainer"
         android:layout_gravity="bottom"
-
+    android:layout_alignParentTop="true"
         >
 
 
         <fragment
             android:layout_width="match_parent"
-            android:layout_height="fill_parent"
+            android:layout_height="match_parent"
             android:id="@+id/map"
             tools:context=".KartenActivity"
             android:name="com.google.android.gms.maps.SupportMapFragment"
             android:layout_gravity="center_horizontal|top"
-            android:layout_below="@+id/SearchViewContainer" />
+   />
 
         <ProgressBar
             android:layout_width="wrap_content"
@@ -66,71 +68,19 @@
             tools:alpha="0.3" />
         <View android:id="@+id/MapTouchOverlay"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/SearchViewContainer">
+            android:layout_height="match_parent">
 
         </View>
 
     </RelativeLayout>
 
-</LinearLayout>
-
-
-<RelativeLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-
-    android:layout_gravity="bottom|end"
-
-    android:paddingLeft="10dp"
-    android:paddingRight="10dp"
-    android:paddingTop="5dp"
-    android:paddingBottom="5dp"
-    android:clipToPadding="false"
-    >
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_filter"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_filter_white"
-        android:layout_marginBottom="10dp"
-        android:layout_marginRight="15dp"
-        android:elevation="6dp"
-        app:elevation="6dp"
-        app:pressedTranslationZ="12dp"
-        app:backgroundTint="@color/colorAccent"
-        app:rippleColor="@android:color/white"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        app:borderWidth="0dp"
-        app:fabSize="normal"
-        android:visibility="visible"
-
-
-        />
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_mylocation"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_my_location_weiss"
-        android:layout_marginRight="15dp"
-        android:layout_marginBottom="15dp"
-        android:elevation="6dp"
-        app:elevation="6dp"
-        app:pressedTranslationZ="12dp"
-        app:backgroundTint="@color/colorAccent"
-        app:rippleColor="@color/rand"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/fab_filter"
-        app:borderWidth="0dp"
-        app:fabSize="normal"
-        android:visibility="visible"
-        />
-
-
 </RelativeLayout>
 
 
+
+    <include layout="@layout/mainfabs"
+        android:visibility="gone"
+        android:id="@+id/fabContainer"/>
 
 
 
@@ -204,9 +154,11 @@
     </FrameLayout>
 
 
-    <include layout="@layout/startupscreen" />
+    <include layout="@layout/startupscreen"
+        android:visibility="gone" />
 
-    <include layout="@layout/errormessage" />
+    <include layout="@layout/errormessage"
+        android:visibility="gone" />
 
     <include layout="@layout/euladialog" />
 

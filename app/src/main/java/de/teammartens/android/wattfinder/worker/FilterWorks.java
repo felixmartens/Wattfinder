@@ -32,7 +32,6 @@ import de.teammartens.android.wattfinder.R;
 import de.teammartens.android.wattfinder.model.FilterEintrag;
 import de.teammartens.android.wattfinder.model.PresetEintrag;
 
-import static de.teammartens.android.wattfinder.KartenActivity.showStartup;
 
 
 /**
@@ -166,7 +165,7 @@ public class FilterWorks {
                                 }
 
                             if (filter_initialized())
-                                KartenActivity.hideStartup();
+                                AnimationWorker.hideStartup();
                         } else {
                             if (LogWorker.isVERBOSE())
                                 LogWorker.e(LOG_TAG, "KEINE Stecker gefunden!!!!!");
@@ -222,7 +221,7 @@ public class FilterWorks {
                                     }
                                 }
                             if (filter_initialized())
-                                KartenActivity.hideStartup();
+                                AnimationWorker.hideStartup();
                         } else {
                             if (LogWorker.isVERBOSE())
                                 LogWorker.e(LOG_TAG, "KEINE Verbund gefunden!!!!!");
@@ -277,7 +276,7 @@ public class FilterWorks {
                                     }
                                 }
                             if (filter_initialized())
-                                KartenActivity.hideStartup();
+                                AnimationWorker.hideStartup();
 
                         } else {
                             if (LogWorker.isVERBOSE())

@@ -20,11 +20,11 @@ import java.util.List;
 
 import de.teammartens.android.wattfinder.KartenActivity;
 import de.teammartens.android.wattfinder.R;
+import de.teammartens.android.wattfinder.worker.AnimationWorker;
 import de.teammartens.android.wattfinder.worker.FilterWorks;
 import de.teammartens.android.wattfinder.worker.GeoWorks;
 import de.teammartens.android.wattfinder.worker.LogWorker;
 
-import static de.teammartens.android.wattfinder.KartenActivity.slideDown;
 
 /**
  * Created by felix on 10.05.15.
@@ -63,7 +63,7 @@ public class FilterFragment extends Fragment {
             public void onTabSelected(TabLayout.Tab tab) {
                 if (tab.getPosition() == 4)
                 {View v = filterView.findViewById(R.id.fab_container);
-                    slideDown(v, 100);
+                    AnimationWorker.slideDown(v, 100);
                     }
 
             }
@@ -159,7 +159,8 @@ if(v!=null)
 
         }
     });
-    KartenActivity.hide_mapSearch();
+    AnimationWorker.hide_mapSearch();
+    AnimationWorker.hide_fabs();
 
 
 

@@ -14,6 +14,7 @@ import android.widget.TextView;
 import de.teammartens.android.wattfinder.KartenActivity;
 import de.teammartens.android.wattfinder.R;
 import de.teammartens.android.wattfinder.model.ImagePagerAdapter;
+import de.teammartens.android.wattfinder.worker.AnimationWorker;
 import de.teammartens.android.wattfinder.worker.ImageWorker;
 import de.teammartens.android.wattfinder.worker.LogWorker;
 
@@ -71,7 +72,7 @@ public class ImageZoomFragment extends Fragment {
 
     public void onPause (){
         super.onPause();
-        KartenActivity.hideImageZoom();
+        AnimationWorker.hideImageZoom();
     }
 
 

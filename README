@@ -1,10 +1,10 @@
-README zum Git-Repository von Wattfinder
+Wattfinder - the android app to view chargepoints via goingelectric.de
 
-
-
-To make the repo compile and run you need androidstuidio in the latest version.
+This is the "new" version using the official API.
+To make the repo compile and run you need androidstudio in the latest version.
+You will need a Google Maps API KEY and a API Key for goingelectric.
 You need to do the following settings:
-The code is at the moment compiled with buildtools 24 for target Android 6.0.1.
+The code is at the moment compiled with buildtools 25 for target Android 6.0.1.
 Min SDK is 15.
 The project needs the following dependencies:
 
@@ -15,6 +15,6 @@ The project needs the following dependencies:
 	5. android-maps-utils 0.3.4
 	6. support-design 26.0
 
-Feel free to clone and work with as long as follow the given LIcense and share your work!
+Feel free to clone and work with it as long as you follow the given LIcense and share your work!
 
 Felix

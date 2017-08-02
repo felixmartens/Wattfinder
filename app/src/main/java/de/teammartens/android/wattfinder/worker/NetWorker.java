@@ -15,8 +15,7 @@ import de.teammartens.android.wattfinder.KartenActivity;
 import de.teammartens.android.wattfinder.R;
 
 import static de.teammartens.android.wattfinder.KartenActivity.getInstance;
-import static de.teammartens.android.wattfinder.KartenActivity.slideDown;
-import static de.teammartens.android.wattfinder.KartenActivity.slideUp;
+
 
 /**
  * Created by felix on 22.07.17.
@@ -49,7 +48,7 @@ public class NetWorker {
             if (tv != null) tv.setText(getInstance().getString(R.string.error_network_title));
 
             View v = KartenActivity.getInstance().findViewById(R.id.errorMessage);
-            if (v != null) slideUp(v, 0);
+            if (v != null) AnimationWorker.slideUp(v, 0);
        }
 
 
@@ -81,7 +80,7 @@ public class NetWorker {
         );
 
         v = KartenActivity.getInstance().findViewById(R.id.errorMessage);
-        if(v!=null) slideUp(v,0);
+        if(v!=null) AnimationWorker.slideUp(v,0);
 
        /* if (RETRY < RETRY_MAX){
             RETRY++;
@@ -117,6 +116,6 @@ public class NetWorker {
     public static void resetRETRY() {
         NetWorker.RETRY = 0;
         View v = KartenActivity.getInstance().findViewById(R.id.errorMessage);
-        if(v!=null) slideDown(v,0);
+        if(v!=null) AnimationWorker.slideDown(v,0);
     }
 }

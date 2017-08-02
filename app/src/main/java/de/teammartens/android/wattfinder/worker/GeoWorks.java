@@ -28,8 +28,6 @@ import java.util.ArrayList;
 import de.teammartens.android.wattfinder.KartenActivity;
 import de.teammartens.android.wattfinder.R;
 
-import static de.teammartens.android.wattfinder.KartenActivity.isDetailsVisibile;
-import static de.teammartens.android.wattfinder.KartenActivity.isFilterVisibile;
 import static de.teammartens.android.wattfinder.KartenActivity.layoutStyle;
 import static de.teammartens.android.wattfinder.KartenActivity.mMap;
 
@@ -173,7 +171,7 @@ public class GeoWorks {
                             LogWorker.d(LOG_TAG, "moveMap animateFinish -"+ mMap.getCameraPosition().target.toString()+" -Zoom:" + zoom +" Verursacher:" + VERURSACHER);
 
                         // nach dem Zoomen in den Details den Versatz nochmal korrigieren, deshalb zweite Animation starten
-                        if ((isDetailsVisibile()||isFilterVisibile()||VERURSACHER=="showMapBackPress")&&VERURSACHER!="moveMap")
+                        if ((AnimationWorker.isDetailsVisibile()||AnimationWorker.isFilterVisibile()||VERURSACHER=="showMapBackPress")&&VERURSACHER!="moveMap")
                                 movemapPosition(position, zoom, "moveMap");
 
                         SaeulenWorks.checkMarkerCache(VERURSACHER);
@@ -382,9 +380,9 @@ public static void animateClick(){
                 Marker_Suche = mMap.addMarker(new MarkerOptions().position(Coord).title(Desc).icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_suche)));
 
                 CUSTOM_MAPVIEW=true;
-                KartenActivity.hide_info();
-                if(isDetailsVisibile())KartenActivity.toggleDetails();
-                if(isFilterVisibile())KartenActivity.toggleFilter();
+                AnimationWorker.hide_info();
+                if(AnimationWorker.isDetailsVisibile())AnimationWorker.toggleDetails();
+                if(AnimationWorker.isFilterVisibile())AnimationWorker.toggleFilter();
                 movemapPosition(Coord,12f,"GeoWorks.Suchmarker");
 
             }
@@ -464,10 +462,10 @@ public static void animateClick(){
 
 
     public static boolean isPositionversetzt(){
-        if(LogWorker.isVERBOSE())LogWorker.d(LOG_TAG,"isPositionVersetzt: Details:"+isDetailsVisibile()+" Filter:"+isFilterVisibile()+" layout:"+layoutStyle());
+        if(LogWorker.isVERBOSE())LogWorker.d(LOG_TAG,"isPositionVersetzt: Details:"+AnimationWorker.isDetailsVisibile()+" Filter:"+AnimationWorker.isFilterVisibile()+" layout:"+layoutStyle());
 
-        if(KartenActivity.isDetailsVisibile()||
-                (KartenActivity.isFilterVisibile()&&!KartenActivity.layoutStyle().equals("default")))
+        if(AnimationWorker.isDetailsVisibile()||
+                (AnimationWorker.isFilterVisibile()&&!KartenActivity.layoutStyle().equals("default")))
         {
             if(LogWorker.isVERBOSE())LogWorker.d(LOG_TAG,"isPositionVersetzt:true");
 
