@@ -68,6 +68,7 @@ public class SaeulenWorks {
     public static HashMap<Integer,Saeule> Saeulen = new HashMap<>();
     public static Long letzterAbrufTime = new Long(0);
     private static LatLngBounds letzterAbrufBeiLLB = new LatLngBounds(new LatLng(0,0),new LatLng(0,0));
+    private static int letzterAbrufSaeulen = 0;
     private static HashMap<Long,LatLngBounds> CachedRegion = new HashMap<>();
     private static HashMap<Integer,Saeule> SaeulenCache = new HashMap<>();
     private static int letzterAbrufFilter;
@@ -119,10 +120,10 @@ public class SaeulenWorks {
             return;
         }
 
-        if(GeoWorks.getMapZoom()<GeoWorks.MAX_ZOOM){
+        if(GeoWorks.getMapZoom()<GeoWorks.MAX_ZOOM || (nwlat - swlat)>8 || (nwlng - swlng)>4 ){
 
 
-            if (GeoWorks.getMapZoom()>0)T.makeText(KartenActivity.getInstance(), KartenActivity.getInstance().getString(R.string.mapviewlarge),Toast.LENGTH_LONG).show();
+            if (GeoWorks.getMapZoom()>0 && !AnimationWorker.startupScreen)T.makeText(KartenActivity.getInstance(), KartenActivity.getInstance().getString(R.string.mapviewlarge),Toast.LENGTH_LONG).show();
             if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG, "Suche Säulen abgebrochen. Kartenausschnitt zu groß. "+GeoWorks.getMapZoom());
 
             return;
@@ -164,6 +165,8 @@ public class SaeulenWorks {
                             letzterAbrufBeiLLB = new LatLngBounds(new LatLng(swlat, swlng), new LatLng(nwlat, nwlng));
                             letzterAbrufFilter = hash;
                             letzterAbrufTime=System.currentTimeMillis();
+                            letzterAbrufSaeulen = jResponse.getJSONArray("chargelocations").length();
+                            if(LogWorker.isVERBOSE())LogWorker.d(LOG_TAG,letzterAbrufSaeulen + "Säulen empfangen.");
                             CachedRegion.put(System.currentTimeMillis(), letzterAbrufBeiLLB);
 
                             if (startkey == 0 ) {//Neuer VErsuch, jedes Mal alle MArker entfernen:
@@ -524,19 +527,19 @@ public class SaeulenWorks {
         CameraPosition cp = KartenActivity.mMap.getCameraPosition();
         LatLngBounds llB = KartenActivity.mMap.getProjection().getVisibleRegion().latLngBounds;
         //Abruf nur starten wenn eine der Ecken des aktuellen Ausshcnitts beim letzten Abruf nicht erfasst wurde
-        if (
-                (!llB.northeast.equals(new LatLng(0,0))&&!llB.southwest.equals(new LatLng(0,0)))
-                        &&!duplicateRQ(FilterWorks.paramsHash())) {
+        if ( !duplicateRQ(FilterWorks.paramsHash())) {
+        if((!llB.northeast.equals(new LatLng(0,0))&&!llB.southwest.equals(new LatLng(0,0)))) {
 
             //Factor for overlap depending on zoomlevel
             double f = 1.0;
-            if (cp.zoom<9.5) f=0.5;
-            if (cp.zoom<8.5) f=0.2;
-            if (cp.zoom<8.0) f=0;
-            double lat_overlap = f*(llB.northeast.latitude-llB.southwest.latitude);
-            double lng_overlap = f*(llB.northeast.longitude-llB.southwest.longitude);
+            if (cp.zoom < 9.5) f = 0.5;
+            if (cp.zoom < 8.5) f = 0.2;
+            if (cp.zoom < 8.0) f = 0;
+            double lat_overlap = f * (llB.northeast.latitude - llB.southwest.latitude);
+            double lng_overlap = f * (llB.northeast.longitude - llB.southwest.longitude);
 
-            ladeMarker(llB.southwest.latitude-lat_overlap, llB.southwest.longitude-lng_overlap, llB.northeast.latitude+lat_overlap, llB.northeast.longitude+lng_overlap, VERURSACHER,0);
+            ladeMarker(llB.southwest.latitude - lat_overlap, llB.southwest.longitude - lng_overlap, llB.northeast.latitude + lat_overlap, llB.northeast.longitude + lng_overlap, VERURSACHER, 0);
+        }
         }else{
             if(LogWorker.isVERBOSE())LogWorker.d(LOG_TAG,"Marker nicht neu geladen, da Abschnitt bekannt.");
         }
@@ -549,6 +552,7 @@ public static boolean duplicateRQ(int hash){
     if (    (hash==letzterAbrufFilter) &&
             letzterAbrufBeiLLB.contains(llB.northeast) &&
             letzterAbrufBeiLLB.contains(llB.southwest)&&
+            letzterAbrufSaeulen > 0 &&
             (System.currentTimeMillis()-letzterAbrufTime)<REFRESH_TIME)
 
             return true;

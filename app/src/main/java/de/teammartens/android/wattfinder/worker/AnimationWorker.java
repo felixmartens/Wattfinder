@@ -295,6 +295,8 @@ public class AnimationWorker {
 
             }
 
+            KartenActivity.setMapCenter();
+
             slideDown(startup, 500);
             startupScreen=false;
         }

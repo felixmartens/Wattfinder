@@ -5,6 +5,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 
@@ -60,9 +61,8 @@ public class NetWorker {
     public static void handleError(VolleyError error, final int Task ){
 
 
-        //TODO
-        // 1. Error Message anzeigen
-        // 2. Farbe anpassen
+        Toast.makeText(KartenActivity.getInstance(),error.getMessage(),Toast.LENGTH_LONG).show();
+
         TextView tv = (TextView) KartenActivity.getInstance().findViewById(R.id.errorTitle);
         if(tv!=null)tv.setText(getInstance().getString(R.string.error_network_title));
 

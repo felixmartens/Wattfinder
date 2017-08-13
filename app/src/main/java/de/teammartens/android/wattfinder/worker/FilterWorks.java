@@ -317,7 +317,7 @@ public class FilterWorks {
     public static void filter_speichern(){
 
         //nicht specihern wenn neues Profil drin steht
-        if (PRESET.equals(KartenActivity.getInstance().getString(R.string.filter_neuesprofil))||PRESET.isEmpty())
+        if (PRESET == null || PRESET.equals(KartenActivity.getInstance().getString(R.string.filter_neuesprofil))||PRESET.isEmpty())
             return;
 
 

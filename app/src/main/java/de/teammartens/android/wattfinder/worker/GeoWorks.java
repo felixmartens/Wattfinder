@@ -307,66 +307,6 @@ public class GeoWorks {
                     }
             }
 
-/*
-public static void animateClick(){
-    //Diese wird nur per MarkerClick ausgelöst, deshalb immer move true
-
-    if(KartenActivity.isDetailsVisibile())
-        animateClick(true,true);
-    else
-        animateClick(false,true);
-
-}
-
-    public static void animateClick(boolean nachObenversetzt){
-        //Das sind die automatischen dahe rimmer move false
-        animateClick(nachObenversetzt,false);
-    }
-    public static void animateClick(boolean nachObenversetzt, boolean move){
-        //wenn move dann bewege die karte zum geklickten marker
-        //wenn nicht dann bewege einfach den mittelpunkt der karte
-        View v = KartenActivity.getInstance().findViewById(R.id.detailFragment);
-        Double hP = KartenActivity.getInstance().getResources().getDisplayMetrics().heightPixels*1.0;
-        //if(LogWorker.isVERBOSE())LogWorker.d(LOG_TAG,"Display ratio Calc: "+hP+"-"+v.getHeight()+"--"+String.format("%+10.2f",((hP-v.getHeight()*1.0)/hP)*0.5)+ "---" +String.valueOf(((hP-v.getHeight()*1.0)/hP)*0.5));
-
-        Double d = 0.5-((hP-v.getHeight()*1.0)/hP)*0.5;
-        if(LogWorker.isVERBOSE())LogWorker.d(LOG_TAG,"Display ratio Animate Click: "+d);
-        LatLng cLatLng = mMap.getCameraPosition().target;
-        if (LogWorker.isVERBOSE())LogWorker.d(LOG_TAG,"Animate Click MOVE"+move+" CUSTOM"+CUSTOM_MAPVIEW);
-        if (move||!CUSTOM_MAPVIEW)  {
-        if (SaeulenWorks.clickedSaeule!= null)
-            cLatLng =  SaeulenWorks.clickedSaeule.getPosition();
-        if (SaeulenWorks.clickedMarker!= null)
-            cLatLng =  SaeulenWorks.clickedMarker.getPosition();
-
-            CUSTOM_MAPVIEW=false;
-        }
-        LatLng nLatLng = cLatLng;
-        if (nachObenversetzt) {
-            LatLngBounds VR = mMap.getProjection().getVisibleRegion().latLngBounds;
-            Configuration config = KartenActivity.getInstance().getResources().getConfiguration();
-            if (config.orientation == config.ORIENTATION_PORTRAIT){
-                Double deltaY = d * (VR.northeast.latitude - VR.southwest.latitude);
-                nLatLng=new LatLng(cLatLng.latitude - deltaY, cLatLng.longitude);
-            }else
-            {
-                Double deltaX = 0.25 * (VR.northeast.longitude - VR.southwest.longitude);
-                nLatLng=new LatLng(cLatLng.latitude, cLatLng.longitude+deltaX);
-            }
-
-        }else{
-            //KartenActivity.show_info();
-
-            //HI könnte theoretisch noch rein dass auch bei CUTOM MAPVIEW die karte wieder korrigiert wird beim shcliessen von details.
-        }
-        MarkerTarget=nLatLng;
-
-        mMap.animateCamera(CameraUpdateFactory.newLatLng(nLatLng), 500,null);
-
-
-    }
-
-*/
 
 
     public static void Suchmarker(LatLng Coord,String Desc){
@@ -392,10 +332,7 @@ public static void animateClick(){
         }
     }
 
-    public void Lademarker(){
 
-
-    }
 
 
 
@@ -477,46 +414,16 @@ public static void animateClick(){
         return false;
     }
 
-/*
-    private static LatLng VersatzBerechnen(LatLng mLatLng) {
-    return VersatzBerechnen(mLatLng,false);
-    }
-
-    public static LatLng VersatzBerechnen(LatLng mLatLng, boolean reverse){
-        LatLng vLatLng = mLatLng;
-        /*LatLngBounds VR = mMap.getProjection().getVisibleRegion().latLngBounds;
-        View v = KartenActivity.getInstance().findViewById(R.id.detailFragment);
-        if (isFilterVisibile()&&layoutStyle()!="default") v = KartenActivity.getInstance().findViewById(R.id.filterFragment);
-        Double hP = KartenActivity.getInstance().getResources().getDisplayMetrics().heightPixels*1.0;
-
-        Double d = ((hP-v.getHeight()*1.0)/hP)*0;
-
-
-        Configuration config = KartenActivity.getInstance().getResources().getConfiguration();
-        if (config.orientation == config.ORIENTATION_PORTRAIT){
-            if(LogWorker.isVERBOSE())LogWorker.d(LOG_TAG,"Display ratio Calc: "+hP+"-"+v.getHeight()+"--"+String.format("%+10.2f",d)+ "---" +String.valueOf(((hP-v.getHeight()*1.0)/hP)*0.5));
-
-            Double deltaY = d * (VR.northeast.latitude - VR.southwest.latitude);
-            vLatLng=new LatLng((reverse?mLatLng.latitude + deltaY:mLatLng.latitude - deltaY), mLatLng.longitude);
-        }else
-        {    hP = KartenActivity.getInstance().getResources().getDisplayMetrics().widthPixels*1.0;
-            d = ((hP-v.getWidth()*1.0)/hP)*0.4;
-            if(LogWorker.isVERBOSE())LogWorker.d(LOG_TAG,"Display ratio Calc: "+hP+"-"+v.getWidth()+"--"+String.format("%+10.2f",d)+ "---" +String.valueOf(((hP-v.getWidth()*1.0)/hP)*0.5));
-
-
-
-            Double deltaX = d * (VR.northeast.longitude - VR.southwest.longitude);
-            vLatLng=new LatLng(mLatLng.latitude, (reverse?mLatLng.longitude-deltaX:mLatLng.longitude+deltaX));
-        }
-
-        return vLatLng;
-    }
-*/
 
     public static boolean validLatLng (LatLng mLatLng){
 
         LatLngBounds llb = new LatLngBounds(new LatLng(33.724339, -22.93945), new LatLng(66.478208, 34.628906));
-        if (llb.contains(mLatLng)) return true;
+
+        if(mLatLng== null ) return false;
+        if (LogWorker.isVERBOSE())LogWorker.d(LOG_TAG,"mLatLng: "+mLatLng);
+        if (llb != null
+                && llb.contains(mLatLng))
+            return true;
 
         return false;
     }

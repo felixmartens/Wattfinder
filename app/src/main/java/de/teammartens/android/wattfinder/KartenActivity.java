@@ -213,30 +213,8 @@ public static ActionBar actionBar;
 
         mMap = googleMap;
         setMapReady(true);
-        Float Lat = sharedPref.getFloat(sP_Latitude,defaultLat);
-        if (Lat==0f)Lat=defaultLat;
-        Float Lng = sharedPref.getFloat(sP_Longitude,defaultLng);
-        if (Lng==0f)Lng=defaultLng;
-        Float zoom = sharedPref.getFloat(sP_ZoomLevel,GeoWorks.DEFAULT_ZOOM);
-        if (!GeoWorks.validLatLng(new LatLng(Lat,Lng))){
-            Lat=defaultLat;
-            Lng=defaultLng;
-            zoom=GeoWorks.DEFAULT_ZOOM;
-        }
 
-        Long TS = sharedPref.getLong(sP_Timestamp,0);
-    if(!(Lat.equals(defaultLat)&&Lng.equals(defaultLng))&&zoom>GeoWorks.MAX_ZOOM&&(System.currentTimeMillis()-TS)<TimestampValid)
-    {
-        GeoWorks.CUSTOM_MAPVIEW=true;
-        GeoWorks.movemapPosition(new LatLng (Lat,Lng),zoom,"mapReady");
-    }
-    else {
-        GeoWorks.CUSTOM_MAPVIEW=false;
-        GeoWorks.setmyPosition(GeoWorks.getmyPosition());
-
-    }
-
-    LogWorker.d("WattfinderInternal","Lat: "+Lat+"Lng: "+Lng+"Z: "+zoom+" geladen");
+        setMapCenter();
 
     View v = getInstance().findViewById(R.id.MapTouchOverlay);
     v.setOnTouchListener(new View.OnTouchListener() {
@@ -415,7 +393,7 @@ private void setupGoogleAPI(){
     protected void onResume() {
         super.onResume();
         sInstance = this;
-        //LogWorker.setVERBOSE(true);
+        LogWorker.setVERBOSE(true);
 
 
         actionBar = getActionBar();
@@ -471,7 +449,7 @@ private void setupGoogleAPI(){
                 removeLocationListener();
 
         super.onStop();
-        setMapReady(false);
+        //setMapReady(false);
     }
 
     @Override
@@ -736,6 +714,47 @@ private void setupGoogleAPI(){
             if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG, "PaddingX:" + v.getWidth());
         }
     }
+
+    public static void setMapCenter(){
+
+
+        Float Lat = sharedPref.getFloat(sP_Latitude,defaultLat);
+        if (Lat==0f)Lat=defaultLat;
+        Float Lng = sharedPref.getFloat(sP_Longitude,defaultLng);
+        if (Lng==0f)Lng=defaultLng;
+        Float zoom = sharedPref.getFloat(sP_ZoomLevel,GeoWorks.DEFAULT_ZOOM);
+        if (!GeoWorks.validLatLng(new LatLng(Lat,Lng))){
+            Lat=defaultLat;
+            Lng=defaultLng;
+            zoom=GeoWorks.DEFAULT_ZOOM;
+        }
+
+        Long TS = sharedPref.getLong(sP_Timestamp,0);
+        if(!(Lat.equals(defaultLat)&&Lng.equals(defaultLng))&&zoom>GeoWorks.MAX_ZOOM&&(System.currentTimeMillis()-TS)<TimestampValid)
+        {
+            GeoWorks.CUSTOM_MAPVIEW=true;
+
+            LogWorker.d("SetMapCenter","Lat: "+Lat+"Lng: "+Lng+"Z: "+zoom+" geladen");
+            GeoWorks.movemapPosition(new LatLng (Lat,Lng),zoom,"mapReady");
+        }
+        else {
+            GeoWorks.CUSTOM_MAPVIEW = false;
+            if (GeoWorks.validLatLng(GeoWorks.getmyPosition())) {
+
+                LogWorker.d("SetMapCenter"," zum Standort bewegen");
+                GeoWorks.setmyPosition(GeoWorks.getmyPosition());
+            }
+            else{
+
+                LogWorker.d("SetMapCenter","zum Standard Standort bewegen");
+                GeoWorks.movemapPosition(new LatLng (defaultLat,defaultLng),GeoWorks.DEFAULT_ZOOM,"mapReadyDefault");
+            }
+        }
+
+
+
+    }
+
     public static LatLng Loc2LatLng (Location l)
     {
         return new LatLng(l.getLatitude(),l.getLongitude());
