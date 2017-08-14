@@ -903,6 +903,8 @@ return param;
                 &&KartenActivity.isMapReady();
         if(LogWorker.isVERBOSE())
             LogWorker.d(LOG_TAG,"filter initialized" + ret);
+
+        if(ret) AnimationWorker.hideStartup();
         return (ret);
     }
 

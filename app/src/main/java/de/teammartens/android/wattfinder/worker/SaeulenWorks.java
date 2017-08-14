@@ -120,11 +120,14 @@ public class SaeulenWorks {
             return;
         }
 
-        if(GeoWorks.getMapZoom()<GeoWorks.MAX_ZOOM || (nwlat - swlat)>8 || (nwlng - swlng)>4 ){
-
+        if(GeoWorks.getMapZoom()<GeoWorks.MAX_ZOOM ||
+                (KartenActivity.layoutStyle()!="land" && (nwlat - swlat)>8 || (nwlng - swlng)>4 )
+                || (KartenActivity.layoutStyle()=="land" && ((nwlat - swlat)>4 || (nwlng - swlng)>8))
+                )
+        {
 
             if (GeoWorks.getMapZoom()>0 && !AnimationWorker.startupScreen)T.makeText(KartenActivity.getInstance(), KartenActivity.getInstance().getString(R.string.mapviewlarge),Toast.LENGTH_LONG).show();
-            if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG, "Suche Säulen abgebrochen. Kartenausschnitt zu groß. "+GeoWorks.getMapZoom());
+            if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG, "Suche Säulen abgebrochen. Kartenausschnitt zu groß. "+GeoWorks.getMapZoom()+"  "+nwlat+"/"+nwlng+"  "+swlat+"/"+swlng);
 
             return;
         }

@@ -6,6 +6,7 @@ import android.content.res.Configuration;
 import android.os.Build;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -264,6 +265,8 @@ public class AnimationWorker {
     }
 
     public static void hideStartup(){
+        if(LogWorker.isVERBOSE())LogWorker.d(LOG_TAG,"hideStartup "+startupScreen);
+
         View startup = getInstance().findViewById(R.id.startupScreen);
         if (startupScreen) {
             if(!KartenActivity.skipEula && (System.currentTimeMillis() - KartenActivity.sharedPref.getLong(KartenActivity.sP_Timestamp,0))>3600*1000){//Zeige Eula wenn skipEula nicht aktiviert und letztes Programmende ist mindestens eine Stunde eher
@@ -318,7 +321,7 @@ public class AnimationWorker {
         startup.setVisibility(View.VISIBLE);
         FilterWorks.lade_filterlisten_API();
 
-
+        if(LogWorker.isVERBOSE())LogWorker.d(LOG_TAG,"showStartup");
         startupScreen=true;
         //hide_mapSearch();
 

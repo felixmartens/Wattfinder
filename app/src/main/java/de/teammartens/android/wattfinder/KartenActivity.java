@@ -394,7 +394,7 @@ private void setupGoogleAPI(){
         super.onResume();
         sInstance = this;
         LogWorker.setVERBOSE(true);
-
+        AnimationWorker.startupScreen=true;
 
         actionBar = getActionBar();
         if (actionBar != null) {
