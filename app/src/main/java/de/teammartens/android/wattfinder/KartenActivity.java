@@ -151,9 +151,11 @@ public static ActionBar actionBar;
         public void onLocationChanged(Location location) {
 
 
-            //mCurrentLocation = location;
-            if(location!=null)GeoWorks.setmyPosition(new LatLng (location.getLatitude(),location.getLongitude()));
+            LatLng myloc = Loc2LatLng(location);
+            if(location!=null)GeoWorks.setmyPosition(myloc);
             if ( VERBOSE) LogWorker.d(LOG_TAG, "Location erhalten:"+(location==null?"null":""));
+            if(GeoWorks.validLatLng(myloc))
+                AnimationWorker.show_myloc();
 
 
             //GeoWorks.meinMarker();
@@ -255,9 +257,28 @@ public static ActionBar actionBar;
     v.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+
+            if (ContextCompat.checkSelfPermission(KartenActivity.getInstance(),
+                    Manifest.permission.ACCESS_FINE_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED) {
+
+
+                    ActivityCompat.requestPermissions(KartenActivity.getInstance(),
+                            new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                            MY_PERMISSIONS_REQUEST_LOCATION);
+
+            }else{
+
             AnimationWorker.show_map();
-            GeoWorks.CUSTOM_MAPVIEW = false;
-            GeoWorks.movemapPosition(GeoWorks.getmyPosition(),GeoWorks.DEFAULT_ZOOM,"fab_Mylocation");
+
+            if (GeoWorks.validLatLng(GeoWorks.getmyPosition())){
+                GeoWorks.CUSTOM_MAPVIEW = false;
+                GeoWorks.movemapPosition(GeoWorks.getmyPosition(),GeoWorks.DEFAULT_ZOOM,"fab_Mylocation");
+            }else{
+                Toast.makeText(getInstance(),getString(R.string.novalidlocation),Toast.LENGTH_SHORT);
+            }
+
+            }
         }
     });
 
@@ -487,6 +508,7 @@ private void setupGoogleAPI(){
         if (requestCode==MY_PERMISSIONS_REQUEST_LOCATION&&grantResults[0]==PackageManager.PERMISSION_GRANTED) setupLocationListener();
             else{
                     permissiondenied=true;
+
                 }
         if (requestCode==MY_PERMISSIONS_REMOVE_LOCATION&&grantResults[0]==PackageManager.PERMISSION_GRANTED) removeLocationListener();
     }
@@ -534,6 +556,11 @@ private void setupGoogleAPI(){
                 GeoWorks.setmyPosition(Loc2LatLng(mLocation));
             if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG, "getMyPosition "+(GeoWorks.getmyPosition() == null?"null":"notnull")+"CUSTOMMapView:"+GeoWorks.CUSTOM_MAPVIEW );
              }
+
+            if(mLocation!=null && GeoWorks.validLatLng(Loc2LatLng(mLocation)))
+                AnimationWorker.show_myloc();
+            else
+                AnimationWorker.hide_myloc();
 
             mLocationManager.removeUpdates(mLocationListener);
             mLocationManager.requestLocationUpdates(mLocationManager.getBestProvider(C,true), 10000, 100, mLocationListener);

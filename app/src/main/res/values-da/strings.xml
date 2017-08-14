@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+
+<!-- Menü -->
+<string name="menu_currentlocation">Nuværende position</string>
+<string name="menu_searchdialog">Søg efter adresse</string>
+<string name="menu_configuration">Filterindstillinger</string>
+<string name="menu_clearrecents">Slet din søgehistorik</string>
+<string name="search_hint">Søg i nærheden af...</string>
+<string name="search_label">Wattfinder opladningsmuligheder</string>
+<string name="done">Færdig</string>
+<string name="browser">Åben i browser</string>
+<string name="filterTitel">Filterindstillinger</string>
+<string name="filterKostenlos">Gratis opladningsmulighed</string>
+<string name="filterBarrierefrei">Uden afspærring - kan benyttes uden registrering/abonnement</string>
+<string name="filter247">Døgnåben</string>
+<string name="filterKostenlosParken">Gratis parkering</string>
+<string name="filterBestaetigt">Kun bekræftede opslag</string>
+<string name="filterOhneStoerung">Undlad opslag med fejlmeldinger</string>
+<string name="filterHotels">Hoteller</string>
+<string name="filterRestaurants">Restauranter</string>
+<string name="filterSteckerTitel">Ladestik</string>
+<string name="filterLadekartenTitel">Ladekort</string>
+<string name="filterVerbundTitel">Firma</string>
+<string name="filterAlle">alle</string>
+<string name="detailsBetreiber">Firma</string>
+<string name="details_rating">Rating</string>
+<string name="plural">" "</string>
+<string name="details_network">Detaljer om ladenetværk</string>
+<string name="details_costs">Udgifter</string>
+<string name="details_parking">Parkering</string>
+<string name="details_plugs">Ladestik</string>
+<string name="details_opening">Åbningstider</string>
+<string name="details_ladeweile">Imens du lader</string>
+<string name="details_hinweise">Generel information</string>
+<string name="details_disturbance">Midlertidige fejl</string>
+<string name="details_compatibility">Kompatibilitet:</string>
+<string name="filterPreset">Profil:</string>
+<string name="filter_neuesprofil">Tilføj profil</string>
+<string name="filter_standardprofil">Standardprofil</string>
+<string name="search_title">Wattfinder Søgning</string>
+<string name="filter_neuesprofil_hint">Navngiv ny profil</string>
+<string name="crash_toast_text">Fejlrapport afsendt</string>
+<string name="SaveFilterError">Filtervalg kan ikke gemmes</string>
+<string name="filterBasic">Normal</string>
+<string name="filterPresets">Profil</string>
+<string name="Backstackexit">Ved tryk på "tilbage" endnu engang lukkes Wattfinder</string>
+<string name="fpowerlabel">Minimum ønsket strømstyrke</string>
+<string name="filter_selectall">Vælg alle</string>
+<string name="details_position" >Beskrivelse af område</string>
+<string name="details_verified">Verificeret</string>
+<string name="details_barrierfree">Uden afspærring</string>
+<string name="details_freeparking">Gratis parkering</string>
+<string name="details_freecharging">Gratis opladning</string>
+<string name="details_operator">Firma</string>
+<string name="details_247">Døgnåbent</string>
+<string name="friday">"Fredag: "</string>
+<string name="monday">"Mandag: "</string>
+<string name="saturday">"Lørdag: "</string>
+<string name="sunday">"Søndag: "</string>
+<string name="thursday">Torsdag:</string>
+<string name="tuesday">"Tirsdag: "</string>
+<string name="wednesday">"Onsdag: "</string>
+<string name="infoUpdated">"via goingelectric.de, opdateret kl. "</string>
+<string name="closed">lukket</string>
+<string name="filter_opananytime">Altid åben</string>
+<string name="filter_openednow">Åben nu</string>
+<string name="preset_edit">Omdøb "normal"</string>
+<string name="preset_rename_msg">Ændre beskrivelse af profilen:</string>
+<string name="dialog_change">Ændre</string>
+<string name="dialog_cancel">Fortryd</string>
+<string name="dialog_create">Opret</string>
+<string name="dialog_delete">Slet profil</string>
+<string name="ifault_report">Advarsel! Der er indberettet midlertidige fejlmeldinger på denne ladestander!</string>
+<string name="close">Luk</string>
+<string name="skipMessage">Vis ikke igen</string>
+    <string name="dialog_text1">Velkommen til den nye Wattfinder app,\n
+    App´en bruger nu den nye officiellle GoingElectric-API til at vise lademuligheder og -data. Da Wattfinder app´en kun filtrerer data
+    skal forbedringsforslag og ris/ros tilsendes Goingelectric.de direkte.\n\n
+    Bemærk venligst følgende:\n\n
+    1. Wattfinder samler ikke, videresender eller gemmer personlige data, og vil aldrig gøre dette.\n\n
+    2. Wattfinder leverer positionsdata, filterindstillinger og søgekriterier til goingelectric.de og hvis nødvendigt til Google Maps.\n\n
+    3. Om Google Maps data gemmes eller bearbejdes kan ses i de individuelle indstillinger for programmet på din enhed.\n\n
+    4. Wattfinder leverer - helt anonymt - det samlede antal API-søgninger, udelukkende til videreudvikling.
+    </string>
+<string name="mapviewlarge">Ingen ladestandere vises. Kortudsnit er for stort.</string>
+<string name="nonetworkavailable">Intet netværk registreret. Tjek at enheden er tilsluttet internettet, enten via Wi-Fi eller mobildata og genstart herefter app´en.</string>
+<string name="error_network_title">Netværksfejl</string>
+<string name="error_network_notconn">Intet netværk registreret. Tjek at enheden er tilsluttet internettet, enten via Wi-Fi eller mobildata!</string>
+<string name="also">også</string>
+<string name="only">kun</string>
+<string name="filterKartenaktiv">Ladekort/-firma valgt \"Uden afspærring\" filtret viser yderligere lademuligheder</string>
+<string name="filterkeineKarten">Intet ladekort/-firma valgt, dvs. alle vises (hvis du ikke vælger "Uden afspærring")</string>
+    <string name="novalidlocation">No valid gps location found.</string>
+</resources>

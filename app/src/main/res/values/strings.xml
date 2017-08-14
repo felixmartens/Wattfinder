@@ -96,5 +96,6 @@
     <string name="only">only</string>
     <string name="filterKartenaktiv">Cards/Carriers selected. \"open access\" filter shows additional chargepoints</string>
     <string name="filterkeineKarten">No Cards/Carriers checked, e.g. all will be shown (if you don\'t check \"open access\")</string>
+    <string name="novalidlocation">No valid gps location found.</string>
 
 </resources>

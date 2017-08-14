@@ -212,7 +212,17 @@ public class AnimationWorker {
 
     }
 
+    public static void hide_myloc(){
+        View fabloc = getInstance().findViewById(R.id.fab_mylocation);
+        fadeOut(fabloc,0);
 
+    }
+
+
+    public static void show_myloc(){
+        View fabloc = getInstance().findViewById(R.id.fab_mylocation);
+        fadeIn(fabloc,0,1.0f);
+    }
     public static void show_map(){
         if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG,"Show Map");
         //if(fragmentManager==null)fragmentManager=getFragmentManager();
