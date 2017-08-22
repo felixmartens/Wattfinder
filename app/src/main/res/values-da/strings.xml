@@ -26,8 +26,7 @@
 <string name="filterAlle">alle</string>
 <string name="detailsBetreiber">Firma</string>
 <string name="details_rating">Rating</string>
-<string name="plural">" "</string>
-<string name="details_network">Detaljer om ladenetværk</string>
+    <string name="details_network">Detaljer om ladenetværk</string>
 <string name="details_costs">Udgifter</string>
 <string name="details_parking">Parkering</string>
 <string name="details_plugs">Ladestik</string>
@@ -93,4 +92,9 @@
 <string name="filterKartenaktiv">Ladekort/-firma valgt \"Uden afspærring\" filtret viser yderligere lademuligheder</string>
 <string name="filterkeineKarten">Intet ladekort/-firma valgt, dvs. alle vises (hvis du ikke vælger "Uden afspærring")</string>
     <string name="novalidlocation">No valid gps location found.</string>
+    <string name="f_but_showall">Reset filter to show all</string>
+    <string name="plural">" "</string>
+    <string name="details_loadimages">Load images</string>
+    <string name="filter_simpletitle">Simplified filtering options</string>
+    <string name="filter_but_erweitert">show all filtering options</string>
 </resources>

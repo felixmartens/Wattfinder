@@ -47,7 +47,7 @@ public class Filter_Basic_Fragment extends Fragment {
     public void onResume(){
         super.onResume();
 
-        CheckBox v = (CheckBox) this.getView().findViewById(R.id.fKostenlos);
+        View v = this.getView().findViewById(R.id.fKostenlos);
         v.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -59,7 +59,7 @@ public class Filter_Basic_Fragment extends Fragment {
 
 
 
-        v = (CheckBox) filterBasicView.findViewById(R.id.fKostenlosparken);
+        v = filterBasicView.findViewById(R.id.fKostenlosparken);
         v.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -69,7 +69,7 @@ public class Filter_Basic_Fragment extends Fragment {
             }
         });
 
-        v = (CheckBox) filterBasicView.findViewById(R.id.fHotels);
+        v =  filterBasicView.findViewById(R.id.fHotels);
         v.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -79,7 +79,7 @@ public class Filter_Basic_Fragment extends Fragment {
             }
         });
 
-        v = (CheckBox) filterBasicView.findViewById(R.id.fRestaurants);
+        v = filterBasicView.findViewById(R.id.fRestaurants);
         v.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -89,7 +89,7 @@ public class Filter_Basic_Fragment extends Fragment {
             }
         });
 
-        v = (CheckBox) filterBasicView.findViewById(R.id.fBestaetigt);
+        v = filterBasicView.findViewById(R.id.fBestaetigt);
         v.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -99,7 +99,7 @@ public class Filter_Basic_Fragment extends Fragment {
             }
         });
 
-        v = (CheckBox) filterBasicView.findViewById(R.id.fBarrierefrei);
+        v =  filterBasicView.findViewById(R.id.fBarrierefrei);
         v.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -109,7 +109,7 @@ public class Filter_Basic_Fragment extends Fragment {
             }
         });
 
-        v = (CheckBox) filterBasicView.findViewById(R.id.fStoerung);
+        v =  filterBasicView.findViewById(R.id.fStoerung);
         v.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -160,6 +160,14 @@ public class Filter_Basic_Fragment extends Fragment {
             }
         });
 
+
+       /* v = filterBasicView.findViewById(R.id.f_buttonshowall);
+        v.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FilterWorks.loadPresets(FilterWorks.PRESET_ALL);
+            }
+        });*/
 
         if(LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG,"FilterBasic onResume");
         ladeListe();

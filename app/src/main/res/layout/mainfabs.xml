@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
 
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
         android:layout_height="wrap_content"
 
@@ -39,7 +40,7 @@
             android:layout_height="wrap_content"
             android:src="@drawable/ic_filter_white"
             android:layout_marginBottom="10dp"
-            android:layout_marginRight="22dp"
+            android:layout_marginRight="18dp"
             android:elevation="6dp"
             app:elevation="6dp"
             app:pressedTranslationZ="12dp"
@@ -50,13 +51,14 @@
             app:borderWidth="0dp"
             app:fabSize="mini"
             android:visibility="visible"
-            android:layout_below="@+id/fab_search" />
+            android:layout_below="@+id/fab_search"
+            tools:fabSize="auto" />
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/fab_mylocation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_my_location_weiss"
-            android:layout_marginRight="22dp"
+            android:layout_marginRight="18dp"
             android:layout_marginBottom="15dp"
             android:elevation="6dp"
             app:elevation="6dp"

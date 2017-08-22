@@ -78,10 +78,10 @@ public class KartenActivity extends FragmentActivity
         implements GoogleApiClient.OnConnectionFailedListener,ActivityCompat.OnRequestPermissionsResultCallback,OnMapReadyCallback {
     private static final String LOG_TAG = "Wattfinder";
     public static GoogleMap mMap; // Might be null if Google Play services APK is not available.
-    private final static int
+    private final static Integer
             CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
-    private final static int MY_PERMISSIONS_REQUEST_LOCATION = 9;
-    private final static int MY_PERMISSIONS_REMOVE_LOCATION = 8;
+    private final static Integer MY_PERMISSIONS_REQUEST_LOCATION = 17;
+    private final static Integer MY_PERMISSIONS_REMOVE_LOCATION = 18;
     //private LocationClient mLocationClient;
     public static LocationManager mLocationManager;
     //public static Location mCurrentLocation;
@@ -192,24 +192,17 @@ public static ActionBar actionBar;
     protected void onActivityResult(
             int requestCode, int resultCode, Intent data) {
         // Decide what to do based on the original request code
-        switch (requestCode) {
-
-            case CONNECTION_FAILURE_RESOLUTION_REQUEST :
+        if (requestCode == CONNECTION_FAILURE_RESOLUTION_REQUEST
+                && resultCode == Activity.RESULT_OK){
             /*
              * If the result code is Activity.RESULT_OK, try
              * to connect again
              */
-                switch (resultCode) {
-                    case Activity.RESULT_OK :
-                    /*
-                     * Try the request again
-                     */
-
-                        break;
+                setupGoogleAPI();
                 }
 
         }
-    }
+
 @Override
     public void onMapReady(GoogleMap googleMap) {
 
@@ -311,6 +304,7 @@ public static ActionBar actionBar;
         //getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
         sInstance = this;
 
+
         setContentView(R.layout.mainlayout);
         sharedPref = getPreferences(Context.MODE_PRIVATE);
         fragmentManager = getSupportFragmentManager();
@@ -354,8 +348,8 @@ private void setupGoogleAPI(){
 
     // Showing status
     if(PlayServiceStatus!=ConnectionResult.SUCCESS){ // Google Play Services are not available
-
-        int requestCode = 10;
+        LogWorker.e(LOG_TAG,"PlayServices not connected");
+        Integer requestCode = CONNECTION_FAILURE_RESOLUTION_REQUEST;
         Dialog dialog = GooglePlayServicesUtil.getErrorDialog(PlayServiceStatus, this, requestCode);
         dialog.show();
 
@@ -382,6 +376,9 @@ private void setupGoogleAPI(){
     protected void onStart() {
         super.onStart();
         LogWorker.init_logging();
+        // DEBUGGING
+        //LogWorker.setVERBOSE(true);
+
         lineSeparator =System.getProperty("line.separator");
 
     }
@@ -400,7 +397,7 @@ private void setupGoogleAPI(){
             e.putFloat(sP_ZoomLevel, cp.zoom);
             e.putLong(sP_Timestamp, System.currentTimeMillis());
             e.putInt(sP_APIRQCount, API_RQ_Count);
-            e.commit();
+            e.apply();
             LogWorker.d("WattfinderInternal", "Pause");
             LogWorker.d("WattfinderInternal", "GeoWorks Lat: " + GeoWorks.getMapPosition().latitude + " Lng: " + GeoWorks.getMapPosition().longitude + " Z: " + GeoWorks.getMapZoom() + "");
             LogWorker.d("WattfinderInternal", "Lat: " + new Float(cp.target.latitude) + " Lng: " + new Float(cp.target.longitude) + " Z: " + cp.zoom + " saved");
@@ -426,7 +423,7 @@ private void setupGoogleAPI(){
         prepareSearch();
 
 
-        if(API_RQ_Count==0) API_RQ_Count = sharedPref.getInt(sP_APIRQCount,0);
+        API_RQ_Count = sharedPref.getInt(sP_APIRQCount,0);
         if(LogWorker.isVERBOSE())LogWorker.d(LOG_TAG,"APIRQCOUNT:"+getAPI_RQ_Count());
 
         skipEula = sharedPref.getBoolean("skipEula",false);
@@ -507,6 +504,7 @@ private void setupGoogleAPI(){
 
         if (requestCode==MY_PERMISSIONS_REQUEST_LOCATION&&grantResults[0]==PackageManager.PERMISSION_GRANTED) setupLocationListener();
             else{
+            if (LogWorker.isVERBOSE())LogWorker.e(LOG_TAG,"requestLocation Permission DENIED");
                     permissiondenied=true;
 
                 }
@@ -517,7 +515,7 @@ private void setupGoogleAPI(){
         if (ContextCompat.checkSelfPermission(KartenActivity.getInstance(),
                 Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
-
+            if (LogWorker.isVERBOSE())LogWorker.d(LOG_TAG,"requestLocation Permission REMOVE");
             ActivityCompat.requestPermissions(KartenActivity.getInstance(),
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                     MY_PERMISSIONS_REMOVE_LOCATION);
@@ -533,7 +531,7 @@ private void setupGoogleAPI(){
                 != PackageManager.PERMISSION_GRANTED) {
 
             if (!AnimationWorker.startupScreen && !permissiondenied)
-
+            if (LogWorker.isVERBOSE())LogWorker.d(LOG_TAG,"requestLocation Permission");
             ActivityCompat.requestPermissions(KartenActivity.getInstance(),
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                     MY_PERMISSIONS_REQUEST_LOCATION);

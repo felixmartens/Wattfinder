@@ -48,18 +48,18 @@ public class LogWorker {
 
     public static void e(String TAG, String message){
         cacheLog("E",TAG,message);
-        Log.e(TAG,message);
+        if (message != null && message.length() > 0) Log.e(TAG,message);
     }
 
     public static void e(String TAG, String message, Exception e){
         cacheLog("E",TAG,message+" Exception:"+e);
-        Log.e(TAG,message,e);
+        if (message != null && message.length() > 0) Log.e(TAG,message,e);
     }
 
     public static void d(String TAG, String message){
 
         cacheLog("D",TAG,message);
-        Log.d(TAG,message);
+        if (message != null && message.length() > 0) Log.d(TAG,message);
     }
 
     public static void init_logging(){

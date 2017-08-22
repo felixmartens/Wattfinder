@@ -82,8 +82,6 @@
 
     </LinearLayout>
 
-
-</LinearLayout>
     <TextView
         android:text="@string/ifault_report"
         android:layout_width="match_parent"
@@ -93,7 +91,11 @@
         android:textColor="@color/textColorPrimaryInverse"
         android:background="@color/color_fault"
         android:layout_gravity="bottom"
-        android:visibility="gone" />
+        android:visibility="visible"
+        android:drawableLeft="@drawable/ic_report_problem"
+        android:gravity="center" />
+</LinearLayout>
+
 
 
     <RelativeLayout

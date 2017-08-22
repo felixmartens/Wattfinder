@@ -39,6 +39,7 @@ import de.teammartens.android.wattfinder.worker.AnimationWorker;
 import de.teammartens.android.wattfinder.worker.GeoWorks;
 import de.teammartens.android.wattfinder.worker.ImageWorker;
 import de.teammartens.android.wattfinder.worker.LogWorker;
+import de.teammartens.android.wattfinder.worker.NetWorker;
 
 import static android.view.View.GONE;
 
@@ -142,6 +143,15 @@ mContext =this.getContext();
             detailsView.setAlpha(1.0f);
             detailsView.setBackgroundColor(getResources().getColor(R.color.white));
 
+            View v = detailsView.findViewById(R.id.dLoadImages);
+            v.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    initializeWorker();
+                    v.setVisibility(GONE);
+                }
+            });
+
         }
     }
 
@@ -149,6 +159,7 @@ mContext =this.getContext();
         super.onResume();
         AnimationWorker.hide_mapSearch();
         AnimationWorker.hide_fabs();
+
     }
 
 
@@ -306,7 +317,22 @@ mContext =this.getContext();
                                 //ImgIDs[n]=O.getInt("id");
                                 if(LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG,"PhotoId:"+O.getInt("id"));
                             }
-                            initializeWorker();
+                            //Bilder nur über WiFi sofort laden, sonst erst auf Aufforderung
+                            View v = detailsView.findViewById(R.id.dLoadImages);
+                            if(NetWorker.isWiFi()){
+                                initializeWorker();
+                                v.setVisibility(View.GONE);
+                            }
+
+                            else
+                            {
+                                v.setVisibility(View.VISIBLE);
+                                v = detailsView.findViewById(R.id.d_ImageBack);
+                                v.setVisibility(View.VISIBLE);
+                                v = detailsView.findViewById(R.id.dImagePager);
+                                v.setVisibility(View.GONE);
+                            }
+
                             imgPager.setVisibility(View.VISIBLE);
                         }else{
                             imgPager.setVisibility(GONE);
@@ -331,7 +357,7 @@ http://indragni.com/blog/2013/03/31/android-imageswitcher-example/
 
                         KartenActivity.setMapPadding(detailsView);
                     } else {
-                        Toast.makeText(KartenActivity.getInstance(), "Fehler beim Abrufen der Detailinformation. Bitt nochmal versuchen.", Toast.LENGTH_LONG);
+                        Toast.makeText(KartenActivity.getInstance(), "Fehler beim Abrufen der Detailinformation. Bitte nochmal versuchen.", Toast.LENGTH_LONG);
                         if (LogWorker.isVERBOSE())
                             LogWorker.d(LOG_TAG, "ERROR:" + jResponse.getString("status"));
                     }
@@ -384,9 +410,10 @@ http://indragni.com/blog/2013/03/31/android-imageswitcher-example/
 
     public static void initializeWorker() {
 
-
+        View v = detailsView.findViewById(R.id.d_ImageBack);
+        v.setVisibility(GONE);
         detailImages = (ViewPager) detailsView.findViewById(R.id.dImagePager);
-
+        detailImages.setVisibility(View.VISIBLE);
         pager_indicator = (LinearLayout) detailsView.findViewById(R.id.dImgPagerCountDots);
 
         ImageWorker.initImages(false);

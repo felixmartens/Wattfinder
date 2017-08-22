@@ -94,4 +94,8 @@
     <string name="filterKartenaktiv">Karten/Verbünde ausgewählt. \"barrierefrei\" zeigt zusätzliche Ladesäulen an</string>
     <string name="filterkeineKarten">Keine Karten/Verbünde gewählt, d.h. es werden alle angezeigt (wenn nicht \"barrierefrei\" gewählt wird)</string>
     <string name="novalidlocation">Keine gültige GPS-Position gefunden.</string>
+    <string name="f_but_showall">Filter löschen und alles anzeigen</string>
+    <string name="details_loadimages">Bilder laden</string>
+    <string name="filter_but_erweitert">Erweiterte Filtereinstellungen anzeigen</string>
+    <string name="filter_simpletitle">Vereinfachte Filteroptionen</string>
 </resources>

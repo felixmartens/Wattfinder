@@ -8,6 +8,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
+import com.google.android.gms.games.GamesMetadata;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -50,29 +51,28 @@ public class NetWorker {
 
             View v = KartenActivity.getInstance().findViewById(R.id.errorMessage);
             if (v != null) AnimationWorker.slideUp(v, 0);
-       }
-
+        }
 
 
         return isConnected;
     }
 
 
-    public static void handleError(VolleyError error, final int Task ){
+    public static void handleError(VolleyError error, final int Task) {
 
 
-        Toast.makeText(KartenActivity.getInstance(),error.getMessage(),Toast.LENGTH_LONG).show();
-
+        Toast.makeText(KartenActivity.getInstance(), "NetzwerkFehler:" + error.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+        if (LogWorker.isVERBOSE()) LogWorker.e("NETWORKER",error.getLocalizedMessage());
         TextView tv = (TextView) KartenActivity.getInstance().findViewById(R.id.errorTitle);
-        if(tv!=null)tv.setText(getInstance().getString(R.string.error_network_title));
+        if (tv != null) tv.setText(getInstance().getString(R.string.error_network_title));
 
         tv = (TextView) KartenActivity.getInstance().findViewById(R.id.errorText);
-        if(tv!=null)tv.setText(error.getMessage());
+        if (tv != null) tv.setText(error.getLocalizedMessage());
         View v = KartenActivity.getInstance().findViewById(R.id.errorMessage);
         v.setOnClickListener(new View.OnClickListener() {
                                  @Override
                                  public void onClick(View v) {
-                                     if (Task==TASK_FILTER)FilterWorks.lade_filterlisten_API();
+                                     if (Task == TASK_FILTER) FilterWorks.lade_filterlisten_API();
                                      else SaeulenWorks.reloadMarker();
                                  }
                              }
@@ -80,7 +80,7 @@ public class NetWorker {
         );
 
         v = KartenActivity.getInstance().findViewById(R.id.errorMessage);
-        if(v!=null) AnimationWorker.slideUp(v,0);
+        if (v != null) AnimationWorker.slideUp(v, 0);
 
        /* if (RETRY < RETRY_MAX){
             RETRY++;
@@ -105,14 +105,27 @@ public class NetWorker {
         }*/
 
 
-
-
     }
 
     public static int getRETRY() {
         return RETRY;
     }
 
+
+    public static boolean isWiFi(){
+
+
+
+        ConnectivityManager cm =
+                (ConnectivityManager) KartenActivity.getInstance().getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        if(activeNetwork == null) return false;
+
+        return (activeNetwork.getType() == ConnectivityManager.TYPE_WIFI);
+
+
+    }
     public static void resetRETRY() {
         NetWorker.RETRY = 0;
         View v = KartenActivity.getInstance().findViewById(R.id.errorMessage);

@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:id="@+id/dBezeichnung"
-            android:textColor="@color/textColorPrimary"
+            android:textColor="@color/textColorPrimaryInverse"
             android:background="@color/colorPrimary"
             android:padding="6dp" />
 
@@ -37,8 +37,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/scrollView"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
             android:paddingBottom="10dp"
             android:paddingTop="2dp"
             android:layout_marginTop="4dp"
@@ -63,23 +61,27 @@
 
              <RelativeLayout
                  android:layout_width="match_parent"
-                 android:layout_height="240dp"
-                 android:id="@+id/imgPagerParent">
+                 android:layout_height="wrap_content"
+                 android:id="@+id/imgPagerParent"
+                 android:paddingLeft="10dp"
+                 android:paddingRight="10dp">
 
-                <android.support.v4.view.ViewPager
+                 <android.support.v4.view.ViewPager
                     android:id="@+id/dImagePager"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="240dp"
                     android:fitsSystemWindows="true"
-                    tools:listitem="@layout/imgpagerchild" />
+                    tools:listitem="@layout/imgpagerchild"
+                     android:visibility="gone" />
 
-                <RelativeLayout
+                 <RelativeLayout
                     android:id="@+id/dImgPagerIndicator"
                     android:layout_width="match_parent"
                     android:layout_height="55dp"
-                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentBottom="false"
                     android:layout_marginTop="5dp"
-                    android:gravity="center">
+                    android:gravity="center"
+                     android:layout_below="@+id/dImagePager">
 
                 <LinearLayout
                     android:id="@+id/dImgPagerCountDots"
@@ -89,13 +91,35 @@
                     android:gravity="center"
                     android:orientation="horizontal" />
                 </RelativeLayout>
-            </RelativeLayout>
+
+                 <ImageView
+                     android:layout_width="wrap_content"
+                     android:layout_height="wrap_content"
+                     app:srcCompat="@drawable/icon_mono"
+                     android:id="@+id/d_ImageBack"
+                     android:visibility="visible"
+                     android:elevation="1dp"
+                     android:layout_alignParentLeft="true" />
+
+                 <Button
+                     android:text="@string/details_loadimages"
+                     android:layout_width="wrap_content"
+                     android:layout_height="wrap_content"
+                     android:id="@+id/dLoadImages"
+                     android:layout_centerInParent="true"
+                     style="@style/Widget.AppCompat.Button.Small"
+                     android:clickable="false"
+                     android:visibility="gone" />
+
+             </RelativeLayout>
 
 
                 <LinearLayout
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -113,7 +137,9 @@
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:id="@+id/dBetreiber">
+                    android:id="@+id/dBetreiber"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -138,7 +164,9 @@
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:id="@+id/dVerbund">
+                    android:id="@+id/dVerbund"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -161,19 +189,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:id="@+id/dKosten">
-            <View
-                    android:layout_height="1.0dp"
-                    android:layout_width="match_parent"
-                    android:background="@color/divider"
-                    android:paddingEnd="5dp"
-                    android:paddingRight="5dp"
-                    android:id="@+id/vKosten"
-                    android:layout_marginTop="10dp" />
+            <include layout="@layout/divider"
+                android:id="@+id/vKosten"
+                     />
 
                 <LinearLayout
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -195,7 +220,8 @@
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:id="@+id/dKosten_b"
-                    android:paddingLeft="15dp" />
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp" />
 
             </LinearLayout>
 
@@ -204,19 +230,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:id="@+id/dStecker">
-                <View
-                    android:layout_height="1.0dp"
-                    android:layout_width="match_parent"
-                    android:background="@color/divider"
-                    android:paddingEnd="5dp"
-                    android:paddingRight="5dp"
+                <include layout="@layout/divider"
                     android:id="@+id/vStecker"
-                    android:layout_marginTop="10dp" />
-
+                    />
                 <LinearLayout
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" >
+                    android:layout_height="match_parent"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -238,18 +260,14 @@
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:id="@+id/dStecker_b"
-                    android:paddingLeft="15dp" />
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp" />
                 </LinearLayout>
 
 
-                <View
-                    android:layout_height="1.0dp"
-                    android:layout_width="match_parent"
-                    android:background="@color/divider"
-                    android:paddingEnd="5dp"
-                    android:paddingRight="5dp"
+                <include layout="@layout/divider"
                     android:id="@+id/vBooleans"
-                    android:layout_marginTop="10dp" />
+                    />
 
                 <CheckBox
                     android:text="@string/details_verified"
@@ -257,13 +275,16 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/dVerified"
                     android:textSize="14sp"
-                    android:enabled="true"
+                    android:enabled="false"
                     android:textColor="?android:attr/textColorSecondary"
                     android:gravity="center_vertical"
-                    android:checked="true"
                     android:clickable="false"
                     android:editable="false"
-                    android:focusable="false" />
+                    android:focusable="false"
+                    android:textColorLink="?attr/colorPrimary"
+                    android:checked="true"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp" />
 
                 <CheckBox
                     android:text="@string/details_freeparking"
@@ -271,12 +292,14 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/dfreeParking"
                     android:textSize="14sp"
-                    android:enabled="true"
+                    android:enabled="false"
                     android:textColor="?android:attr/textColorSecondary"
                     android:checked="false"
                     android:clickable="false"
                     android:gravity="center_vertical"
-                    android:focusable="false" />
+                    android:focusable="false"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp" />
 
                 <CheckBox
                     android:text="@string/details_freecharging"
@@ -284,12 +307,14 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/dfreeCharging"
                     android:textSize="14sp"
-                    android:enabled="true"
+                    android:enabled="false"
                     android:textColor="?android:attr/textColorSecondary"
                     android:checked="false"
                     android:clickable="false"
                     android:gravity="center_vertical"
-                    android:focusable="false" />
+                    android:focusable="false"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp" />
 
                 <CheckBox
                     android:text="@string/details_barrierfree"
@@ -297,12 +322,14 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/dBarrierefrei"
                     android:textSize="14sp"
-                    android:enabled="true"
+                    android:enabled="false"
                     android:textColor="?android:attr/textColorSecondary"
                     android:checked="false"
                     android:clickable="false"
                     android:gravity="center_vertical"
-                    android:focusable="false" />
+                    android:focusable="false"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp" />
 
 
             <LinearLayout
@@ -310,20 +337,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:id="@+id/dZeiten">
-            <View
-                    android:layout_height="1.0dp"
-                    android:layout_width="match_parent"
-                    android:background="@color/divider"
-                    android:paddingEnd="5dp"
-                    android:paddingRight="5dp"
+                <include layout="@layout/divider"
                     android:id="@+id/vZeiten"
-                    android:layout_marginTop="10dp" />
+                    />
 
                 <LinearLayout
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:minHeight="25dp">
+                    android:minHeight="25dp"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -346,12 +370,14 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/d247"
                     android:textSize="14sp"
-                    android:enabled="true"
+                    android:enabled="false"
                     android:textColor="?android:attr/textColorSecondary"
                     android:checked="false"
                     android:clickable="false"
                     android:gravity="center_vertical"
-                    android:focusable="false" />
+                    android:focusable="false"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp" />
 
 
                 <TextView
@@ -359,14 +385,16 @@
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:id="@+id/dZeiten_z"
-                    android:paddingLeft="15dp" />
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:id="@+id/dZeiten_b"
-                    android:paddingLeft="15dp" />
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp" />
 
                 </LinearLayout>
 
@@ -375,22 +403,18 @@
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:id="@+id/dLadeweile"
-                android:layout_marginRight="50dp">
-            <View
-                    android:layout_height="1.0dp"
-                    android:layout_width="match_parent"
-                    android:background="@color/divider"
-                    android:paddingEnd="5dp"
-                    android:paddingRight="5dp"
+                android:id="@+id/dLadeweile">
+                <include layout="@layout/divider"
                     android:id="@+id/vLadeweile"
-                    android:layout_marginTop="10dp" />
+                    />
 
                 <LinearLayout
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:minHeight="25dp">
+                    android:minHeight="25dp"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -412,30 +436,27 @@
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:id="@+id/dLadeweile_b"
-                    android:paddingLeft="15dp" />
+                    android:paddingLeft="10dp"
+                    android:layout_marginRight="50dp"/>
                 </LinearLayout>
 
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:id="@+id/dHinweise"
-                android:layout_marginRight="50dp">
+                android:id="@+id/dHinweise">
 
-            <View
-                    android:layout_height="1.0dp"
-                    android:layout_width="match_parent"
-                    android:background="@color/divider"
-                    android:paddingEnd="5dp"
-                    android:paddingRight="5dp"
+                <include layout="@layout/divider"
                     android:id="@+id/vHinweise"
-                    android:layout_marginTop="10dp" />
+                    />
 
                 <LinearLayout
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:minHeight="25dp">
+                    android:minHeight="25dp"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -457,7 +478,8 @@
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:id="@+id/dHinweise_b"
-                    android:paddingLeft="15dp" />
+                    android:paddingLeft="10dp"
+                    android:layout_marginRight="50dp"/>
                 </LinearLayout>
 
 
@@ -466,21 +488,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:id="@+id/dPosition"
-                android:layout_marginRight="50dp">
-            <View
-                    android:layout_height="1.0dp"
-                    android:layout_width="match_parent"
-                    android:background="@color/divider"
-                    android:paddingEnd="5dp"
-                    android:paddingRight="5dp"
+               >
+                <include layout="@layout/divider"
                     android:id="@+id/vPosition"
-                    android:layout_marginTop="10dp" />
+                    />
 
                 <LinearLayout
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:minHeight="25dp">
+                    android:minHeight="25dp"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -494,7 +513,8 @@
                         android:layout_height="wrap_content"
                         android:textAppearance="?android:attr/textAppearanceSmall"
                         android:id="@+id/dPosition_c"
-                        android:paddingLeft="10dp" />
+                        android:paddingLeft="10dp"
+                        />
                 </LinearLayout>
 
                 <TextView
@@ -502,53 +522,63 @@
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:id="@+id/dPosition_b"
-                    android:paddingLeft="15dp" />
+                    android:paddingLeft="10dp"
+                    android:layout_marginRight="50dp" />
                 </LinearLayout>
 
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:id="@+id/dStoerung"
-                android:background="@color/color_fault">
+                android:id="@+id/dStoerung">
 
-            <View
-                    android:layout_height="1.0dp"
-                    android:layout_width="match_parent"
-                    android:background="@color/divider"
-                    android:paddingEnd="5dp"
-                    android:paddingRight="5dp"
+                <include layout="@layout/divider"
                     android:id="@+id/vStoerung"
-                    android:layout_marginTop="10dp" />
+                    />
 
                 <LinearLayout
-                    android:orientation="horizontal"
+                    android:orientation="vertical"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:minHeight="25dp">
+                    android:layout_height="match_parent"
+                    android:background="@color/color_fault"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:padding="3dp">
+
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:minHeight="25dp"
+                        android:background="@color/color_fault">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="?android:attr/textAppearanceMedium"
+                            android:id="@+id/dStoerungTitel"
+                            android:text="@string/details_disturbance"
+                            android:drawableLeft="@drawable/ic_report_problem" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="?android:attr/textAppearanceSmall"
+                            android:id="@+id/dStoerung_c"
+                            android:paddingLeft="10dp" />
+                    </LinearLayout>
 
                     <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:id="@+id/dStoerungTitel"
-                        android:text="@string/details_disturbance" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:id="@+id/dStoerung_c"
-                        android:paddingLeft="10dp" />
+                        android:id="@+id/dStoerung_b"
+                        android:layout_marginRight="50dp"
+                        android:background="@color/color_fault" />
+
                 </LinearLayout>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:id="@+id/dStoerung_b"
-                    android:paddingLeft="15dp" />
-                </LinearLayout>
+            </LinearLayout>
 
 
     </LinearLayout>

@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <TextView
+        android:text="@string/filter_simpletitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/filter_simpletitle"
+        android:layout_marginBottom="10sp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/filter_simpletitle"
+        android:layout_marginBottom="50sp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/filter_rest"
+            android:visibility="visible"
+            android:paddingTop="5dp"
+            android:weightSum="1"
+            android:layout_below="@+id/filter_simpletitle"
+            android:layout_margin="10sp"
+            android:elevation="10dp"
+            android:background="@color/colorCard">
+
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/filterKostenlos"
+                android:id="@+id/fKostenlos"
+                android:layout_above="@+id/progressBar"
+                android:layout_toLeftOf="@+id/progressBar"
+                android:layout_toStartOf="@+id/progressBar" />
+
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/filterBarrierefrei"
+                android:id="@+id/fBarrierefrei"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/fBarrierefrei_hint"
+                android:layout_marginBottom="5sp"
+                android:layout_marginLeft="10sp" />
+
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/filterBestaetigt"
+                android:id="@+id/fBestaetigt"
+                android:visibility="gone" />
+
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/filterOhneStoerung"
+                android:id="@+id/fStoerung" />
+
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/filterHotels"
+                android:id="@+id/fHotels"
+                android:visibility="gone" />
+
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/filterRestaurants"
+                android:id="@+id/fRestaurants"
+                android:visibility="gone" />
+
+            <Spinner
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/f_opening"
+                android:spinnerMode="dialog"
+                android:theme="@style/MyLightTheme"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="15dp"
+                android:layout_weight="0.03"
+                style="@style/Widget.AppCompat.Spinner.DropDown"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp" />
+
+
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/filter_simpleplugs"
+            android:layout_margin="10sp"
+            android:background="@color/colorCard"
+            android:elevation="10dp">
+
+            <CheckBox
+                android:text="CheckBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/filtersimple_Schuko" />
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10sp"
+                android:paddingRight="30sp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/fPower_label"
+                    android:text="@string/fpowerlabel"
+                    android:layout_weight="1"
+                    android:textColor="@color/primary_text_default_material_light" />
+
+                <TextView
+                    android:text="0"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/fPowerDisplay"
+                    android:layout_weight="1"
+                    android:gravity="right"
+                    android:textColor="@color/primary_text_default_material_light"
+                    android:textSize="@dimen/abc_text_size_medium_material" />
+            </LinearLayout>
+
+            <SeekBar
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:max="4"
+                android:progress="2"
+                android:id="@+id/fPowerBar"
+                android:layout_marginRight="50sp"
+                android:layout_marginLeft="50sp"
+                android:layout_marginTop="10sp"
+                style="@style/Widget.AppCompat.SeekBar" />
+        </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+    <Button
+        android:text="@string/filter_but_erweitert"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/filter_buttonerweitert"
+        style="@style/Widget.AppCompat.Button.Small"
+        android:textSize="12sp"
+        android:layout_alignParentRight="false"
+        android:layout_alignParentBottom="true" />
+
+
+</RelativeLayout>

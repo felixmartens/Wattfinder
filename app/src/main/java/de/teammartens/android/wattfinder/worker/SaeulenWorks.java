@@ -78,19 +78,18 @@ public class SaeulenWorks {
     private static String RQ_URL = "";
     private static final String RQ_TAG = "RQ_Marker";
     private static Toast T;
+    private static final int bounds_x = 16;
+    private static final int bounds_y = 8;
 
 
 
 
     public static void reloadMarker(){
         //nur wenn Map auch sichtbar ist:
-        Fragment f =  KartenActivity.fragmentManager.findFragmentById(R.id.map);
-        Configuration config = KartenActivity.getInstance().getResources().getConfiguration();
-        if (config.orientation != config.ORIENTATION_PORTRAIT||!AnimationWorker.isFilterVisibile()){
-                   if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG, "LadeMarker");
+        if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG, "LadeMarker");
              LatLngBounds llB = KartenActivity.mMap.getProjection().getVisibleRegion().latLngBounds;
              ladeMarker(llB.southwest.latitude,llB.southwest.longitude,llB.northeast.latitude,llB.northeast.longitude, "reloadMarker",0);
-        }
+
     }
 
 
@@ -121,12 +120,15 @@ public class SaeulenWorks {
         }
 
         if(GeoWorks.getMapZoom()<GeoWorks.MAX_ZOOM ||
-                (KartenActivity.layoutStyle()!="land" && (nwlat - swlat)>8 || (nwlng - swlng)>4 )
-                || (KartenActivity.layoutStyle()=="land" && ((nwlat - swlat)>4 || (nwlng - swlng)>8))
+                (KartenActivity.layoutStyle()!="land" && (nwlat - swlat)>bounds_x || (nwlng - swlng)>bounds_y )
+                || (KartenActivity.layoutStyle()=="land" && ((nwlat - swlat)>bounds_y || (nwlng - swlng)>bounds_x))
                 )
         {
 
-            if (GeoWorks.getMapZoom()>0 && !AnimationWorker.startupScreen)T.makeText(KartenActivity.getInstance(), KartenActivity.getInstance().getString(R.string.mapviewlarge),Toast.LENGTH_LONG).show();
+            if (GeoWorks.getMapZoom()>0 && !AnimationWorker.startupScreen)
+            {   if(T != null) T.cancel();
+                T.makeText(KartenActivity.getInstance(), KartenActivity.getInstance().getString(R.string.mapviewlarge),Toast.LENGTH_SHORT).show();
+            }
             if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG, "Suche Säulen abgebrochen. Kartenausschnitt zu groß. "+GeoWorks.getMapZoom()+"  "+nwlat+"/"+nwlng+"  "+swlat+"/"+swlng);
 
             return;
@@ -200,7 +202,7 @@ public class SaeulenWorks {
 
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    LogWorker.d(LOG_TAG, error.getMessage());
+                    LogWorker.e(LOG_TAG, error.getLocalizedMessage());
                     RQ_PENDING = false;
                 }
             });

@@ -9,7 +9,7 @@
     <color name="blau">#ff1a49cd</color>
     <color name="rand">#7D8FB2</color>
     <color name="transparent">#00ffffff</color>
-    <color name="colorPrimary">#42a5f5</color>
+    <color name="colorPrimary">#849db2</color>
     <color name="colorPrimaryDark">#092146</color>
     <color name="textColorPrimary">#ffffff</color>
 
@@ -23,5 +23,6 @@
     <color name="color_fault">#fded2d</color>
     <color name="color_error">#bf4141</color>
     <color name="colorTextsec">#14328a</color>
+    <color name="colorCard">#eeeeee</color>
 
 </resources>

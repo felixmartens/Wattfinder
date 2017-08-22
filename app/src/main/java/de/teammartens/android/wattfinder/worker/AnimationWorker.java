@@ -55,7 +55,7 @@ public class AnimationWorker {
 
             }
 
-
+            hide_fabs();
             // slideUp(getInstance().findViewById(R.id.fab_filter), 0);
             // slideUp(getInstance().findViewById(R.id.fab_mylocation), 0);
 
@@ -75,7 +75,9 @@ public class AnimationWorker {
             //slideUp(getInstance().findViewById(R.id.fab_filter), 200);
             //slideUp(getInstance().findViewById(R.id.fab_mylocation), 200);
             KartenActivity.setMapPaddingY(0);
+            show_fabs();
         }
+
         //getInstance().findViewById(R.id.fab_filter).setVisibility(View.VISIBLE);
         //getInstance().findViewById(R.id.fab_mylocation).setVisibility(View.VISIBLE);
         //getInstance().findViewById(R.id.fab_directions).setVisibility(View.GONE);
@@ -214,7 +216,9 @@ public class AnimationWorker {
 
     public static void hide_myloc(){
         View fabloc = getInstance().findViewById(R.id.fab_mylocation);
-        fadeOut(fabloc,0);
+        //erstmal deaktiviert um genaueres testen zuzulassen
+
+        //fadeOut(fabloc,0);
 
     }
 
@@ -224,32 +228,33 @@ public class AnimationWorker {
         fadeIn(fabloc,0,1.0f);
     }
     public static void show_map(){
-        if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG,"Show Map");
-        //if(fragmentManager==null)fragmentManager=getFragmentManager();
-        if (isDetailsVisibile())
-            fragmentManager.popBackStack();
+        if (KartenActivity.isMapReady()) {
+            if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG, "Show Map");
+            //if(fragmentManager==null)fragmentManager=getFragmentManager();
+            if (isDetailsVisibile())
+                fragmentManager.popBackStack();
 
 
-        if (isFilterVisibile())
-            fragmentManager.popBackStack();
+            if (isFilterVisibile())
+                fragmentManager.popBackStack();
 
 
-        hide_info();
-        slideUp(getInstance().findViewById(R.id.fab_filter), 200);
-        slideUp(getInstance().findViewById(R.id.fab_mylocation), 200);
-        show_debug();
-        show_fabs();
-        hide_mapSearch();
-        KartenActivity.mapFragment.getView().requestFocus();
-        //slideDown(getInstance().findViewById(R.id.fab_directions), 500);
-        //slideUp(getInstance().findViewById(R.id.fab_filter), 200);
-        //slideUp(getInstance().findViewById(R.id.fab_mylocation), 200);
-        //findViewById(R.id.fab_filter).requestFocus();
-        //GeoWorks.animateClick(false);
-        KartenActivity.setMapPaddingY(0);
-        //GeoWorks.movemapPosition("showMap",false);
-        KartenActivity.BackstackEXIT=false;
-
+            hide_info();
+            slideUp(getInstance().findViewById(R.id.fab_filter), 200);
+            slideUp(getInstance().findViewById(R.id.fab_mylocation), 200);
+            show_debug();
+            show_fabs();
+            hide_mapSearch();
+            KartenActivity.mapFragment.getView().requestFocus();
+            //slideDown(getInstance().findViewById(R.id.fab_directions), 500);
+            //slideUp(getInstance().findViewById(R.id.fab_filter), 200);
+            //slideUp(getInstance().findViewById(R.id.fab_mylocation), 200);
+            //findViewById(R.id.fab_filter).requestFocus();
+            //GeoWorks.animateClick(false);
+            KartenActivity.setMapPaddingY(0);
+            //GeoWorks.movemapPosition("showMap",false);
+            KartenActivity.BackstackEXIT = false;
+        }
     }
 
 
