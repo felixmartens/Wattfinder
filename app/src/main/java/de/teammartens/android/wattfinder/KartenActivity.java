@@ -1,11 +1,10 @@
 package de.teammartens.android.wattfinder;
 
 import android.Manifest;
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Dialog;
+import android.app.DialogFragment;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -17,29 +16,17 @@ import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.os.Build;
-import android.provider.SearchRecentSuggestions;
-import android.app.DialogFragment;
-import android.provider.Settings;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.app.FragmentActivity;
-import android.app.ActionBar;
-
 import android.os.Bundle;
-
+import android.provider.SearchRecentSuggestions;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -51,28 +38,20 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.GoogleMap;
-
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 
-
-import de.teammartens.android.wattfinder.fragments.DetailsFragment;
-import de.teammartens.android.wattfinder.fragments.FilterFragment;
-import de.teammartens.android.wattfinder.fragments.ImageZoomFragment;
-import de.teammartens.android.wattfinder.fragments.MiniInfoFragment;
 import de.teammartens.android.wattfinder.model.ArrayAdapterSearchView;
 import de.teammartens.android.wattfinder.model.rSuggestionsProvider;
+import de.teammartens.android.wattfinder.worker.AnimationWorker;
 import de.teammartens.android.wattfinder.worker.ExceptionWorker;
 import de.teammartens.android.wattfinder.worker.FilterWorks;
 import de.teammartens.android.wattfinder.worker.GeoWorks;
 import de.teammartens.android.wattfinder.worker.LogWorker;
 import de.teammartens.android.wattfinder.worker.NetWorker;
 import de.teammartens.android.wattfinder.worker.SaeulenWorks;
-import de.teammartens.android.wattfinder.worker.AnimationWorker;
-
-import static de.teammartens.android.wattfinder.worker.FilterWorks.filter_initialized;
 
 
 public class KartenActivity extends FragmentActivity
@@ -726,30 +705,35 @@ private void setupGoogleAPI(){
     }
 
     public static void setMapPaddingY(Integer h) {
-        mMap.setPadding(0,0,0,h);
-        if(LogWorker.isVERBOSE())LogWorker.d(LOG_TAG,"PaddingY:"+h);
-        if (h==0){
+        if(mMap!=null) {
+            mMap.setPadding(0, 0, 0, h);
+            if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG, "PaddingY:" + h);
+            if (h == 0) {
 
-            //CameraUpdate CU = CameraUpdateFactory.newLatLngZoom(VersatzBerechnen(Geo), zoom);
+                //CameraUpdate CU = CameraUpdateFactory.newLatLngZoom(VersatzBerechnen(Geo), zoom);
+            }
+            MapPaddingY = h;
         }
-        MapPaddingY = h;
     }
     public static void setMapPaddingX(Integer w) {
-        mMap.setPadding(0,0,w,0);
-        MapPaddingX = w;
-        if(LogWorker.isVERBOSE())LogWorker.d(LOG_TAG,"PaddingX:"+w);
+        if(mMap!=null) {
+            mMap.setPadding(0, 0, w, 0);
+            MapPaddingX = w;
+            if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG, "PaddingX:" + w);
+        }
     }
 
 
     public static void setMapPadding(View v) {
-        Configuration config = KartenActivity.getInstance().getResources().getConfiguration();
-        if (config.orientation == config.ORIENTATION_PORTRAIT) {
-            mMap.setPadding(0, 0, 0, v.getHeight());
-            if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG, "PaddingY:" + v.getHeight());
-        }else
-        {
-            mMap.setPadding(0, 0, v.getWidth(),0);
-            if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG, "PaddingX:" + v.getWidth());
+        if(mMap!=null) {
+            Configuration config = KartenActivity.getInstance().getResources().getConfiguration();
+            if (config.orientation == config.ORIENTATION_PORTRAIT) {
+                mMap.setPadding(0, 0, 0, v.getHeight());
+                if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG, "PaddingY:" + v.getHeight());
+            } else {
+                mMap.setPadding(0, 0, v.getWidth(), 0);
+                if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG, "PaddingX:" + v.getWidth());
+            }
         }
     }
 
