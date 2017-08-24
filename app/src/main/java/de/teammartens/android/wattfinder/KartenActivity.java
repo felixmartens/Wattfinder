@@ -1,11 +1,8 @@
 package de.teammartens.android.wattfinder;
 
 import android.Manifest;
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-
+import android.app.ActionBar;
 import android.app.Activity;
-import android.app.Dialog;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -17,30 +14,16 @@ import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.os.Build;
-import android.provider.SearchRecentSuggestions;
-import android.app.DialogFragment;
-import android.provider.Settings;
-import android.support.v4.app.ActivityCompat; //min API 23
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-//import android.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.app.FragmentActivity;
-import android.app.ActionBar;
-
 import android.os.Bundle;
-
+import android.provider.SearchRecentSuggestions;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -49,28 +32,25 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.Volley;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.GoogleMap;
-
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 
-
 import de.teammartens.android.wattfinder.model.ArrayAdapterSearchView;
 import de.teammartens.android.wattfinder.model.rSuggestionsProvider;
+import de.teammartens.android.wattfinder.worker.AnimationWorker;
 import de.teammartens.android.wattfinder.worker.ExceptionWorker;
 import de.teammartens.android.wattfinder.worker.FilterWorks;
 import de.teammartens.android.wattfinder.worker.GeoWorks;
 import de.teammartens.android.wattfinder.worker.LogWorker;
 import de.teammartens.android.wattfinder.worker.NetWorker;
 import de.teammartens.android.wattfinder.worker.SaeulenWorks;
-import de.teammartens.android.wattfinder.worker.AnimationWorker;
 
-import static de.teammartens.android.wattfinder.worker.FilterWorks.filter_initialized;
+//import android.app.FragmentManager;
 
 
 public class KartenActivity extends FragmentActivity
@@ -123,25 +103,186 @@ public static ActionBar actionBar;
     private static KartenActivity sInstance;
 
 
-    // Define a DialogFragment that displays the error dialog
-    public static class ErrorDialogFragment extends DialogFragment {
-        // Global field to contain the error dialog
-        private Dialog mDialog;
-        // Default constructor. Sets the dialog field to null
-        public ErrorDialogFragment() {
-            super();
-            mDialog = null;
+
+
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+
+        super.onCreate(savedInstanceState);
+        //getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
+        sInstance = this;
+
+        setContentView(R.layout.mainlayout);
+        sharedPref = getPreferences(Context.MODE_PRIVATE);
+        fragmentManager = getSupportFragmentManager();
+
+        //Aktiviere Handling für UncaughtException
+        if (LogWorker.DEFAULT_DEBUGGING) new ExceptionWorker(KartenActivity.this);
+
+        mapFragment = (SupportMapFragment) fragmentManager.findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
+
+
+
+        // Get the intent, verify the action and get the query
+        Intent intent = getIntent();
+        if (intent != null && Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            String data = intent.getDataString();
+            if ( LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG,"Intent Data: -"+data+"-");
+            String query = intent.getStringExtra(SearchManager.QUERY);
+            if ( LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG,"Intent Query: -"+query+"-");
+            if (data == null || !data.equals("Suggestion")){
+                //erstmal in Recents speichern
+                SearchRecentSuggestions suggestions = new SearchRecentSuggestions(this,
+                        rSuggestionsProvider.AUTHORITY, rSuggestionsProvider.MODE);
+                suggestions.saveRecentQuery(query, null);
+
+
+                GeoWorks.starteSuche(query);}
+            else{
+                GeoWorks.starteSucheSuggested(query);
+            }
+        }else if (!FilterWorks.filter_initialized())AnimationWorker.showStartup();
+        //Preload Saäulen wenn gute Internetverbindung
+        //SaeulenWorks.ladeMarker(46.727812939969645,6.26220703125,54.89177403135015,14.65576171875); //Ganz Deutschland
+
+
+        //}
+
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        LogWorker.init_logging();
+
+        lineSeparator =System.getProperty("line.separator");
+
+    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+
+        FilterWorks.filter_speichern();
+
+        if (mMap!=null) {
+            if (sharedPref == null)
+                sharedPref = getPreferences(Context.MODE_PRIVATE);
+            SharedPreferences.Editor e = sharedPref.edit();
+            CameraPosition cp = mMap.getCameraPosition();
+            if (GeoWorks.validLatLng(cp.target) && cp.zoom > GeoWorks.MAX_ZOOM) {
+                e.putFloat(sP_Latitude, new Float(cp.target.latitude));
+                e.putFloat(sP_Longitude, new Float(cp.target.longitude));
+                e.putFloat(sP_ZoomLevel, cp.zoom);
+                e.putLong(sP_Timestamp, System.currentTimeMillis());
+                e.putInt(sP_APIRQCount, API_RQ_Count);
+                e.apply();
+                LogWorker.d("WattfinderInternal", "Pause");
+                LogWorker.d("WattfinderInternal", "GeoWorks Lat: " + GeoWorks.getMapPosition().latitude + " Lng: " + GeoWorks.getMapPosition().longitude + " Z: " + GeoWorks.getMapZoom() + "");
+                LogWorker.d("WattfinderInternal", "Lat: " + new Float(cp.target.latitude) + " Lng: " + new Float(cp.target.longitude) + " Z: " + cp.zoom + " saved");
+            }
+
         }
-        // Set the dialog to display
-        public void setDialog(Dialog dialog) {
-            mDialog = dialog;
+        LogWorker.sendLog();
+
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        sInstance = this;
+
+        AnimationWorker.startupScreen=true;
+
+        actionBar = getActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayShowTitleEnabled(false);
+            actionBar.setDisplayShowHomeEnabled(false);
+            actionBar.hide();
         }
-        // Return a Dialog to the DialogFragment.
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            return mDialog;
+        prepareSearch();
+
+
+        API_RQ_Count = sharedPref.getInt(sP_APIRQCount,0);
+        if(LogWorker.isVERBOSE())LogWorker.d(LOG_TAG,"APIRQCOUNT:"+getAPI_RQ_Count());
+
+        skipEula = sharedPref.getBoolean("skipEula",false);
+
+        NetWorker.resetRETRY();
+
+        fragmentManager = getSupportFragmentManager();
+        if (PlayServiceStatus == ConnectionResult.SUCCESS) {
+
+            setupLocationListener();
+        }
+
+        //TODO
+        if (!NetWorker.networkavailable()){
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage(getResources().getString(R.string.nonetworkavailable))
+                    .setCancelable(false)
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            finish();}
+                    });
+            AlertDialog alert = builder.create();
+            alert.show();
+        }
+
+
+    }
+
+
+
+
+
+
+    /*
+     * Called when the Activity is no longer visible.
+     */
+    @Override
+    protected void onStop() {
+        // Disconnecting the client invalidates it.
+        if (mLocationManager != null)
+            removeLocationListener();
+
+        super.onStop();
+        //setMapReady(false);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(fragmentManager.getBackStackEntryCount() != 0) {
+
+// TODO: Hier muss unbedingt nachgearbeitet werden. Momentan funktioniert die Erkennung ob Map visible ist nur ab Android15
+
+            fragmentManager.popBackStack();
+
+            SupportMapFragment f =  ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map));
+            if((android.os.Build.VERSION.SDK_INT>14 && f.getUserVisibleHint() )||android.os.Build.VERSION.SDK_INT<15){
+                if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG, "BackStacked to Map");
+                SaeulenWorks.reloadMarker();
+
+                GeoWorks.movemapPosition("showMapBackPress");
+                AnimationWorker.show_map();
+                //show_info();
+            }
+        } else {
+            // Damit muss Back zweimal gedrückt werden um die App zu verlassen.
+            if(BackstackEXIT) {
+                if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG, "BackStacked to EXIT");
+                super.onBackPressed();
+            }else{
+                Toast.makeText(this,this.getString(R.string.Backstackexit), Toast.LENGTH_LONG).show();
+                BackstackEXIT=true;
+            }
         }
     }
+
+
     //Mein eigener Location Listener
     private  class myLocationListener implements LocationListener {
 
@@ -182,6 +323,61 @@ public static ActionBar actionBar;
         }
     }
     public LocationListener  mLocationListener = new myLocationListener();
+
+    private void removeLocationListener(){
+        if (ContextCompat.checkSelfPermission(KartenActivity.getInstance(),
+                Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            if (LogWorker.isVERBOSE())LogWorker.d(LOG_TAG,"requestLocation Permission REMOVE");
+            ActivityCompat.requestPermissions(KartenActivity.getInstance(),
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    MY_PERMISSIONS_REMOVE_LOCATION);
+        } else {
+            mLocationManager.removeUpdates(mLocationListener);
+        }
+    }
+    public void setupLocationListener(){
+
+
+        if (ContextCompat.checkSelfPermission(KartenActivity.getInstance(),
+                Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            if (!AnimationWorker.startupScreen && !permissiondenied) {
+                if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG, "requestLocation Permission");
+                ActivityCompat.requestPermissions(KartenActivity.getInstance(),
+                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                        MY_PERMISSIONS_REQUEST_LOCATION);
+            }
+        } else {
+            mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+
+            Criteria C = new Criteria();
+            C.setAccuracy(Criteria.ACCURACY_FINE);
+            C.setPowerRequirement(Criteria.POWER_MEDIUM);
+            C.setSpeedRequired(false);
+            C.setBearingRequired(false);
+            Location mLocation = mLocationManager.getLastKnownLocation(mLocationManager.getBestProvider(C,false));
+
+
+            // Getting Current Location as of GPS
+
+
+            if(mLocation!=null){
+                GeoWorks.setmyPosition(Loc2LatLng(mLocation));
+                if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG, "getMyPosition "+(GeoWorks.getmyPosition() == null?"null":"notnull")+"CUSTOMMapView:"+GeoWorks.CUSTOM_MAPVIEW );
+            }
+
+            if(mLocation!=null && GeoWorks.validLatLng(Loc2LatLng(mLocation)))
+                AnimationWorker.show_myloc();
+            else
+                AnimationWorker.hide_myloc();
+
+            mLocationManager.removeUpdates(mLocationListener);
+            mLocationManager.requestLocationUpdates(mLocationManager.getBestProvider(C,true), 10000, 100, mLocationListener);
+        }
+    }
 
     /*
  * Handle results returned to the FragmentActivity
@@ -296,64 +492,22 @@ public static ActionBar actionBar;
     }
 
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-
-        super.onCreate(savedInstanceState);
-        //getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
-        sInstance = this;
-
-        setContentView(R.layout.mainlayout);
-        sharedPref = getPreferences(Context.MODE_PRIVATE);
-        fragmentManager = getSupportFragmentManager();
-
-        //Aktiviere Handling für UncaughtException
-        if (LogWorker.DEFAULT_DEBUGGING) new ExceptionWorker(KartenActivity.this);
-
-        mapFragment = (SupportMapFragment) fragmentManager.findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
-
-            setupGoogleAPI();
-
-            // Get the intent, verify the action and get the query
-            Intent intent = getIntent();
-            if (intent != null && Intent.ACTION_SEARCH.equals(intent.getAction())) {
-                String data = intent.getDataString();
-                if ( LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG,"Intent Data: -"+data+"-");
-                String query = intent.getStringExtra(SearchManager.QUERY);
-                if ( LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG,"Intent Query: -"+query+"-");
-                if (data == null || !data.equals("Suggestion")){
-                //erstmal in Recents speichern
-                SearchRecentSuggestions suggestions = new SearchRecentSuggestions(this,
-                        rSuggestionsProvider.AUTHORITY, rSuggestionsProvider.MODE);
-                suggestions.saveRecentQuery(query, null);
 
 
-                GeoWorks.starteSuche(query);}
-                else{
-                    GeoWorks.starteSucheSuggested(query);
-                }
-            }else if (!FilterWorks.filter_initialized())AnimationWorker.showStartup();
-            //Preload Saäulen wenn gute Internetverbindung
-            //SaeulenWorks.ladeMarker(46.727812939969645,6.26220703125,54.89177403135015,14.65576171875); //Ganz Deutschland
+public GoogleApiClient setupGoogleAPI(){
 
-
-        //}
-
-
-    }
-
-private void setupGoogleAPI(){
-
+        if ((mGoogleApiClient != null && mGoogleApiClient.isConnected()))
+            return mGoogleApiClient;
 
         // Getting Google Play availability status
         PlayServiceStatus = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(getBaseContext());
 
         // Showing status
         if (PlayServiceStatus != ConnectionResult.SUCCESS) { // Google Play Services are not available
-            LogWorker.e(LOG_TAG, "PlayServices not connected");
+            LogWorker.e(LOG_TAG, "PlayServices not connected:"+GoogleApiAvailability.getInstance().getErrorString(PlayServiceStatus));
             Integer requestCode = CONNECTION_FAILURE_RESOLUTION_REQUEST;
-            Dialog dialog = GoogleApiAvailability.getInstance().getErrorDialog(this, PlayServiceStatus, requestCode, new DialogInterface.OnCancelListener() {
+
+            /*Dialog dialog = GoogleApiAvailability.getInstance().getErrorDialog(this, PlayServiceStatus, requestCode, new DialogInterface.OnCancelListener() {
                 @Override
                 public void onCancel(DialogInterface dialog) {
                     LogWorker.e(LOG_TAG, "onConnectionFailed: ConnectionResult.getErrorCode() = "
@@ -362,25 +516,21 @@ private void setupGoogleAPI(){
                    Toast.makeText(KartenActivity.getInstance(), s ,Toast.LENGTH_SHORT).show();
 
                 }
-            });
+            });*/
             //dialog.show();
+
 
         } else { // Google Play Services are available
 
 
-            if (mapFragment != null) {
-                //das sollte einen Crash verursachen
-               //mapFragment = null;
-
-                mapFragment.getView().bringToFront();
                 mGoogleApiClient = new GoogleApiClient.Builder(this)
                         .enableAutoManage(this, 0, this)
                         .addApi(Places.GEO_DATA_API)
                         .build();
-            }
+                return mGoogleApiClient;
+
         }
-
-
+return null;
 }
 
     public static boolean GoogleAPIConnected(){
@@ -388,133 +538,8 @@ private void setupGoogleAPI(){
         return (mGoogleApiClient != null && mGoogleApiClient.isConnected());
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        LogWorker.init_logging();
-
-        lineSeparator =System.getProperty("line.separator");
-
-    }
-    @Override
-    protected void onPause() {
-        super.onPause();
 
 
-        FilterWorks.filter_speichern();
-
-        if (mMap!=null) {
-            if (sharedPref == null)
-                sharedPref = getPreferences(Context.MODE_PRIVATE);
-            SharedPreferences.Editor e = sharedPref.edit();
-            CameraPosition cp = mMap.getCameraPosition();
-            if (GeoWorks.validLatLng(cp.target) && cp.zoom > GeoWorks.MAX_ZOOM) {
-                e.putFloat(sP_Latitude, new Float(cp.target.latitude));
-                e.putFloat(sP_Longitude, new Float(cp.target.longitude));
-                e.putFloat(sP_ZoomLevel, cp.zoom);
-                e.putLong(sP_Timestamp, System.currentTimeMillis());
-                e.putInt(sP_APIRQCount, API_RQ_Count);
-                e.apply();
-                LogWorker.d("WattfinderInternal", "Pause");
-                LogWorker.d("WattfinderInternal", "GeoWorks Lat: " + GeoWorks.getMapPosition().latitude + " Lng: " + GeoWorks.getMapPosition().longitude + " Z: " + GeoWorks.getMapZoom() + "");
-                LogWorker.d("WattfinderInternal", "Lat: " + new Float(cp.target.latitude) + " Lng: " + new Float(cp.target.longitude) + " Z: " + cp.zoom + " saved");
-            }
-
-        }
-        LogWorker.sendLog();
-
-    }
-    @Override
-    protected void onResume() {
-        super.onResume();
-        sInstance = this;
-
-        AnimationWorker.startupScreen=true;
-
-        actionBar = getActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayShowTitleEnabled(false);
-            actionBar.setDisplayShowHomeEnabled(false);
-            actionBar.hide();
-        }
-        prepareSearch();
-
-
-        API_RQ_Count = sharedPref.getInt(sP_APIRQCount,0);
-        if(LogWorker.isVERBOSE())LogWorker.d(LOG_TAG,"APIRQCOUNT:"+getAPI_RQ_Count());
-
-        skipEula = sharedPref.getBoolean("skipEula",false);
-
-        NetWorker.resetRETRY();
-
-        fragmentManager = getSupportFragmentManager();
-        if (PlayServiceStatus == ConnectionResult.SUCCESS) {
-
-            setupLocationListener();
-        }
-
-        //TODO
-        if (!NetWorker.networkavailable()){
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setMessage(getResources().getString(R.string.nonetworkavailable))
-                    .setCancelable(false)
-                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                        finish();}
-                    });
-            AlertDialog alert = builder.create();
-            alert.show();
-        }
-
-
-    }
-
-
-
-
-
-
-        /*
-         * Called when the Activity is no longer visible.
-         */
-    @Override
-    protected void onStop() {
-        // Disconnecting the client invalidates it.
-            if (mLocationManager != null)
-                removeLocationListener();
-
-        super.onStop();
-        //setMapReady(false);
-    }
-
-    @Override
-    public void onBackPressed() {
-        if(fragmentManager.getBackStackEntryCount() != 0) {
-
-// TODO: Hier muss unbedingt nachgearbeitet werden. Momentan funktioniert die Erkennung ob Map visible ist nur ab Android15
-
-            fragmentManager.popBackStack();
-
-            SupportMapFragment f =  ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map));
-            if((android.os.Build.VERSION.SDK_INT>14 && f.getUserVisibleHint() )||android.os.Build.VERSION.SDK_INT<15){
-                if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG, "BackStacked to Map");
-                SaeulenWorks.reloadMarker();
-
-                GeoWorks.movemapPosition("showMapBackPress");
-                AnimationWorker.show_map();
-                //show_info();
-            }
-        } else {
-            // Damit muss Back zweimal gedrückt werden um die App zu verlassen.
-            if(BackstackEXIT) {
-                if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG, "BackStacked to EXIT");
-                super.onBackPressed();
-            }else{
-                Toast.makeText(this,this.getString(R.string.Backstackexit), Toast.LENGTH_LONG).show();
-                BackstackEXIT=true;
-            }
-        }
-    }
 
 
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults){
@@ -528,60 +553,6 @@ private void setupGoogleAPI(){
         if (requestCode==MY_PERMISSIONS_REMOVE_LOCATION&&grantResults[0]==PackageManager.PERMISSION_GRANTED) removeLocationListener();
     }
 
-    private void removeLocationListener(){
-        if (ContextCompat.checkSelfPermission(KartenActivity.getInstance(),
-                Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-            if (LogWorker.isVERBOSE())LogWorker.d(LOG_TAG,"requestLocation Permission REMOVE");
-            ActivityCompat.requestPermissions(KartenActivity.getInstance(),
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                    MY_PERMISSIONS_REMOVE_LOCATION);
-        } else {
-            mLocationManager.removeUpdates(mLocationListener);
-        }
-    }
-    public void setupLocationListener(){
-
-
-        if (ContextCompat.checkSelfPermission(KartenActivity.getInstance(),
-                Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-
-            if (!AnimationWorker.startupScreen && !permissiondenied) {
-                if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG, "requestLocation Permission");
-                ActivityCompat.requestPermissions(KartenActivity.getInstance(),
-                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                        MY_PERMISSIONS_REQUEST_LOCATION);
-            }
-        } else {
-            mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-
-
-            Criteria C = new Criteria();
-                C.setAccuracy(Criteria.ACCURACY_FINE);
-                C.setPowerRequirement(Criteria.POWER_MEDIUM);
-                C.setSpeedRequired(false);
-                C.setBearingRequired(false);
-            Location mLocation = mLocationManager.getLastKnownLocation(mLocationManager.getBestProvider(C,false));
-
-
-            // Getting Current Location as of GPS
-
-
-            if(mLocation!=null){
-                GeoWorks.setmyPosition(Loc2LatLng(mLocation));
-            if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG, "getMyPosition "+(GeoWorks.getmyPosition() == null?"null":"notnull")+"CUSTOMMapView:"+GeoWorks.CUSTOM_MAPVIEW );
-             }
-
-            if(mLocation!=null && GeoWorks.validLatLng(Loc2LatLng(mLocation)))
-                AnimationWorker.show_myloc();
-            else
-                AnimationWorker.hide_myloc();
-
-            mLocationManager.removeUpdates(mLocationListener);
-            mLocationManager.requestLocationUpdates(mLocationManager.getBestProvider(C,true), 10000, 100, mLocationListener);
-        }
-    }
 
 
 
@@ -678,6 +649,15 @@ private void setupGoogleAPI(){
     }
 
 
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+        LogWorker.e(LOG_TAG, "onConnectionFailed: ConnectionResult.getErrorCode() = "
+                + connectionResult.getErrorCode());
+// TODO(Developer): Check error code and notify the user of error state and resolution.
+        Toast.makeText(this,
+                "Could not connect to Google API Client: Error " + connectionResult.getErrorCode(),
+                Toast.LENGTH_SHORT).show();
+    }
 
 
 

@@ -1,14 +1,11 @@
 package de.teammartens.android.wattfinder.worker;
 
 import android.content.Context;
-import android.content.res.Configuration;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.SystemClock;
-import android.support.v4.app.Fragment;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.BounceInterpolator;
 import android.view.animation.Interpolator;
@@ -27,7 +24,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.VisibleRegion;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
@@ -36,7 +32,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -202,7 +197,7 @@ public class SaeulenWorks {
 
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    LogWorker.e(LOG_TAG, error.getLocalizedMessage());
+                    NetWorker.handleError(error,NetWorker.TASK_SAEULEN);
                     RQ_PENDING = false;
                 }
             });
@@ -400,7 +395,7 @@ public class SaeulenWorks {
         });
         // Point the map's listeners at the listeners implemented by the cluster
         // manager.
-        KartenActivity.mMap.setOnCameraChangeListener(mClusterManager);
+        KartenActivity.mMap.setOnCameraIdleListener(mClusterManager);
         KartenActivity.mMap.setOnMarkerClickListener(mClusterManager);
         mClusterManager.setRenderer(new meinClusterRenderer(KartenActivity.getInstance(),KartenActivity.mMap,mClusterManager));
 
@@ -454,12 +449,15 @@ public class SaeulenWorks {
 
 
 
-    private static class meinClusterRenderer extends DefaultClusterRenderer<Saeule> implements GoogleMap.OnCameraChangeListener {
+    private static class meinClusterRenderer extends DefaultClusterRenderer<Saeule> implements GoogleMap.OnCameraIdleListener {
+
+        GoogleMap mMap;
 
         public meinClusterRenderer(Context context, GoogleMap map,
                                    ClusterManager<Saeule> clusterManager) {
-            super(context, map, clusterManager);
 
+            super(context, map, clusterManager);
+            mMap=map;
         }
 
         @Override
@@ -481,8 +479,8 @@ public class SaeulenWorks {
 
 
         @Override
-        public void onCameraChange(CameraPosition cameraPosition) {
-
+        public void onCameraIdle() {
+            CameraPosition cameraPosition = mMap.getCameraPosition();
             LatLng mLatLng = cameraPosition.target;
             if (LogWorker.isVERBOSE())
                 LogWorker.d(LOG_TAG, "onCameraChange: Versetzt:" + GeoWorks.isPositionversetzt() + " Detailsvisible:" + AnimationWorker.isDetailsVisibile() + " MapZoom" + GeoWorks.getMapZoom() + " cpZoom" + cameraPosition.zoom);

@@ -10,9 +10,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 
-//import org.acra.ACRA;
-//import org.acra.ErrorReporter;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -32,6 +29,9 @@ import de.teammartens.android.wattfinder.KartenActivity;
 import de.teammartens.android.wattfinder.R;
 import de.teammartens.android.wattfinder.model.FilterEintrag;
 import de.teammartens.android.wattfinder.model.PresetEintrag;
+
+//import org.acra.ACRA;
+//import org.acra.ErrorReporter;
 
 
 

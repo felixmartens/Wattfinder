@@ -1,6 +1,5 @@
 package de.teammartens.android.wattfinder.worker;
 
-import android.content.res.Configuration;
 import android.location.Location;
 
 import com.android.volley.Response;
@@ -15,15 +14,11 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import android.view.View;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.ArrayList;
 
 import de.teammartens.android.wattfinder.KartenActivity;
 import de.teammartens.android.wattfinder.R;
@@ -44,16 +39,9 @@ public class GeoWorks {
     private static final Integer MeinMarkerIcon = R.drawable.marker_standort;
     private static final String API_KEY = "@string/google_maps_key";
 
-    public static final int GEOCODE = 1;
-    public static final int REVERSE_GEOCODE = 2;
-    public static final int LADE_SAEULEN = 3;
-    public static final int LADE_MINIINFO = 4;
-    public static final int HOLE_DETAILS = 5;
-    public static final int AUTOCOMPLETE = 9;
     public static final Float DEFAULT_ZOOM = 10.5f;
     public static final Float DETAIL_ZOOM = 17f;
     public static final Float MAX_ZOOM = 6.0f; // wenn Zoom kleiner werde keine Säulen mehr geladen wiel kartenausschnitt zu groß
-    private static int ACTION = 0;
     private static String mQuery="";
     public static boolean CUSTOM_MAPVIEW=false;
     public static LatLng MarkerTarget;
@@ -335,67 +323,6 @@ public class GeoWorks {
 
 
 
-
-
-
-
-    private static ArrayList<String> resultList;
-
-    private ArrayList<String> autocomplete(String input) {
-
-        StringBuilder sb = new StringBuilder(PLACES_API_BASE + TYPE_AUTOCOMPLETE + OUT_JSON);
-        sb.append("?key=" + API_KEY);
-        sb.append("&components=country:de");
-        try {
-            sb.append("&input=" + URLEncoder.encode(input, "utf8"));
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-
-        String url = sb.toString();
-        JsonObjectRequest req = new JsonObjectRequest(url, null,
-                new Response.Listener<JSONObject>() {
-
-
-                    @Override
-                    public void onResponse(JSONObject response) {
-
-                        JSONArray predsJsonArray = null;
-                        try {
-
-                            predsJsonArray = response.getJSONArray("predictions");
-
-
-                        // Extract the Place descriptions from the results
-                            resultList = new ArrayList<String>(predsJsonArray.length());
-                            for (int i = 0; i < predsJsonArray.length(); i++) {
-                                resultList.add(predsJsonArray.getJSONObject(i).getString("description"));
-                            }
-
-                            //Jetzt noch in Autocomplete einfügen
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-
-
-                }, new Response.ErrorListener() {
-
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        // TODO Auto-generated method stub
-
-                    }
-                });
-
-// Access the RequestQueue through your singleton class.
-        KartenActivity.getInstance().addToRequestQueue(req);
-
-
-
-        return resultList;
-    }
 
 
     public static boolean isPositionversetzt(){

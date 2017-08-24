@@ -4,17 +4,14 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.database.Cursor;
 import android.support.v4.widget.CursorAdapter;
-
 import android.support.v7.widget.SearchView;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 
 import de.teammartens.android.wattfinder.KartenActivity;
-import de.teammartens.android.wattfinder.R;
 import de.teammartens.android.wattfinder.worker.GeoWorks;
 import de.teammartens.android.wattfinder.worker.LogWorker;
 

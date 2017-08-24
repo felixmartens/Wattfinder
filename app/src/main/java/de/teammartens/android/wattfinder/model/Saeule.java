@@ -1,12 +1,9 @@
 package de.teammartens.android.wattfinder.model;
 
-import android.os.SystemClock;
 import android.text.format.DateUtils;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.clustering.ClusterItem;
-
-import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -79,7 +76,14 @@ public class Saeule implements ClusterItem {
         return mName;
     }
 
-
+    @Override
+    public String getTitle(){
+     return mName;
+    }
+    @Override
+    public String getSnippet(){
+        return mAddress;
+    }
 
     public Long getUpdated(){
         return updated;
