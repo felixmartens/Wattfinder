@@ -23,7 +23,8 @@
         android:textIsSelectable="false"
         android:textColor="@color/colorPrimaryDark"
         android:typeface="sans"
-        android:gravity="center" />
+        android:gravity="center"
+        android:editable="false" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -44,14 +45,20 @@
 
             android:textSize="14sp"
             android:textAlignment="center"
-            android:textIsSelectable="false"
             android:textColor="@color/colorPrimaryDark"
             android:typeface="sans"
             android:gravity="top"
             android:layout_height="wrap_content"
             android:singleLine="false"
-            android:inputType="textMultiLine"
-            android:layout_margin="6sp" />
+            android:inputType="none"
+            android:layout_margin="6sp"
+            android:textIsSelectable="false"
+            android:cursorVisible="false"
+            android:editable="false"
+            android:focusableInTouchMode="false"
+            android:focusable="false"
+            android:selectAllOnFocus="false"
+            tools:textIsSelectable="false" />
 
 
 

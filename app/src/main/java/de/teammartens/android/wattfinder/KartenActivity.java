@@ -64,6 +64,7 @@ import de.teammartens.android.wattfinder.fragments.ImageZoomFragment;
 import de.teammartens.android.wattfinder.fragments.MiniInfoFragment;
 import de.teammartens.android.wattfinder.model.ArrayAdapterSearchView;
 import de.teammartens.android.wattfinder.model.rSuggestionsProvider;
+import de.teammartens.android.wattfinder.worker.ExceptionWorker;
 import de.teammartens.android.wattfinder.worker.FilterWorks;
 import de.teammartens.android.wattfinder.worker.GeoWorks;
 import de.teammartens.android.wattfinder.worker.LogWorker;
@@ -153,7 +154,7 @@ public static ActionBar actionBar;
 
             LatLng myloc = Loc2LatLng(location);
             if(location!=null)GeoWorks.setmyPosition(myloc);
-            if ( VERBOSE) LogWorker.d(LOG_TAG, "Location erhalten:"+(location==null?"null":""));
+            if ( LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG, "Location erhalten:"+(location==null?"null":""));
             if(GeoWorks.validLatLng(myloc))
                 AnimationWorker.show_myloc();
 
@@ -304,10 +305,12 @@ public static ActionBar actionBar;
         //getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
         sInstance = this;
 
-
         setContentView(R.layout.mainlayout);
         sharedPref = getPreferences(Context.MODE_PRIVATE);
         fragmentManager = getSupportFragmentManager();
+
+        //Aktiviere Handling für UncaughtException
+        if (LogWorker.DEFAULT_DEBUGGING) new ExceptionWorker(KartenActivity.this);
 
         mapFragment = (SupportMapFragment) fragmentManager.findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -343,27 +346,35 @@ public static ActionBar actionBar;
     }
 
 private void setupGoogleAPI(){
-    // Getting Google Play availability status
-    PlayServiceStatus = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getBaseContext());
-
-    // Showing status
-    if(PlayServiceStatus!=ConnectionResult.SUCCESS){ // Google Play Services are not available
-        LogWorker.e(LOG_TAG,"PlayServices not connected");
-        Integer requestCode = CONNECTION_FAILURE_RESOLUTION_REQUEST;
-        Dialog dialog = GooglePlayServicesUtil.getErrorDialog(PlayServiceStatus, this, requestCode);
-        dialog.show();
-
-    }else { // Google Play Services are available
 
 
-        if (mapFragment != null) {
-            mapFragment.getView().bringToFront();
-            mGoogleApiClient = new GoogleApiClient.Builder(this)
-                    .enableAutoManage(this, 0, this)
-                    .addApi(Places.GEO_DATA_API)
-                    .build();
+        // Getting Google Play availability status
+        PlayServiceStatus = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getBaseContext());
+
+        // Showing status
+        if (PlayServiceStatus != ConnectionResult.SUCCESS) { // Google Play Services are not available
+            LogWorker.e(LOG_TAG, "PlayServices not connected");
+            Integer requestCode = CONNECTION_FAILURE_RESOLUTION_REQUEST;
+            Dialog dialog = GooglePlayServicesUtil.getErrorDialog(PlayServiceStatus, this, requestCode);
+
+
+            dialog.show();
+
+        } else { // Google Play Services are available
+
+
+            if (mapFragment != null) {
+                //das sollte einen Crash verursachen
+               // mapFragment = null;
+
+                mapFragment.getView().bringToFront();
+                mGoogleApiClient = new GoogleApiClient.Builder(this)
+                        .enableAutoManage(this, 0, this)
+                        .addApi(Places.GEO_DATA_API)
+                        .build();
+            }
         }
-    }
+
 
 }
 
@@ -376,8 +387,6 @@ private void setupGoogleAPI(){
     protected void onStart() {
         super.onStart();
         LogWorker.init_logging();
-        // DEBUGGING
-        //LogWorker.setVERBOSE(true);
 
         lineSeparator =System.getProperty("line.separator");
 
@@ -389,21 +398,24 @@ private void setupGoogleAPI(){
 
         FilterWorks.filter_speichern();
 
-        SharedPreferences.Editor e = sharedPref.edit();
-        CameraPosition cp = mMap.getCameraPosition();
-        if (GeoWorks.validLatLng(cp.target)&&cp.zoom>GeoWorks.MAX_ZOOM){
-            e.putFloat(sP_Latitude, new Float(cp.target.latitude));
-            e.putFloat(sP_Longitude, new Float(cp.target.longitude));
-            e.putFloat(sP_ZoomLevel, cp.zoom);
-            e.putLong(sP_Timestamp, System.currentTimeMillis());
-            e.putInt(sP_APIRQCount, API_RQ_Count);
-            e.apply();
-            LogWorker.d("WattfinderInternal", "Pause");
-            LogWorker.d("WattfinderInternal", "GeoWorks Lat: " + GeoWorks.getMapPosition().latitude + " Lng: " + GeoWorks.getMapPosition().longitude + " Z: " + GeoWorks.getMapZoom() + "");
-            LogWorker.d("WattfinderInternal", "Lat: " + new Float(cp.target.latitude) + " Lng: " + new Float(cp.target.longitude) + " Z: " + cp.zoom + " saved");
+        if (mMap!=null) {
+            if (sharedPref == null)
+                sharedPref = getPreferences(Context.MODE_PRIVATE);
+            SharedPreferences.Editor e = sharedPref.edit();
+            CameraPosition cp = mMap.getCameraPosition();
+            if (GeoWorks.validLatLng(cp.target) && cp.zoom > GeoWorks.MAX_ZOOM) {
+                e.putFloat(sP_Latitude, new Float(cp.target.latitude));
+                e.putFloat(sP_Longitude, new Float(cp.target.longitude));
+                e.putFloat(sP_ZoomLevel, cp.zoom);
+                e.putLong(sP_Timestamp, System.currentTimeMillis());
+                e.putInt(sP_APIRQCount, API_RQ_Count);
+                e.apply();
+                LogWorker.d("WattfinderInternal", "Pause");
+                LogWorker.d("WattfinderInternal", "GeoWorks Lat: " + GeoWorks.getMapPosition().latitude + " Lng: " + GeoWorks.getMapPosition().longitude + " Z: " + GeoWorks.getMapZoom() + "");
+                LogWorker.d("WattfinderInternal", "Lat: " + new Float(cp.target.latitude) + " Lng: " + new Float(cp.target.longitude) + " Z: " + cp.zoom + " saved");
+            }
+
         }
-
-
         LogWorker.sendLog();
 
     }
@@ -530,11 +542,12 @@ private void setupGoogleAPI(){
                 Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
 
-            if (!AnimationWorker.startupScreen && !permissiondenied)
-            if (LogWorker.isVERBOSE())LogWorker.d(LOG_TAG,"requestLocation Permission");
-            ActivityCompat.requestPermissions(KartenActivity.getInstance(),
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                    MY_PERMISSIONS_REQUEST_LOCATION);
+            if (!AnimationWorker.startupScreen && !permissiondenied) {
+                if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG, "requestLocation Permission");
+                ActivityCompat.requestPermissions(KartenActivity.getInstance(),
+                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                        MY_PERMISSIONS_REQUEST_LOCATION);
+            }
         } else {
             mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 

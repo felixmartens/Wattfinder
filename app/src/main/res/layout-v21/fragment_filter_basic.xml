@@ -115,7 +115,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:max="4"
-            android:progress="2"
+            android:progress="0"
             android:id="@+id/fPowerBar"
             android:layout_marginRight="50sp"
             android:layout_marginLeft="50sp"

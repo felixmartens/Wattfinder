@@ -1,6 +1,10 @@
 package de.teammartens.android.wattfinder.worker;
 
+import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -26,6 +30,8 @@ import de.teammartens.android.wattfinder.KartenActivity;
 public class LogWorker {
     private static boolean VERBOSE = false;
 
+    public static final boolean DEFAULT_DEBUGGING = true;
+
     public static String getlogID() {
         return id;
     }
@@ -33,7 +39,6 @@ public class LogWorker {
     private static String id = "abcd1234";
     private static final String LOG_TAG = "LOG_WORKER";
     private static Set<LogEntry> LogCache = new HashSet<LogEntry>();
-
     public static boolean isVERBOSE() {
         return VERBOSE;
     }
@@ -63,14 +68,20 @@ public class LogWorker {
     }
 
     public static void init_logging(){
+
         SharedPreferences sPref = KartenActivity.sharedPref;
 
         id = sPref.getString("LoggingID","abcdef");
         if (id.equals("abcdef"))
             id=generate_id();
 
+        if(DEFAULT_DEBUGGING)
+            LogWorker.setVERBOSE(true);
 
     }
+
+
+
 
 
     private static void cacheLog(final String type, final String TAG, final String message){
