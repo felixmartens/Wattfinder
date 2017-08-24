@@ -6,6 +6,9 @@ import android.net.Uri;
 import android.os.Build;
 import android.util.Log;
 
+import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.common.api.GoogleApiClient;
+
 import de.teammartens.android.wattfinder.KartenActivity;
 
 /**
@@ -44,6 +47,7 @@ public class ExceptionWorker  implements Thread.UncaughtExceptionHandler {
         public void uncaughtException(final Thread thread, final Throwable e) {
 
             StackTraceElement[] arr = e.getStackTrace();
+            GoogleApiClient mGoogleApiClient = KartenActivity.getInstance().setupGoogleAPI();
             final StringBuffer report = new StringBuffer(e.toString());
             final String DOUBLE_LINE_SEP = "\n\n";
             final String SINGLE_LINE_SEP = "\n";
@@ -87,6 +91,14 @@ public class ExceptionWorker  implements Thread.UncaughtExceptionHandler {
             report.append(SINGLE_LINE_SEP);
             report.append("Product: ");
             report.append(Build.PRODUCT);
+            report.append(SINGLE_LINE_SEP);
+            report.append(lineSeperator);
+            report.append("--------- PlayServices ---------\n\n");
+            report.append("Connection: ");
+            report.append(GoogleApiAvailability.getInstance().getErrorString(GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(KartenActivity.getInstance().getBaseContext())));
+            report.append(SINGLE_LINE_SEP);
+            report.append("Version: ");
+            report.append(GoogleApiAvailability.GOOGLE_PLAY_SERVICES_VERSION_CODE);
             report.append(SINGLE_LINE_SEP);
             report.append(lineSeperator);
             report.append("--------- Firmware ---------\n\n");
