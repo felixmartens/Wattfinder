@@ -1,6 +1,5 @@
 package de.teammartens.android.wattfinder.worker;
 
-import android.content.res.Configuration;
 import android.location.Location;
 
 import com.android.volley.Response;
@@ -14,8 +13,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-
-import android.view.View;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -114,7 +111,7 @@ public class GeoWorks {
 
     public static void movemapPosition(final LatLng position, final float zoom, final String VERURSACHER){
 
-        if(position!=null) {
+        if(position!=null && mMap != null) {
             if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG, "moveMap to "+position.toString() + "/"+zoom+" wegen "+VERURSACHER);
             LatLng nPosition = new LatLng(position.latitude,position.longitude);
 
