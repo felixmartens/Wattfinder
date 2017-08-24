@@ -21,9 +21,10 @@ import android.os.Build;
 import android.provider.SearchRecentSuggestions;
 import android.app.DialogFragment;
 import android.provider.Settings;
-import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityCompat; //min API 23
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+//import android.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.FragmentActivity;
 import android.app.ActionBar;
@@ -47,6 +48,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.Volley;
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.places.Places;
@@ -58,10 +60,6 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 
 
-import de.teammartens.android.wattfinder.fragments.DetailsFragment;
-import de.teammartens.android.wattfinder.fragments.FilterFragment;
-import de.teammartens.android.wattfinder.fragments.ImageZoomFragment;
-import de.teammartens.android.wattfinder.fragments.MiniInfoFragment;
 import de.teammartens.android.wattfinder.model.ArrayAdapterSearchView;
 import de.teammartens.android.wattfinder.model.rSuggestionsProvider;
 import de.teammartens.android.wattfinder.worker.ExceptionWorker;
@@ -76,7 +74,7 @@ import static de.teammartens.android.wattfinder.worker.FilterWorks.filter_initia
 
 
 public class KartenActivity extends FragmentActivity
-        implements GoogleApiClient.OnConnectionFailedListener,ActivityCompat.OnRequestPermissionsResultCallback,OnMapReadyCallback {
+        implements GoogleApiClient.OnConnectionFailedListener, ActivityCompat.OnRequestPermissionsResultCallback,OnMapReadyCallback {
     private static final String LOG_TAG = "Wattfinder";
     public static GoogleMap mMap; // Might be null if Google Play services APK is not available.
     private final static Integer
@@ -349,23 +347,30 @@ private void setupGoogleAPI(){
 
 
         // Getting Google Play availability status
-        PlayServiceStatus = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getBaseContext());
+        PlayServiceStatus = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(getBaseContext());
 
         // Showing status
         if (PlayServiceStatus != ConnectionResult.SUCCESS) { // Google Play Services are not available
             LogWorker.e(LOG_TAG, "PlayServices not connected");
             Integer requestCode = CONNECTION_FAILURE_RESOLUTION_REQUEST;
-            Dialog dialog = GooglePlayServicesUtil.getErrorDialog(PlayServiceStatus, this, requestCode);
+            Dialog dialog = GoogleApiAvailability.getInstance().getErrorDialog(this, PlayServiceStatus, requestCode, new DialogInterface.OnCancelListener() {
+                @Override
+                public void onCancel(DialogInterface dialog) {
+                    LogWorker.e(LOG_TAG, "onConnectionFailed: ConnectionResult.getErrorCode() = "
+                            + PlayServiceStatus);
+                    CharSequence s = "Could not connect to Google API Client: Error " + String.valueOf(PlayServiceStatus);
+                   Toast.makeText(KartenActivity.getInstance(), s ,Toast.LENGTH_SHORT).show();
 
-
-            dialog.show();
+                }
+            });
+            //dialog.show();
 
         } else { // Google Play Services are available
 
 
             if (mapFragment != null) {
                 //das sollte einen Crash verursachen
-               // mapFragment = null;
+               //mapFragment = null;
 
                 mapFragment.getView().bringToFront();
                 mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -580,40 +585,9 @@ private void setupGoogleAPI(){
 
 
 
-    public boolean onCreateOptionsMenu(Menu menu) {
-
-        //getMenuInflater().inflate(R.menu.menu, menu);
-
-        //this.menu = menu;
-
-
-/*
-        SearchManager manager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-
-        //SearchView search = (SearchView) menu.findItem(R.id.menu_search).getActionView();
-
-        MenuItem searchItem = menu.findItem(R.id.menu_search);
-
-        if (searchItem!= null){
-            final ArrayAdapterSearchView searchView = (ArrayAdapterSearchView) MenuItemCompat.getActionView(searchItem);
-            if (searchView == null) LogWorker.e("Building SearchView","search was Null");
-            searchView.setSearchableInfo(manager.getSearchableInfo(getComponentName()));
-            searchView.setIconifiedByDefault(false); // Do not iconify the widget; expand it by default
-            searchView.setQueryRefinementEnabled(true);
-
-        }else
-        {
-            LogWorker.e("Building SearchView", "searchItem was Null");
-        }
-
-*/
-
-        return true;
-
-    }
   private  void prepareSearch(){
     ArrayAdapterSearchView searchView=(ArrayAdapterSearchView) findViewById(R.id.map_search);
-    if (searchView == null) LogWorker.e("Building SearchView","search was Null");
+    if (searchView == null && LogWorker.isVERBOSE()) LogWorker.e("Building SearchView","search was Null");
     searchView.setQueryHint(getString(R.string.search_hint));
 
     SearchManager manager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
@@ -704,15 +678,7 @@ private void setupGoogleAPI(){
     }
 
 
-    @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
-        LogWorker.e(LOG_TAG, "onConnectionFailed: ConnectionResult.getErrorCode() = "
-                + connectionResult.getErrorCode());
-// TODO(Developer): Check error code and notify the user of error state and resolution.
-        Toast.makeText(this,
-                "Could not connect to Google API Client: Error " + connectionResult.getErrorCode(),
-                Toast.LENGTH_SHORT).show();
-    }
+
 
 
 

@@ -12,7 +12,7 @@
     <color name="colorPrimary">#849db2</color>
     <color name="colorPrimaryDark">#092146</color>
     <color name="textColorPrimary">#ffffff</color>
-
+    <color name="ItemTintedBack">#f9fbfb</color>
     <color name="windowBackground">#ffffff</color>
     <color name="navigationBarColor">#000000</color>
     <color name="colorAccent">#4caeda</color>
