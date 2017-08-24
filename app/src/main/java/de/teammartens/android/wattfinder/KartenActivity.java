@@ -461,7 +461,8 @@ public static ActionBar actionBar;
 
             if (GeoWorks.validLatLng(GeoWorks.getmyPosition())){
                 GeoWorks.CUSTOM_MAPVIEW = false;
-                GeoWorks.movemapPosition(GeoWorks.getmyPosition(),GeoWorks.DEFAULT_ZOOM,"fab_Mylocation");
+                //GeoWorks.movemapPosition(GeoWorks.getmyPosition(),GeoWorks.MY_LOCATION_ZOOM,"fab_Mylocation");
+                GeoWorks.setmyPosition();
             }else{
                 Toast.makeText(getInstance(),getString(R.string.novalidlocation),Toast.LENGTH_SHORT);
             }
