@@ -669,32 +669,36 @@ return null;
         API_RQ_Count++;
 
     }
-
     public static void setMapPaddingY(Integer h) {
-        mMap.setPadding(0,0,0,h);
-        if(LogWorker.isVERBOSE())LogWorker.d(LOG_TAG,"PaddingY:"+h);
-        if (h==0){
+        if(mMap!=null) {
+            mMap.setPadding(0, 0, 0, h);
+            if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG, "PaddingY:" + h);
+            if (h == 0) {
 
-            //CameraUpdate CU = CameraUpdateFactory.newLatLngZoom(VersatzBerechnen(Geo), zoom);
+                //CameraUpdate CU = CameraUpdateFactory.newLatLngZoom(VersatzBerechnen(Geo), zoom);
+            }
+            MapPaddingY = h;
         }
-        MapPaddingY = h;
     }
     public static void setMapPaddingX(Integer w) {
-        mMap.setPadding(0,0,w,0);
-        MapPaddingX = w;
-        if(LogWorker.isVERBOSE())LogWorker.d(LOG_TAG,"PaddingX:"+w);
+        if(mMap!=null) {
+            mMap.setPadding(0, 0, w, 0);
+            MapPaddingX = w;
+            if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG, "PaddingX:" + w);
+        }
     }
 
 
     public static void setMapPadding(View v) {
-        Configuration config = KartenActivity.getInstance().getResources().getConfiguration();
-        if (config.orientation == config.ORIENTATION_PORTRAIT) {
-            mMap.setPadding(0, 0, 0, v.getHeight());
-            if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG, "PaddingY:" + v.getHeight());
-        }else
-        {
-            mMap.setPadding(0, 0, v.getWidth(),0);
-            if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG, "PaddingX:" + v.getWidth());
+        if(mMap!=null) {
+            Configuration config = KartenActivity.getInstance().getResources().getConfiguration();
+            if (config.orientation == config.ORIENTATION_PORTRAIT) {
+                mMap.setPadding(0, 0, 0, v.getHeight());
+                if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG, "PaddingY:" + v.getHeight());
+            } else {
+                mMap.setPadding(0, 0, v.getWidth(), 0);
+                if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG, "PaddingX:" + v.getWidth());
+            }
         }
     }
 
