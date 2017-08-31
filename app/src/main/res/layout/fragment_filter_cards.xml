@@ -8,7 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/fCards_all"
-        android:background="@color/common_action_bar_splitter"
+        android:background="@color/ItemTintedBack"
         android:textSize="14sp"
         android:paddingTop="8dp"
         android:paddingBottom="8dp" />

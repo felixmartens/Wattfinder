@@ -1,14 +1,11 @@
 package de.teammartens.android.wattfinder.worker;
 
 import android.content.Context;
-import android.content.res.Configuration;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.SystemClock;
-import android.support.v4.app.Fragment;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.BounceInterpolator;
 import android.view.animation.Interpolator;
@@ -27,7 +24,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.VisibleRegion;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
@@ -36,7 +32,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -55,8 +50,11 @@ import de.teammartens.android.wattfinder.model.Saeule;
 public class SaeulenWorks {
     private static final String LOG_TAG = "Wattfinder SäulenWorks";
     private static final float[] Marker_Colors = {BitmapDescriptorFactory.HUE_RED,(float) 220,(float) 200, BitmapDescriptorFactory.HUE_CYAN, BitmapDescriptorFactory.HUE_ORANGE};
-    private static final Integer[] Markers = {R.drawable.marker_1,R.drawable.marker_1,R.drawable.marker_2,R.drawable.marker_3,R.drawable.marker_4};
-    private static final Integer[] Markers_Fault = {R.drawable.marker_1_h,R.drawable.marker_1_h,R.drawable.marker_2_h,R.drawable.marker_3_h,R.drawable.marker_4_h};
+    private static final Integer[] Markers = {R.drawable.marker_1,R.drawable.marker_1,R.drawable.marker_2,R.drawable.marker_3,R.drawable.marker_4,R.drawable.marker_5};
+    private static final Integer[] Markers_Fault = {R.drawable.marker_1_h,R.drawable.marker_1_h,R.drawable.marker_2_h,R.drawable.marker_3_h,R.drawable.marker_4_h,R.drawable.marker_5_h};
+    private static final Integer[] Markers_Clicked = {R.drawable.marker_1_c,R.drawable.marker_1_c,R.drawable.marker_2_c,R.drawable.marker_3_c,R.drawable.marker_4_c,R.drawable.marker_5_c};
+    private static final Integer[] Markers_Fault_Clicked = {R.drawable.marker_1_ch,R.drawable.marker_1_ch,R.drawable.marker_2_ch,R.drawable.marker_3_ch,R.drawable.marker_4_ch,R.drawable.marker_5_ch};
+
     private static final Integer CACHE_OUTDATED_MILLIS =  1800000;//30min
     private static final Integer CACHE_EXPIRED_MILLIS = 86400000;//24Stunden
     private static final String fAPIUrl = "https://api.goingelectric.de/chargepoints/";
@@ -65,6 +63,7 @@ public class SaeulenWorks {
     private static ArrayList<MarkerOptions> Marker_Saeule_Options = new ArrayList<MarkerOptions>();
     private static ArrayList<Integer> Saeulen_ID = new ArrayList<Integer>();
     public static ClusterManager<Saeule> mClusterManager;
+    private static meinClusterRenderer mClusterRenderer;
     public static HashMap<Integer,Saeule> Saeulen = new HashMap<>();
     public static Long letzterAbrufTime = new Long(0);
     private static LatLngBounds letzterAbrufBeiLLB = new LatLngBounds(new LatLng(0,0),new LatLng(0,0));
@@ -202,7 +201,7 @@ public class SaeulenWorks {
 
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    LogWorker.e(LOG_TAG, error.getLocalizedMessage());
+                    NetWorker.handleError(error,NetWorker.TASK_SAEULEN);
                     RQ_PENDING = false;
                 }
             });
@@ -291,6 +290,7 @@ public class SaeulenWorks {
                     if(pMax>=11) sTyp=2;
                     if(pMax>=20) sTyp=3;
                     if(pMax>=43) sTyp=4;
+                    if(pMax>=100) sTyp=5;
                     S.setTyp(sTyp);
 
                     S.setFaultreport(M.optBoolean("fault_report",false));
@@ -342,35 +342,19 @@ public class SaeulenWorks {
         // (Activity extends context, so we can pass 'this' in the constructor.)
         mClusterManager = new ClusterManager<Saeule>(KartenActivity.getInstance(), KartenActivity.mMap);
 
-        mClusterManager.getMarkerCollection().setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+
+        mClusterManager.setOnClusterInfoWindowClickListener(new ClusterManager.OnClusterInfoWindowClickListener<Saeule>() {
             @Override
-            public boolean onMarkerClick(final Marker marker) {
-                marker.hideInfoWindow();
-                MarkerBounce(marker);
-                marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
-                return false;
+            public void onClusterInfoWindowClick(Cluster<Saeule> cluster) {
+
             }
         });
+        /*
         mClusterManager.setOnClusterItemClickListener(new ClusterManager.OnClusterItemClickListener<Saeule>() {
-            @Override
-            public boolean onClusterItemClick(Saeule item) {
-                Marker marker = null;
-                resetClickMarker();
-                if ( LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG,"OnCLusterItemCLickListener  "+item.getID());
-                clickedSaeule = item;
 
-                MiniInfoFragment.setzeSaeule(item.getID(), item);
-                //GeoWorks.animateClick();
-                GeoWorks.movemapPosition(item.getPosition(),"MarkerClick");
-                if(AnimationWorker.isFilterVisibile()) AnimationWorker.toggleFilter();
-                if(!AnimationWorker.isDetailsVisibile())AnimationWorker.show_info();else AnimationWorker.hide_info();
-
-
-
-                return true;
-            }
-        });
-
+        });*/
+        mClusterRenderer= new meinClusterRenderer(KartenActivity.getInstance(),KartenActivity.mMap,mClusterManager);
+        mClusterManager.setOnClusterItemClickListener(mClusterRenderer);
         mClusterManager.setOnClusterClickListener(new ClusterManager.OnClusterClickListener<Saeule>() {
             @Override
             public boolean onClusterClick(Cluster<Saeule> cluster) {
@@ -400,9 +384,9 @@ public class SaeulenWorks {
         });
         // Point the map's listeners at the listeners implemented by the cluster
         // manager.
-        KartenActivity.mMap.setOnCameraChangeListener(mClusterManager);
+        KartenActivity.mMap.setOnCameraIdleListener(mClusterManager);
         KartenActivity.mMap.setOnMarkerClickListener(mClusterManager);
-        mClusterManager.setRenderer(new meinClusterRenderer(KartenActivity.getInstance(),KartenActivity.mMap,mClusterManager));
+        mClusterManager.setRenderer(mClusterRenderer);
 
     }
 
@@ -410,7 +394,7 @@ public class SaeulenWorks {
 
         final Handler handler = new Handler();
         final long start = SystemClock.uptimeMillis();
-        final long duration = 1500;
+        final long duration = 1200;
 
         final Interpolator interpolator = new BounceInterpolator();
 
@@ -421,7 +405,7 @@ public class SaeulenWorks {
                 float t = Math.max(
                         1 - interpolator.getInterpolation((float) elapsed
                                 / duration), 0);
-                marker.setAnchor(0.5f, 1.0f + 2 * t);
+                marker.setAnchor(0.3f, 1.0f + 1.1f * t);
 
                 if (t > 0.0) {
                     // Post again 16ms later.
@@ -429,12 +413,18 @@ public class SaeulenWorks {
                 }
             }
         });
+
+
+
+
+
+
     }
 
     public static void resetClickMarker(){
         if(clickedMarker !=null && clickedSaeule !=null){
             BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(Markers[0]);
-            if ( clickedSaeule.getTyp() < 5 && clickedSaeule.getTyp() >= 0 )
+            if ( clickedSaeule.getTyp() < (Markers.length+1) && clickedSaeule.getTyp() >= 0 )
                 if (clickedSaeule.isFaultreport())
                     icon = BitmapDescriptorFactory.fromResource(Markers_Fault[clickedSaeule.getTyp()]);
                 else
@@ -454,12 +444,50 @@ public class SaeulenWorks {
 
 
 
-    private static class meinClusterRenderer extends DefaultClusterRenderer<Saeule> implements GoogleMap.OnCameraChangeListener {
+    private static class meinClusterRenderer extends DefaultClusterRenderer<Saeule> implements GoogleMap.OnCameraIdleListener,GoogleMap.OnMarkerClickListener, ClusterManager.OnClusterItemClickListener<Saeule> {
 
+        GoogleMap mMap;
         public meinClusterRenderer(Context context, GoogleMap map,
                                    ClusterManager<Saeule> clusterManager) {
-            super(context, map, clusterManager);
 
+            super(context, map, clusterManager);
+            mMap=map;
+        }
+
+        @Override
+        public boolean onClusterItemClick(Saeule item) {
+            Marker marker = getMarker(item);
+            resetClickMarker();
+            if ( LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG,"OnCLusterItemCLickListener  "+item.getID());
+            clickedSaeule = item;
+            clickedMarker=marker;
+            MarkerBounce(marker);
+            //marker.setIcon(BitmapDescriptorFactory.fromResource(Markers_Clicked[clickedSaeule.getTyp()]));
+            if(clickedMarker !=null && clickedSaeule !=null){
+                BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(Markers[0]);
+
+                if ( clickedSaeule.getTyp() < 5 && clickedSaeule.getTyp() >= 0 )
+                    if (clickedSaeule.isFaultreport())
+                        icon = BitmapDescriptorFactory.fromResource(Markers_Fault_Clicked[clickedSaeule.getTyp()]);
+                    else
+                        icon = BitmapDescriptorFactory.fromResource(Markers_Clicked[clickedSaeule.getTyp()]);
+                try {
+                    clickedMarker.setIcon(icon);
+                }
+                catch(IllegalArgumentException e){
+                    LogWorker.e(LOG_TAG,"ILLEGAL ARGUMENT on setIcon" + e.toString());
+
+                }
+            }
+            MiniInfoFragment.setzeSaeule(item.getID(), item);
+            //GeoWorks.animateClick();
+            GeoWorks.movemapPosition(item.getPosition(),"MarkerClick");
+            if(AnimationWorker.isFilterVisibile()) AnimationWorker.toggleFilter();
+            if(!AnimationWorker.isDetailsVisibile())AnimationWorker.show_info();else AnimationWorker.hide_info();
+
+
+
+            return true;
         }
 
         @Override
@@ -477,12 +505,19 @@ public class SaeulenWorks {
         protected void onClusterItemRendered(Saeule clusterItem,
                                              Marker marker) {
             super.onClusterItemRendered(clusterItem, marker);
+
         }
 
+        @Override
+        public boolean onMarkerClick(final Marker marker) {
+            Saeule S = getClusterItem(marker);
+            LogWorker.d(LOG_TAG,"Marker Click:" + S.getName());
+            return false;
+        }
 
         @Override
-        public void onCameraChange(CameraPosition cameraPosition) {
-
+        public void onCameraIdle() {
+            CameraPosition cameraPosition = mMap.getCameraPosition();
             LatLng mLatLng = cameraPosition.target;
             if (LogWorker.isVERBOSE())
                 LogWorker.d(LOG_TAG, "onCameraChange: Versetzt:" + GeoWorks.isPositionversetzt() + " Detailsvisible:" + AnimationWorker.isDetailsVisibile() + " MapZoom" + GeoWorks.getMapZoom() + " cpZoom" + cameraPosition.zoom);

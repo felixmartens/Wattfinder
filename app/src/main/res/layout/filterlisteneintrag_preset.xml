@@ -31,7 +31,7 @@
 
         app:elevation="0dp"
         app:pressedTranslationZ="4dp"
-        app:backgroundTint="@color/common_action_bar_splitter"
+        app:backgroundTint="@color/ItemTintedBack"
         app:rippleColor="@color/rand"
         app:borderWidth="1dp"
         app:fabSize="mini"

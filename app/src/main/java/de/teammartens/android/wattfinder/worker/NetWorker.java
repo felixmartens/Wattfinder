@@ -8,7 +8,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
-import com.google.android.gms.games.GamesMetadata;
 
 import java.util.Timer;
 import java.util.TimerTask;

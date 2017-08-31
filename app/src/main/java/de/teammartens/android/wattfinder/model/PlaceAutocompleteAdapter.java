@@ -15,27 +15,26 @@ package de.teammartens.android.wattfinder.model;
 * limitations under the License.
 */
 
-        import com.google.android.gms.common.api.GoogleApiClient;
-        import com.google.android.gms.common.api.PendingResult;
-        import com.google.android.gms.common.api.Status;
-        import com.google.android.gms.location.places.AutocompleteFilter;
-        import com.google.android.gms.location.places.AutocompletePrediction;
-        import com.google.android.gms.location.places.AutocompletePredictionBuffer;
-        import com.google.android.gms.location.places.Places;
-        import com.google.android.gms.maps.model.LatLngBounds;
+import android.content.Context;
+import android.widget.ArrayAdapter;
+import android.widget.Filter;
+import android.widget.Filterable;
+import android.widget.Toast;
 
-        import android.content.Context;
-        import android.util.Log;
-        import android.widget.ArrayAdapter;
-        import android.widget.Filter;
-        import android.widget.Filterable;
-        import android.widget.Toast;
-        import java.util.ArrayList;
-        import java.util.Iterator;
-        import java.util.concurrent.TimeUnit;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.places.AutocompleteFilter;
+import com.google.android.gms.location.places.AutocompletePrediction;
+import com.google.android.gms.location.places.AutocompletePredictionBuffer;
+import com.google.android.gms.location.places.Places;
+import com.google.android.gms.maps.model.LatLngBounds;
 
-        import de.teammartens.android.wattfinder.KartenActivity;
-        import de.teammartens.android.wattfinder.worker.LogWorker;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.concurrent.TimeUnit;
+
+import de.teammartens.android.wattfinder.worker.LogWorker;
 
 /**
  * Adapter that handles Autocomplete requests from the Places Geo Data API.
@@ -178,7 +177,7 @@ public class PlaceAutocompleteAdapter
                 AutocompletePrediction prediction = iterator.next();
 // Get the details of this prediction and copy it into a new PlaceAutocomplete object.
                 resultList.add(new PlaceAutocomplete(prediction.getPlaceId(),
-                        prediction.getDescription()));
+                        prediction.getPrimaryText(null)));
             }
 // Release the buffer now that all data has been copied.
             autocompletePredictions.release();

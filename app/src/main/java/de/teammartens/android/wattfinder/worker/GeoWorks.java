@@ -18,9 +18,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.ArrayList;
 
 import de.teammartens.android.wattfinder.KartenActivity;
 import de.teammartens.android.wattfinder.R;
@@ -35,22 +33,11 @@ public class GeoWorks {
     private static final String LOG_TAG = "WattfinderGeoWorks";
 
 
-    private static final String PLACES_API_BASE = "https://maps.googleapis.com/maps/api/place";
-    private static final String TYPE_AUTOCOMPLETE = "/autocomplete";
-    private static final String OUT_JSON = "/json";
-    private static final Integer MeinMarkerIcon = R.drawable.marker_standort;
-    private static final String API_KEY = "@string/google_maps_key";
 
-    public static final int GEOCODE = 1;
-    public static final int REVERSE_GEOCODE = 2;
-    public static final int LADE_SAEULEN = 3;
-    public static final int LADE_MINIINFO = 4;
-    public static final int HOLE_DETAILS = 5;
-    public static final int AUTOCOMPLETE = 9;
     public static final Float DEFAULT_ZOOM = 10.5f;
     public static final Float DETAIL_ZOOM = 17f;
+    public static final Float MY_LOCATION_ZOOM = 13.5f;
     public static final Float MAX_ZOOM = 6.0f; // wenn Zoom kleiner werde keine Säulen mehr geladen wiel kartenausschnitt zu groß
-    private static int ACTION = 0;
     private static String mQuery="";
     public static boolean CUSTOM_MAPVIEW=false;
     public static LatLng MarkerTarget;
@@ -64,32 +51,25 @@ public class GeoWorks {
         return myPosition;
     }
 
-    public static void setmyPosition(LatLng mapPosition) {
-        setmyPosition(mapPosition,DEFAULT_ZOOM);
+
+    public static void setmyPosition() {
+        setmyPosition(getmyPosition());
     }
-    public static void setmyPosition(LatLng mPosition,Float zoom) {
+
+    public static void setmyPosition(LatLng mapPosition) {
+        setmyPosition(mapPosition,MY_LOCATION_ZOOM,false);
+    }
+
+    public static void setmyPosition(LatLng mPosition,Float zoom, boolean moveMap) {
 
         if (mPosition != null ){
             if (KartenActivity.mMap != null) {
-            Location alt = new Location("LastLocation");
-            Location neu = new Location("NewLocation");
-            Float D =  1000f;
-            if (myPosition!=null){
-                alt.setLatitude(myPosition.latitude);
-                alt.setLongitude(myPosition.longitude);
-                neu.setLatitude(mPosition.latitude);
-                neu.setLongitude(mPosition.longitude);
-                D=alt.distanceTo(neu);
+             if (Marker_Ich != null) Marker_Ich.remove();
+             Marker_Ich = KartenActivity.mMap.addMarker(new MarkerOptions().position(mPosition)
+                    .title("Meine Position").icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_standort)));
+                if (moveMap||!CUSTOM_MAPVIEW)
+                    movemapPosition(mPosition, zoom, "setmyPositionZoom");
             }
-
-
-
-            if (Marker_Ich != null) Marker_Ich.remove();
-            Marker_Ich = KartenActivity.mMap.addMarker(new MarkerOptions().position(mPosition)
-                .title("Meine Position").icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_standort)));
-            if (!CUSTOM_MAPVIEW && D > 100)
-                movemapPosition(mPosition, zoom, "setmyPositionZoom");
-        }
             myPosition = mPosition;
         }
     }
@@ -110,8 +90,8 @@ public class GeoWorks {
 
 
     public static void movemapPosition(final LatLng position, final float zoom, final String VERURSACHER){
+       if(position!=null&& mMap != null&&zoom>2.0f) {
 
-        if(position!=null && mMap != null) {
             if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG, "moveMap to "+position.toString() + "/"+zoom+" wegen "+VERURSACHER);
             LatLng nPosition = new LatLng(position.latitude,position.longitude);
 
@@ -332,67 +312,6 @@ public class GeoWorks {
 
 
 
-
-
-
-
-    private static ArrayList<String> resultList;
-
-    private ArrayList<String> autocomplete(String input) {
-
-        StringBuilder sb = new StringBuilder(PLACES_API_BASE + TYPE_AUTOCOMPLETE + OUT_JSON);
-        sb.append("?key=" + API_KEY);
-        sb.append("&components=country:de");
-        try {
-            sb.append("&input=" + URLEncoder.encode(input, "utf8"));
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-
-        String url = sb.toString();
-        JsonObjectRequest req = new JsonObjectRequest(url, null,
-                new Response.Listener<JSONObject>() {
-
-
-                    @Override
-                    public void onResponse(JSONObject response) {
-
-                        JSONArray predsJsonArray = null;
-                        try {
-
-                            predsJsonArray = response.getJSONArray("predictions");
-
-
-                        // Extract the Place descriptions from the results
-                            resultList = new ArrayList<String>(predsJsonArray.length());
-                            for (int i = 0; i < predsJsonArray.length(); i++) {
-                                resultList.add(predsJsonArray.getJSONObject(i).getString("description"));
-                            }
-
-                            //Jetzt noch in Autocomplete einfügen
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-
-
-                }, new Response.ErrorListener() {
-
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        // TODO Auto-generated method stub
-
-                    }
-                });
-
-// Access the RequestQueue through your singleton class.
-        KartenActivity.getInstance().addToRequestQueue(req);
-
-
-
-        return resultList;
-    }
 
 
     public static boolean isPositionversetzt(){
