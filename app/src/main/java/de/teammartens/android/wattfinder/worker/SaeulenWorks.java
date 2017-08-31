@@ -53,6 +53,8 @@ public class SaeulenWorks {
     private static final Integer[] Markers = {R.drawable.marker_1,R.drawable.marker_1,R.drawable.marker_2,R.drawable.marker_3,R.drawable.marker_4,R.drawable.marker_5};
     private static final Integer[] Markers_Fault = {R.drawable.marker_1_h,R.drawable.marker_1_h,R.drawable.marker_2_h,R.drawable.marker_3_h,R.drawable.marker_4_h,R.drawable.marker_5_h};
     private static final Integer[] Markers_Clicked = {R.drawable.marker_1_c,R.drawable.marker_1_c,R.drawable.marker_2_c,R.drawable.marker_3_c,R.drawable.marker_4_c,R.drawable.marker_5_c};
+    private static final Integer[] Markers_Fault_Clicked = {R.drawable.marker_1_ch,R.drawable.marker_1_ch,R.drawable.marker_2_ch,R.drawable.marker_3_ch,R.drawable.marker_4_ch,R.drawable.marker_5_ch};
+
     private static final Integer CACHE_OUTDATED_MILLIS =  1800000;//30min
     private static final Integer CACHE_EXPIRED_MILLIS = 86400000;//24Stunden
     private static final String fAPIUrl = "https://api.goingelectric.de/chargepoints/";
@@ -392,7 +394,7 @@ public class SaeulenWorks {
 
         final Handler handler = new Handler();
         final long start = SystemClock.uptimeMillis();
-        final long duration = 1500;
+        final long duration = 1200;
 
         final Interpolator interpolator = new BounceInterpolator();
 
@@ -403,7 +405,7 @@ public class SaeulenWorks {
                 float t = Math.max(
                         1 - interpolator.getInterpolation((float) elapsed
                                 / duration), 0);
-                marker.setAnchor(0.1f, 0.5f + 3 * t);
+                marker.setAnchor(0.3f, 1.0f + 1.1f * t);
 
                 if (t > 0.0) {
                     // Post again 16ms later.
@@ -411,12 +413,18 @@ public class SaeulenWorks {
                 }
             }
         });
+
+
+
+
+
+
     }
 
     public static void resetClickMarker(){
         if(clickedMarker !=null && clickedSaeule !=null){
             BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(Markers[0]);
-            if ( clickedSaeule.getTyp() < 5 && clickedSaeule.getTyp() >= 0 )
+            if ( clickedSaeule.getTyp() < (Markers.length+1) && clickedSaeule.getTyp() >= 0 )
                 if (clickedSaeule.isFaultreport())
                     icon = BitmapDescriptorFactory.fromResource(Markers_Fault[clickedSaeule.getTyp()]);
                 else
@@ -453,8 +461,24 @@ public class SaeulenWorks {
             if ( LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG,"OnCLusterItemCLickListener  "+item.getID());
             clickedSaeule = item;
             clickedMarker=marker;
-            //MarkerBounce(marker);
-            marker.setIcon(BitmapDescriptorFactory.fromResource(Markers_Clicked[clickedSaeule.getTyp()]));
+            MarkerBounce(marker);
+            //marker.setIcon(BitmapDescriptorFactory.fromResource(Markers_Clicked[clickedSaeule.getTyp()]));
+            if(clickedMarker !=null && clickedSaeule !=null){
+                BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(Markers[0]);
+
+                if ( clickedSaeule.getTyp() < 5 && clickedSaeule.getTyp() >= 0 )
+                    if (clickedSaeule.isFaultreport())
+                        icon = BitmapDescriptorFactory.fromResource(Markers_Fault_Clicked[clickedSaeule.getTyp()]);
+                    else
+                        icon = BitmapDescriptorFactory.fromResource(Markers_Clicked[clickedSaeule.getTyp()]);
+                try {
+                    clickedMarker.setIcon(icon);
+                }
+                catch(IllegalArgumentException e){
+                    LogWorker.e(LOG_TAG,"ILLEGAL ARGUMENT on setIcon" + e.toString());
+
+                }
+            }
             MiniInfoFragment.setzeSaeule(item.getID(), item);
             //GeoWorks.animateClick();
             GeoWorks.movemapPosition(item.getPosition(),"MarkerClick");

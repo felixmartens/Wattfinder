@@ -91,7 +91,7 @@ public class GeoWorks {
 
     public static void movemapPosition(final LatLng position, final float zoom, final String VERURSACHER){
 
-        if(position!=null&& mMap != null) {
+        if(position!=null&& mMap != null&&zoom>2.0f) {
             if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG, "moveMap to "+position.toString() + "/"+zoom+" wegen "+VERURSACHER);
             LatLng nPosition = new LatLng(position.latitude,position.longitude);
 

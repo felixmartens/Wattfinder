@@ -3,6 +3,7 @@ package de.teammartens.android.wattfinder;
 import android.Manifest;
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.Dialog;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -508,7 +509,7 @@ public GoogleApiClient setupGoogleAPI(){
             LogWorker.e(LOG_TAG, "PlayServices not connected:"+GoogleApiAvailability.getInstance().getErrorString(PlayServiceStatus));
             Integer requestCode = CONNECTION_FAILURE_RESOLUTION_REQUEST;
 
-            /*Dialog dialog = GoogleApiAvailability.getInstance().getErrorDialog(this, PlayServiceStatus, requestCode, new DialogInterface.OnCancelListener() {
+            Dialog dialog = GoogleApiAvailability.getInstance().getErrorDialog(this, PlayServiceStatus, requestCode, new DialogInterface.OnCancelListener() {
                 @Override
                 public void onCancel(DialogInterface dialog) {
                     LogWorker.e(LOG_TAG, "onConnectionFailed: ConnectionResult.getErrorCode() = "
@@ -517,8 +518,8 @@ public GoogleApiClient setupGoogleAPI(){
                    Toast.makeText(KartenActivity.getInstance(), s ,Toast.LENGTH_SHORT).show();
 
                 }
-            });*/
-            //dialog.show();
+            });
+            dialog.show();
 
 
         } else { // Google Play Services are available
