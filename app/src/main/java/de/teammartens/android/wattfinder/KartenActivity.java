@@ -479,6 +479,7 @@ public static ActionBar actionBar;
                 GeoWorks.setmyPosition();
             }else{
                 Toast.makeText(getInstance(),getString(R.string.novalidlocation),Toast.LENGTH_SHORT);
+                if(LogWorker.isVERBOSE())LogWorker.d(LOG_TAG,"StandortButton: Kein gültiger Standort");
             }
 
             }

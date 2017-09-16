@@ -435,7 +435,7 @@ public class FilterWorks {
     public static boolean lese_filter(Integer F) {
         if (LogWorker.isVERBOSE())
             LogWorker.d(LOG_TAG, " Lese Filter: " + F + "(" + FilterInt2StrHelper(F) + "):" + filter.get(F));
-        return filter.get(F);
+        return (filter!=null?filter.get(F):false);
 
 
     }

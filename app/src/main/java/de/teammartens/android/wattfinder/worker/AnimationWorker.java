@@ -2,11 +2,9 @@ package de.teammartens.android.wattfinder.worker;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.content.res.Configuration;
 import android.os.Build;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -245,7 +243,8 @@ public class AnimationWorker {
             show_debug();
             show_fabs();
             hide_mapSearch();
-            KartenActivity.mapFragment.getView().requestFocus();
+            if (KartenActivity.mapFragment != null)
+                KartenActivity.mapFragment.getView().requestFocus();
             //slideDown(getInstance().findViewById(R.id.fab_directions), 500);
             //slideUp(getInstance().findViewById(R.id.fab_filter), 200);
             //slideUp(getInstance().findViewById(R.id.fab_mylocation), 200);

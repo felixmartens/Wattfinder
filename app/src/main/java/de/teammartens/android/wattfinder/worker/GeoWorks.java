@@ -72,7 +72,8 @@ public class GeoWorks {
                     movemapPosition(mPosition, zoom, "setmyPositionZoom");
             }
             myPosition = mPosition;
-        }
+        }else
+            if(LogWorker.isVERBOSE())LogWorker.d(LOG_TAG,"setMyPosition mPosition= null!");
     }
 
     public static void movemapPosition(final String VERURSACHER){
