@@ -98,4 +98,6 @@
     <string name="details_loadimages">Bilder laden</string>
     <string name="filter_but_erweitert">Erweiterte Filtereinstellungen anzeigen</string>
     <string name="filter_simpletitle">Vereinfachte Filteroptionen</string>
+    <string name="infoEntfernungPos">Entfernung vom Standort:</string>
+    <string name="infoEntfernungZiel">Entfernung zum Ziel:</string>
 </resources>

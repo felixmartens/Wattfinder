@@ -4,7 +4,6 @@ import android.Manifest;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Dialog;
-import android.app.DialogFragment;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -24,7 +23,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
-
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
@@ -85,7 +83,10 @@ public class KartenActivity extends FragmentActivity
     private static final String sP_Latitude = "LastLatitude";
     private static final String sP_Longitude = "LastLongitude";
     public static final String sP_Timestamp = "TimeatLastPosition";
-    private static final Long TimestampValid = 24*3600*1000l;
+    private static final String zP_Latitude = "TargetLatitude";
+    private static final String zP_Longitude = "TargetLongitude";
+    private static final String zP_String = "TargetString";
+    private static final Long TimestampValid = 12*3600*1000l;
     private static final Float defaultLat = 52.5170365f;
     private static final Float defaultLng = 13.3888599f;
     private static final LatLng defaultLatLng = new LatLng(defaultLat,defaultLng);
@@ -181,6 +182,17 @@ public static ActionBar actionBar;
                 e.putFloat(sP_Longitude, new Float(cp.target.longitude));
                 e.putFloat(sP_ZoomLevel, cp.zoom);
                 e.putLong(sP_Timestamp, System.currentTimeMillis());
+                LatLng c = GeoWorks.getSuchPosition();
+                if (c!= null){
+                    e.putFloat(zP_Latitude, new Float(c.latitude));
+                    e.putFloat(zP_Longitude, new Float(c.longitude));
+                    e.putString(zP_String,GeoWorks.getSuchString());
+                }else
+                {
+                    e.putFloat(zP_Latitude, 0f);
+                    e.putFloat(zP_Longitude, 0f);
+                }
+
                 e.putInt(sP_APIRQCount, API_RQ_Count);
                 e.apply();
                 LogWorker.d("WattfinderInternal", "Pause");
@@ -720,26 +732,36 @@ return null;
         }
 
         Long TS = sharedPref.getLong(sP_Timestamp,0);
-        if(!(Lat.equals(defaultLat)&&Lng.equals(defaultLng))&&zoom>GeoWorks.MAX_ZOOM&&(System.currentTimeMillis()-TS)<TimestampValid)
-        {
-            GeoWorks.CUSTOM_MAPVIEW=true;
 
-            LogWorker.d("SetMapCenter","Lat: "+Lat+"Lng: "+Lng+"Z: "+zoom+" geladen");
-            GeoWorks.movemapPosition(new LatLng (Lat,Lng),zoom,"mapReady");
-        }
-        else {
-            GeoWorks.CUSTOM_MAPVIEW = false;
-            if (GeoWorks.validLatLng(GeoWorks.getmyPosition())) {
+        if((System.currentTimeMillis()-TS)<TimestampValid) {
 
-                LogWorker.d("SetMapCenter"," zum Standort bewegen");
-                GeoWorks.setmyPosition(GeoWorks.getmyPosition());
+            if (!(Lat.equals(defaultLat) && Lng.equals(defaultLng)) && zoom > GeoWorks.MAX_ZOOM) {
+                GeoWorks.CUSTOM_MAPVIEW = true;
+
+                LogWorker.d("SetMapCenter", "Lat: " + Lat + "Lng: " + Lng + "Z: " + zoom + " geladen");
+                GeoWorks.movemapPosition(new LatLng(Lat, Lng), zoom, "mapReady");
+            } else {
+                GeoWorks.CUSTOM_MAPVIEW = false;
+                if (GeoWorks.validLatLng(GeoWorks.getmyPosition())) {
+
+                    LogWorker.d("SetMapCenter", " zum Standort bewegen");
+                    GeoWorks.setmyPosition(GeoWorks.getmyPosition());
+                } else {
+
+                    LogWorker.d("SetMapCenter", "zum Standard Standort bewegen");
+                    GeoWorks.movemapPosition(new LatLng(defaultLat, defaultLng), GeoWorks.DEFAULT_ZOOM, "mapReadyDefault");
+                }
             }
-            else{
-
-                LogWorker.d("SetMapCenter","zum Standard Standort bewegen");
-                GeoWorks.movemapPosition(new LatLng (defaultLat,defaultLng),GeoWorks.DEFAULT_ZOOM,"mapReadyDefault");
+            //Lade Suchmarker
+            Lat = sharedPref.getFloat(zP_Latitude,0);
+            Lng = sharedPref.getFloat(zP_Longitude,0);
+            if(Lat>0&&Lng>0){
+                GeoWorks.Suchmarker(new LatLng(Lat,Lng),sharedPref.getString(zP_String,""));
             }
+
         }
+
+
 
 
 

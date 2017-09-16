@@ -81,10 +81,10 @@
     <string name="dialog_text1">Welcome to the new Wattfinder app,\n
     we are now using the new official API by goingelectric.de to retrieve the chargepoint data. As Wattfinder only displays the data collected by goingelectric.de all your thanks and love for
     the data should go to them. Errors and ideas according the data should do also. Wattfinder only filters and displays the data.\n\n
-    Please not the following:\n\n
+    Please note the following:\n\n
     1. Wattfinder does not and will never collect, save or transmit any individual-related data.\n\n
-    2. Wattfinder does transmit filtering options, location data and search queries to goingelectric.de an if necessary to Google Maps API.\n\n
-    3. Please check the seperate termas and conditions of Google Maps if they use your personal data.\n\n
+    2. Wattfinder does transmit filtering options, location data and search queries to goingelectric.de and if necessary to Google Maps API.\n\n
+    3. Please check the seperate terms and conditions of Google Maps if they collect or use your personal data.\n\n
     4. Wattfinder does transmit -- stricly anonymously -- the total count of API requests for further development purposes.</string>
     <string name="close">Close</string>
     <string name="skipMessage">Don\'t show again</string>
@@ -101,5 +101,7 @@
     <string name="filter_but_erweitert">show all filtering options</string>
     <string name="filter_simpletitle">Simplified filtering options</string>
     <string name="details_loadimages">Load images</string>
+    <string name="infoEntfernungZiel">Distance to target position:</string>
+    <string name="infoEntfernungPos">Distance from current position:</string>
 
 </resources>

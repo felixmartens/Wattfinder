@@ -41,8 +41,9 @@ public class GeoWorks {
     private static String mQuery="";
     public static boolean CUSTOM_MAPVIEW=false;
     public static LatLng MarkerTarget;
-    public static LatLng myPosition,mapPosition,animTarget;
-
+    public static LatLng myPosition,mapPosition, suchPosition;
+    public static String suchString;
+    private static final int aroundDistance = 3000;
 
     public static Float mapZoom;
     public static Marker Marker_Ich, Marker_Suche = null;
@@ -188,6 +189,43 @@ public class GeoWorks {
     }
 
 
+    public static String distanceToString(LatLng Coord1,LatLng Coord2){
+        Float distance = 0f;
+
+        distance=distanceToFloat(Coord1,Coord2);
+
+        String Distance = "";
+
+        if (distance>1000){
+            Distance = String.format("%.1f",distance/1000)+" km";
+        }else{
+            Distance = String.format("%.0f",distance)+" m";
+        }
+
+        return Distance;
+    }
+
+
+    public static Float distanceToFloat(LatLng Coord1,LatLng Coord2){
+        Float distance = 0f;
+        Location alt = new Location("MapLocation");
+        Location neu = new Location("MapLocation");
+
+        alt.setLatitude(Coord1.latitude);
+        alt.setLongitude(Coord1.longitude);
+        neu.setLatitude(Coord2.latitude);
+        neu.setLongitude(Coord2.longitude);
+        distance=alt.distanceTo(neu);
+        return distance;
+
+    }
+
+
+    public static boolean isAround (LatLng Coord){
+
+        return (distanceToFloat(Coord,getMapPosition())<aroundDistance);
+    }
+
 
 
     public static void starteSuche(String query){
@@ -222,9 +260,7 @@ public class GeoWorks {
                             String fAddress = ((JSONArray)response.get("results")).getJSONObject(0)
                                     .getString("formatted_address");
 
-                            if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG,"latitude "+ lat);
-                            if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG,"longitude "+ lng);
-                            if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG,"at "+ fAddress);
+                            if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG,"latitude "+ lat + "longitude "+ lng+"at "+ fAddress);
                             LatLng l = new LatLng(lat,lng);
 
                             Suchmarker(l, fAddress);
@@ -284,15 +320,23 @@ public class GeoWorks {
                     }
             }
 
+    public static LatLng getSuchPosition() {
+        return suchPosition;
+    }
 
+    public static String getSuchString() {
+        return suchString;
+    }
 
-    public static void Suchmarker(LatLng Coord,String Desc){
+    public static void Suchmarker(LatLng Coord, String Desc){
 
         if (mMap != null) {
 
             if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG, "Create Marker Suche " + Desc);
 
             if (Coord != null && !Desc.isEmpty()){
+                suchPosition = Coord;
+                suchString = Desc;
                 if (Marker_Suche !=null) Marker_Suche.remove();
                 Marker_Suche = mMap.addMarker(new MarkerOptions().position(Coord).title(Desc).icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_suche)));
 
@@ -300,7 +344,7 @@ public class GeoWorks {
                 AnimationWorker.hide_info();
                 if(AnimationWorker.isDetailsVisibile())AnimationWorker.toggleDetails();
                 if(AnimationWorker.isFilterVisibile())AnimationWorker.toggleFilter();
-                movemapPosition(Coord,12f,"GeoWorks.Suchmarker");
+                movemapPosition(Coord,MY_LOCATION_ZOOM,"GeoWorks.Suchmarker");
 
             }
 

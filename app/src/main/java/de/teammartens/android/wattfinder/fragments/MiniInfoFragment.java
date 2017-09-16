@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,11 +11,11 @@ import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
 
-
 import de.teammartens.android.wattfinder.KartenActivity;
 import de.teammartens.android.wattfinder.R;
 import de.teammartens.android.wattfinder.model.Saeule;
 import de.teammartens.android.wattfinder.worker.AnimationWorker;
+import de.teammartens.android.wattfinder.worker.GeoWorks;
 
 /**
  * Created by felix on 10.11.14.
@@ -100,6 +99,19 @@ public void onPause(){
             mTitel = mTitel + ", " + mSaeule.getAddress();
             t2 = (TextView) infoView.findViewById(R.id.iAnschluesse);
             t2.setText(mSaeule.getChargepoints());
+            t2 = (TextView) infoView.findViewById(R.id.iEntfernung);
+            t2.setVisibility(View.GONE);
+            if (GeoWorks.isAround(GeoWorks.getSuchPosition())){
+                t2.setText(KartenActivity.getInstance().getResources().getString(R.string.infoEntfernungZiel)+" "+GeoWorks.distanceToString(mPos,GeoWorks.getSuchPosition()));
+                t2.setVisibility(View.VISIBLE);
+            }else
+            {
+                if (GeoWorks.isAround(GeoWorks.getmyPosition())){
+                    t2.setText(KartenActivity.getInstance().getResources().getString(R.string.infoEntfernungPos)+" "+GeoWorks.distanceToString(mPos,GeoWorks.getmyPosition()));
+                    t2.setVisibility(View.VISIBLE);
+                }
+            }
+
             t2 = (TextView) infoView.findViewById(R.id.iUpdated);
             t2.setText(KartenActivity.getInstance().getString(R.string.infoUpdated)+mSaeule.getUpdatedString());
             t2 = (TextView) infoView.findViewById(R.id.ifault_report);
@@ -122,7 +134,7 @@ public void onPause(){
             TextView t = (TextView) infoView.findViewById(R.id.iSaeulenid);
             t.setText("");
             t = (TextView) infoView.findViewById(R.id.iAdresse);t.setText("");
-            t = (TextView) infoView.findViewById(R.id.iVerbundPreis);t.setText("");
+            t = (TextView) infoView.findViewById(R.id.iEntfernung);t.setText("");
             t = (TextView) infoView.findViewById(R.id.iAnschluesse);t.setText("");
             t = (TextView) infoView.findViewById(R.id.iUpdated);t.setText("");
         }
@@ -139,6 +151,7 @@ public void onPause(){
 
 
     }
+
 
 
 

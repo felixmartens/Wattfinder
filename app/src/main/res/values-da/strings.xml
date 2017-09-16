@@ -97,4 +97,6 @@
     <string name="details_loadimages">Load images</string>
     <string name="filter_simpletitle">Simplified filtering options</string>
     <string name="filter_but_erweitert">show all filtering options</string>
+    <string name="infoEntfernungPos">Distance from current position:</string>
+    <string name="infoEntfernungZiel">Distance to target position:</string>
 </resources>
