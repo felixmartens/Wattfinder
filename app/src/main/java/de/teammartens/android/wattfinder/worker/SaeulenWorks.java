@@ -79,7 +79,7 @@ public class SaeulenWorks {
     private static Toast T;
     private static final int bounds_x = 16;
     private static final int bounds_y = 8;
-
+    private static Long requestStartTime = 0l;
 
 
 
@@ -150,14 +150,19 @@ public class SaeulenWorks {
 
             if (LogWorker.isVERBOSE())
                 LogWorker.d(LOG_TAG, "JSONUrl:" + url);
-
+            requestStartTime = System.currentTimeMillis();
             JsonObjectRequest pRequest = new JsonObjectRequest(Request.Method.GET,
                     url, (String) null, new Response.Listener<JSONObject>() {
 
 
                 @Override
                 public void onResponse(JSONObject jResponse) {
-
+                    if ((System.currentTimeMillis() - requestStartTime)>10000){
+                        NetWorker.setNetworkQuality(1);
+                    }
+                    if ((System.currentTimeMillis() - requestStartTime)<2000){
+                        NetWorker.rehabilateNetworkQuality();
+                    }
                     RQ_PENDING = false;
                     NetWorker.resetRETRY();
                     AnimationWorker.hide_mapLoading();
@@ -215,7 +220,7 @@ public class SaeulenWorks {
                         if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG, "Pending Requests canceled.");
                     }
                     if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG, "Request added.");
-
+                    requestStartTime=System.currentTimeMillis();
                     KartenActivity.incAPI_RQ_Count();
                     KartenActivity.getInstance().addToRequestQueue(pRequest,RQ_TAG);
                     RQ_PENDING = true;RQ_URL=url;
@@ -573,8 +578,8 @@ public class SaeulenWorks {
             //Factor for overlap depending on zoomlevel
             double f = 1.0;
             if (cp.zoom < 9.5) f = 0.5;
-            if (cp.zoom < 8.5) f = 0.2;
-            if (cp.zoom < 8.0) f = 0;
+            if (cp.zoom < 8.5 || NetWorker.getNetworkQuality()<3) f = 0.2;
+            if (cp.zoom < 8.0 || NetWorker.getNetworkQuality()<2) f = 0;
             double lat_overlap = f * (llB.northeast.latitude - llB.southwest.latitude);
             double lng_overlap = f * (llB.northeast.longitude - llB.southwest.longitude);
 

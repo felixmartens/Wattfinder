@@ -3,13 +3,13 @@ package de.teammartens.android.wattfinder.worker;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.telephony.TelephonyManager;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 
-import java.util.Timer;
 import java.util.TimerTask;
 
 import de.teammartens.android.wattfinder.KartenActivity;
@@ -29,8 +29,46 @@ public class NetWorker {
     private static final int DELAY = 5000;
     private static int RETRY = 0;
     private static final int RETRY_MAX = 3;
+    private static int NETWORK_QUALITY = 3;
+
+    public static int getNetworkQuality() {
+        return NETWORK_QUALITY;
+    }
+
+    public static void setNetworkQuality(int networkQuality) {
+        NETWORK_QUALITY = networkQuality;
+    }
+
+    public static void rehabilateNetworkQuality() {
+        if(NETWORK_QUALITY<3)NETWORK_QUALITY++;
+
+    }
+
+    public static void resetNetworkQuality(){
+
+
+        if(isWiFi())
+            setNetworkQuality(3);
+        else {
+            ConnectivityManager cm =
+                    (ConnectivityManager) KartenActivity.getInstance().getSystemService(Context.CONNECTIVITY_SERVICE);
+
+            NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+
+            if (activeNetwork.getType() == ConnectivityManager.TYPE_MOBILE) {
+
+
+                TelephonyManager tm = (TelephonyManager) KartenActivity.getInstance().getSystemService(Context.TELEPHONY_SERVICE);
+                if (tm.getNetworkType() > 2)
+                    setNetworkQuality(2);
+                else
+                    setNetworkQuality(1);
+            }
+        }
+    }
 
     public static boolean networkavailable() {
+
 
         ConnectivityManager cm =
                 (ConnectivityManager) KartenActivity.getInstance().getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -39,6 +77,8 @@ public class NetWorker {
         boolean isConnected = activeNetwork != null &&
                 activeNetwork.isConnectedOrConnecting();
 
+
+          resetNetworkQuality();
 
         if (!isConnected) {
 
@@ -58,50 +98,59 @@ public class NetWorker {
 
 
     public static void handleError(VolleyError error, final int Task) {
+        handleError(error,Task,"");
+    }
+
+    public static void handleError(VolleyError error, final int Task, final String Liste) {
 
 
-        Toast.makeText(KartenActivity.getInstance(), "NetzwerkFehler:" + error.getLocalizedMessage(), Toast.LENGTH_LONG).show();
-        if (LogWorker.isVERBOSE()) LogWorker.e("NETWORKER",error.getLocalizedMessage());
-        TextView tv = (TextView) KartenActivity.getInstance().findViewById(R.id.errorTitle);
-        if (tv != null) tv.setText(getInstance().getString(R.string.error_network_title));
 
-        tv = (TextView) KartenActivity.getInstance().findViewById(R.id.errorText);
-        if (tv != null) tv.setText(error.getLocalizedMessage());
-        View v = KartenActivity.getInstance().findViewById(R.id.errorMessage);
-        v.setOnClickListener(new View.OnClickListener() {
-                                 @Override
-                                 public void onClick(View v) {
-                                     if (Task == TASK_FILTER) FilterWorks.lade_filterlisten_API();
-                                     else SaeulenWorks.reloadMarker();
-                                 }
-                             }
 
-        );
-
-        v = KartenActivity.getInstance().findViewById(R.id.errorMessage);
-        if (v != null) AnimationWorker.slideUp(v, 0);
-
-       /* if (RETRY < RETRY_MAX){
+        if (RETRY < RETRY_MAX){
             RETRY++;
             TimerTask T;
 
             if (Task==TASK_FILTER)
-                T= new TimerTask() {
+                /*T= new TimerTask() {
                     @Override
                     public void run() {
-                        FilterWorks.lade_filterlisten_API();
+                        FilterWorks.filter_API_request(Liste);
                     }
-                };
+                };*/
+                FilterWorks.filter_API_request(Liste);
             else
-                T = new TimerTask() {
+               /* T = new TimerTask() {
                     @Override
                     public void run() {
                         SaeulenWorks.reloadMarker();
                     }
-                };
+                };*/
+                SaeulenWorks.reloadMarker();
 
-            new Timer().schedule(T ,RETRY*DELAY);
-        }*/
+            //new Timer().schedule(T ,RETRY*DELAY);
+        }else
+        {
+            Toast.makeText(KartenActivity.getInstance(), "NetzwerkFehler:" + error.getMessage(), Toast.LENGTH_LONG).show();
+            if (LogWorker.isVERBOSE()) LogWorker.e("NETWORKER",error.getMessage());
+            TextView tv = (TextView) KartenActivity.getInstance().findViewById(R.id.errorTitle);
+            if (tv != null) tv.setText(getInstance().getString(R.string.error_network_title));
+
+            tv = (TextView) KartenActivity.getInstance().findViewById(R.id.errorText);
+            if (tv != null) tv.setText(error.getMessage());
+            View v = KartenActivity.getInstance().findViewById(R.id.errorMessage);
+            v.setOnClickListener(new View.OnClickListener() {
+                                     @Override
+                                     public void onClick(View v) {
+                                         if (Task == TASK_FILTER) FilterWorks.lade_filterlisten_API();
+                                         else SaeulenWorks.reloadMarker();
+                                     }
+                                 }
+
+            );
+
+            v = KartenActivity.getInstance().findViewById(R.id.errorMessage);
+            if (v != null) AnimationWorker.slideUp(v, 0);
+        }
 
 
     }
@@ -109,7 +158,9 @@ public class NetWorker {
     public static int getRETRY() {
         return RETRY;
     }
-
+    public static int getRETRY_MAX() {
+        return RETRY_MAX;
+    }
 
     public static boolean isWiFi(){
 

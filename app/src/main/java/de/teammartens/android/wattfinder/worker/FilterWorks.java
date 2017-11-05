@@ -135,188 +135,172 @@ public class FilterWorks {
                 !filter_initialized()) {
 
             if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG, "Lade Filterlisten API");
-            String params = "key=" + KartenActivity.getInstance().getString(R.string.GoingElectric_APIKEY);
-            karten_verfuegbar_API.clear();
-            stecker_verfuegbar_API.clear();
-            verbund_verfuegbar_API.clear();
-            JsonObjectRequest filterReqPlugs = new JsonObjectRequest(Request.Method.GET, fAPIUrl_plugs + "?" + params, (String) null, new Response.Listener<JSONObject>() {
-                @Override
-
-                public void onResponse(JSONObject response) {
-                    if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG, "FilterPlugResponse");
-                    //string=fixEncoding(string);
-                    try {
-                        NetWorker.resetRETRY();
-                        String status = response.getString("status");
-                        Set<String> steckerT = new HashSet<String>();
-                        JSONArray Stecker = response.getJSONArray("result");
-                        final int Steckerzahl = Stecker.length();
-                        if (LogWorker.isVERBOSE())
-                            LogWorker.d(LOG_TAG, Steckerzahl + " Stecker gefunden");
-                        if (Steckerzahl > 0) {
-                            f_TIMESTAMP = System.currentTimeMillis() / 1000;
-                            stecker_verfuegbar_API.clear();
-
-                            for (int i = 0; i < Steckerzahl; i++) {
-                                stecker_verfuegbar_API.add(Stecker.getString(i));
-                                // if (LogWorker.isVERBOSE())  LogWorker.d(LOG_TAG, "Stecker:" + Stecker.getString(i));
-                            }
-
-                            if (!stecker_verfuegbar_API.isEmpty())
-                                steckerT.addAll(stecker);
-                            for (String s : steckerT) {
-                                if (!stecker_verfuegbar_API.contains(s)) {
-                                    APIconverter(F_STECKER, s);
-                                }
-                            }
-
-                            if (filter_initialized())
-                                AnimationWorker.hideStartup();
-                        } else {
-                            if (LogWorker.isVERBOSE())
-                                LogWorker.e(LOG_TAG, "KEINE Stecker gefunden!!!!!");
-                        }
-
-                    } catch (JSONException e) {
-                        LogWorker.e(LOG_TAG, "JSONERROR:" + e.getMessage());
-                        e.printStackTrace();
-                    }
-
-                }
-            }
-                    , new Response.ErrorListener() {
-
-                @Override
-                public void onErrorResponse(VolleyError error) {
-
-                    NetWorker.handleError(error, NetWorker.TASK_FILTER);
-
-                }
-
-            });
-
-            JsonObjectRequest filterReqNetworks = new JsonObjectRequest(Request.Method.GET, fAPIUrl_networks + "?" + params, (String) null, new Response.Listener<JSONObject>() {
-                @Override
-
-                public void onResponse(JSONObject response) {
-                    if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG, "FilterNetworkResponse");
-                    //string=fixEncoding(string);
-                    try {
-                        NetWorker.resetRETRY();
-                        String status = response.getString("status");
-                        Set<String> verbundT = new HashSet<String>();
-                        JSONArray Verbund = response.getJSONArray("result");
-                        final int Verbundzahl = Verbund.length();
-                        if (LogWorker.isVERBOSE())
-                            LogWorker.d(LOG_TAG, Verbundzahl + " Verbünde gefunden");
-                        if (Verbundzahl > 0) {
-                            f_TIMESTAMP = System.currentTimeMillis() / 1000;
-                            verbund_verfuegbar_API.clear();
-
-                            for (int i = 0; i < Verbundzahl; i++) {
-                                verbund_verfuegbar_API.add(Verbund.getString(i));
-                                // if ( LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG, "Verbund:" + Verbund.getString(i));
-                            }
-
-
-                            if (!verbund_verfuegbar_API.isEmpty())
-                                verbundT.addAll(verbund);
-                            for (String v : verbundT) {
-                                if (!verbund_verfuegbar_API.contains(v)) {
-                                    APIconverter(F_VERBUND, v);
-                                }
-                            }
-                            if (filter_initialized())
-                                AnimationWorker.hideStartup();
-                        } else {
-                            if (LogWorker.isVERBOSE())
-                                LogWorker.e(LOG_TAG, "KEINE Verbund gefunden!!!!!");
-                        }
-
-                    } catch (JSONException e) {
-                        LogWorker.e(LOG_TAG, "JSONERROR:" + e.getMessage());
-                        e.printStackTrace();
-                    }
-
-                }
-            }, new Response.ErrorListener() {
-
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    NetWorker.handleError(error, NetWorker.TASK_FILTER);
-                }
-
-            });
-
-            JsonObjectRequest filterReqCards = new JsonObjectRequest(Request.Method.GET, fAPIUrl_cards + "?" + params, (String) null, new Response.Listener<JSONObject>() {
-                @Override
-
-                public void onResponse(JSONObject response) {
-                    if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG, "FilterCardsResponse");
-                    //string=fixEncoding(string);
-                    try {
-                        NetWorker.resetRETRY();
-                        String status = response.getString("status");
-                        JSONArray Karten = response.getJSONArray("result");
-                        Set<String> kartenT = new HashSet<String>();
-                        final int Kartenzahl = Karten.length();
-                        if (LogWorker.isVERBOSE())
-                            LogWorker.d(LOG_TAG, Kartenzahl + " Karten gefunden");
-                        if (Kartenzahl > 0) {
-                            f_TIMESTAMP = System.currentTimeMillis() / 1000;
-                            karten_verfuegbar_API.clear();
-                            JSONObject jO = new JSONObject();
-                            for (int i = 0; i < Kartenzahl; i++) {
-                                jO = Karten.getJSONObject(i);
-                                karten_verfuegbar_API.put(jO.getInt("card_id"), jO.getString("name"));
-
-                                //if (LogWorker.isVERBOSE())  LogWorker.d(LOG_TAG, "Karte:" + jO.getString("name"));
-                            }
-
-                            if (!karten_verfuegbar_API.isEmpty())
-
-                                kartenT.addAll(karten);
-                            for (String s : kartenT) {
-                                if (!s.matches("[0-9]+") || !karten_verfuegbar_API.containsKey(Integer.decode(s))) {
-                                    APIconverter(F_KARTEN, s);
-                                }
-                            }
-                            if (filter_initialized())
-                                AnimationWorker.hideStartup();
-
-                        } else {
-                            if (LogWorker.isVERBOSE())
-                                LogWorker.e(LOG_TAG, "KEINE Karten gefunden!!!!!");
-                        }
-
-                    } catch (JSONException e) {
-                        LogWorker.e(LOG_TAG, "JSONERROR:" + e.getMessage());
-                        e.printStackTrace();
-                    }
-
-                }
-            }
-                    , new Response.ErrorListener() {
-
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    NetWorker.handleError(error, NetWorker.TASK_FILTER);
-
-                }
-
-            });
-
-            KartenActivity.getInstance().addToRequestQueue(filterReqPlugs);
-            KartenActivity.incAPI_RQ_Count();
-            KartenActivity.getInstance().addToRequestQueue(filterReqNetworks);
-            KartenActivity.incAPI_RQ_Count();
-            KartenActivity.getInstance().addToRequestQueue(filterReqCards);
-            KartenActivity.incAPI_RQ_Count();
-
+            filter_API_request(F_STECKER);
         } else
             SaeulenWorks.checkMarkerCache("ladefilterAPI-abgebrochen");
     }
 
+    public static void filter_API_request(final String Liste){
+        SharedPreferences sPref = KartenActivity.sharedPref;
+        if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG, "Lade Filterlisten API - "+Liste);
+        String params = "key=" + KartenActivity.getInstance().getString(R.string.GoingElectric_APIKEY);
+        String fAPIUrl="";
+        Set<String> sp_Cache = new HashSet<String>();
+        switch (Liste) {
+            case F_STECKER:
+                fAPIUrl = fAPIUrl_plugs;
+                sp_Cache = sPref.getStringSet("STECKER_API",new HashSet<String>());
+
+                break;
+            case F_VERBUND:
+                fAPIUrl = fAPIUrl_networks;
+                sp_Cache = sPref.getStringSet("VERBUND_API",new HashSet<String>());
+
+                break;
+            case F_KARTEN:
+                fAPIUrl = fAPIUrl_cards;
+                sp_Cache = sPref.getStringSet("KARTEN_API",new HashSet<String>());
+
+                break;
+        }
+        final Set<String> sp_CacheF = sp_Cache;
+        final Long requestTimeStart = System.currentTimeMillis();
+        JsonObjectRequest filterReq = new JsonObjectRequest(Request.Method.GET, fAPIUrl + "?" + params, (String) null, new Response.Listener<JSONObject>() {
+            @Override
+
+            public void onResponse(JSONObject response) {
+                if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG, "FilterAPIResponse " +Liste);
+                //string=fixEncoding(string);
+               if ((System.currentTimeMillis() - requestTimeStart)>5000){
+                   NetWorker.setNetworkQuality(1);
+               }
+                if ((System.currentTimeMillis() - requestTimeStart)<2000){
+                    NetWorker.rehabilateNetworkQuality();
+                }
+                try {
+                    NetWorker.resetRETRY();
+                    String status = response.getString("status");
+                    Set<String> listeT = new HashSet<String>();
+                    Set<String> listeAPI_hs = new HashSet<String>();
+                    HashMap<Integer,String> listeAPI_hm = new HashMap<Integer,String>();
+                    JSONArray JSON_LISTE = response.getJSONArray("result");
+                    final int Listenlaenge = JSON_LISTE.length();
+                    if (LogWorker.isVERBOSE())
+                        LogWorker.d(LOG_TAG,"FilterAPIRq "+Liste + ": "+ Listenlaenge + " Einträge gefunden");
+                    if (Listenlaenge > 0) {
+                        f_TIMESTAMP = System.currentTimeMillis() / 1000;
+
+
+                        if(Liste==F_KARTEN){
+
+                            JSONObject jO = new JSONObject();
+                            for (int i = 0; i < Listenlaenge; i++) {
+                                jO = JSON_LISTE.getJSONObject(i);
+                                listeAPI_hm.put(jO.getInt("card_id"), jO.getString("name"));
+
+                                //if (LogWorker.isVERBOSE())  LogWorker.d(LOG_TAG, "Karte:" + jO.getString("name"));
+                            }
+                        }
+                        else{
+
+                            for (int i = 0; i < Listenlaenge; i++) {
+                                listeAPI_hs.add(JSON_LISTE.getString(i));
+                                // if ( LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG, "Verbund:" + Verbund.getString(i));
+                            }
+
+                        }
+
+
+
+
+
+                        /*if (!listeAPI.isEmpty())
+                            listeT.addAll(verbund);
+                        for (String v : listeT) {
+                            if (!listeAPI.contains(v)) {
+                                APIconverter(Liste/, v);
+                            }
+                        }*/
+
+                        if (filter_initialized())
+                            AnimationWorker.hideStartup();
+
+                        switch (Liste) {
+                            case F_STECKER:
+                                stecker_verfuegbar_API = listeAPI_hs;
+                                filter_API_request(F_VERBUND);
+
+                                break;
+                            case F_VERBUND:
+                                verbund_verfuegbar_API = listeAPI_hs;
+                                filter_API_request(F_KARTEN);
+                                break;
+                            case F_KARTEN:
+                                karten_verfuegbar_API = listeAPI_hm;
+                                break;
+                        }
+
+                    } else {
+                        if (LogWorker.isVERBOSE())
+                            LogWorker.e(LOG_TAG, "Leere Antwort !!! API ReQUest "+ Liste);
+                    }
+
+                } catch (JSONException e) {
+                    LogWorker.e(LOG_TAG, "JSONERROR:" + e.getMessage());
+                    e.printStackTrace();
+                }
+
+            }
+        }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                if(NetWorker.getRETRY()<NetWorker.getRETRY_MAX()){
+                    filter_API_request(Liste);
+                }else{
+                    NetWorker.setNetworkQuality(0);
+                    switch (Liste) {
+                        case F_STECKER:
+                            stecker_verfuegbar_API = sp_CacheF;
+                            filter_API_request(F_VERBUND);
+                            break;
+                        case F_VERBUND:
+                            verbund_verfuegbar_API = sp_CacheF;
+                            filter_API_request(F_KARTEN);
+                            break;
+                        case F_KARTEN:
+                            karten_verfuegbar_API = deserialize_karten(sp_CacheF);
+                            break;
+                    }
+                }
+                NetWorker.handleError(error, NetWorker.TASK_FILTER,Liste);
+            }
+
+        });
+
+        /*Request nur starten wenn Netzwerkverbindung einigermaßen gut ist, sonst nehemen wir die gespeicherten*/
+
+        if(NetWorker.getNetworkQuality()>1 || sp_CacheF.size()<1){
+         KartenActivity.getInstance().addToRequestQueue(filterReq);
+         KartenActivity.incAPI_RQ_Count();}
+        else {
+            switch (Liste) {
+                case F_STECKER:
+                    stecker_verfuegbar_API = sp_CacheF;
+                    filter_API_request(F_VERBUND);
+                    break;
+                case F_VERBUND:
+                    verbund_verfuegbar_API = sp_CacheF;
+                    filter_API_request(F_KARTEN);
+                    break;
+                case F_KARTEN:
+                    karten_verfuegbar_API = deserialize_karten(sp_CacheF);
+                    break;
+            }
+        }
+
+
+    }
     /*
     Filtereinstellungen speichern
      */
@@ -341,6 +325,9 @@ public class FilterWorks {
         editor.putStringSet(PRESET + "STECKER", stecker);
         editor.putStringSet(PRESET + "VERBUND", verbund);
         editor.putStringSet(PRESET + "KARTEN", karten);
+        editor.putStringSet("STECKER_API", stecker_verfuegbar_API);
+        editor.putStringSet("VERBUND_API", verbund_verfuegbar_API);
+        editor.putStringSet("KARTEN_API", serialize_karten());
         editor.putString("currentPreset", PRESET);
         editor.putStringSet("PRESETS", presets);
         if (!editor.commit()) {
@@ -369,6 +356,35 @@ public class FilterWorks {
         }
 
 
+    }
+
+
+    /*
+    Helper um karten_API-available in den sharedPref speichern zu können
+    */
+
+    private static HashSet<String> serialize_karten(){
+        HashSet<String> hs = new HashSet<String>();
+        for (Map.Entry<Integer, String> e : karten_verfuegbar_API.entrySet()) {
+            hs.add(e.getKey()+"||"+e.getValue());
+        }
+
+        return hs;
+    }
+
+        /*
+    Helper um karten_API-available in den sharedPref speichern zu können
+    */
+
+    private static HashMap<Integer,String> deserialize_karten(Set<String> liste_karten){
+        HashMap<Integer,String> hm= new HashMap<Integer,String>();
+        for (String l:liste_karten
+             ) {
+            String[] split = l.split("||");
+            hm.put(Integer.getInteger(split[0]),split[1]);
+        }
+
+        return hm;
     }
 
     /*
