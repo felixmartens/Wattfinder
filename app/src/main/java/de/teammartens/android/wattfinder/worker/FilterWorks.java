@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.text.TextUtils;
 import android.widget.Toast;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -118,26 +119,35 @@ public class FilterWorks {
         verbund = sPref.getStringSet(PRESET + "VERBUND", new HashSet<String>());
 
 
+
         karten = sPref.getStringSet(PRESET + "KARTEN", new HashSet<String>());
         if (LogWorker.isVERBOSE())
             LogWorker.d(LOG_TAG, "Karten aus DB geladen:" + karten.toString());
         convert2API();
 
+
+        f_TIMESTAMP = sPref.getLong("fTimestamp",0);
+        
+        stecker_verfuegbar_API = sPref.getStringSet("STECKER_API",new HashSet<String>());
+
+        karten_verfuegbar_API = deserialize_karten(sPref.getStringSet("KARTEN_API",new HashSet<String>()));
+
+        verbund_verfuegbar_API = sPref.getStringSet("VERBUND_API",new HashSet<String>());
     }
 
 
     /*
-   Listen für Stecker,Verbund, und Karten von Webseite via JSON API laden
+   Listen für Stecker,Verbund, und Karten von goingelectric via JSON API laden
    12/2016
     */
-    public static void lade_filterlisten_API() {
+    public static void refresh_filterlisten_API() {
         if ((System.currentTimeMillis() / 1000 - f_TIMESTAMP) > f_OUTDATED ||
-                !filter_initialized()) {
+                !filter_initialized() || NetWorker.getNetworkQuality()>1) {
 
-            if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG, "Lade Filterlisten API");
+            if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG, "Refresh Filterlisten API");
             filter_API_request(F_STECKER);
         } else
-            SaeulenWorks.checkMarkerCache("ladefilterAPI-abgebrochen");
+            SaeulenWorks.checkMarkerCache("ladefilterAPI-nicht nötig");
     }
 
     public static void filter_API_request(final String Liste){
@@ -149,21 +159,21 @@ public class FilterWorks {
         switch (Liste) {
             case F_STECKER:
                 fAPIUrl = fAPIUrl_plugs;
-                sp_Cache = sPref.getStringSet("STECKER_API",new HashSet<String>());
+              //  sp_Cache = sPref.getStringSet("STECKER_API",new HashSet<String>());
 
                 break;
             case F_VERBUND:
                 fAPIUrl = fAPIUrl_networks;
-                sp_Cache = sPref.getStringSet("VERBUND_API",new HashSet<String>());
+               // sp_Cache = sPref.getStringSet("VERBUND_API",new HashSet<String>());
 
                 break;
             case F_KARTEN:
                 fAPIUrl = fAPIUrl_cards;
-                sp_Cache = sPref.getStringSet("KARTEN_API",new HashSet<String>());
+               // sp_Cache = sPref.getStringSet("KARTEN_API",new HashSet<String>());
 
                 break;
         }
-        final Set<String> sp_CacheF = sp_Cache;
+    //    final Set<String> sp_CacheF = sp_Cache;
         final Long requestTimeStart = System.currentTimeMillis();
         JsonObjectRequest filterReq = new JsonObjectRequest(Request.Method.GET, fAPIUrl + "?" + params, (String) null, new Response.Listener<JSONObject>() {
             @Override
@@ -178,7 +188,7 @@ public class FilterWorks {
                     NetWorker.rehabilateNetworkQuality();
                 }
                 try {
-                    NetWorker.resetRETRY();
+
                     String status = response.getString("status");
                     Set<String> listeT = new HashSet<String>();
                     Set<String> listeAPI_hs = new HashSet<String>();
@@ -221,15 +231,15 @@ public class FilterWorks {
                                 APIconverter(Liste/, v);
                             }
                         }*/
-
+                        if(LogWorker.isVERBOSE())LogWorker.d(LOG_TAG,listeAPI_hs.size() + " gespeichert");
                         if (filter_initialized())
                             AnimationWorker.hideStartup();
 
                         switch (Liste) {
                             case F_STECKER:
+
                                 stecker_verfuegbar_API = listeAPI_hs;
                                 filter_API_request(F_VERBUND);
-
                                 break;
                             case F_VERBUND:
                                 verbund_verfuegbar_API = listeAPI_hs;
@@ -255,24 +265,19 @@ public class FilterWorks {
 
             @Override
             public void onErrorResponse(VolleyError error) {
-                if(NetWorker.getRETRY()<NetWorker.getRETRY_MAX()){
-                    filter_API_request(Liste);
-                }else{
+
                     NetWorker.setNetworkQuality(0);
                     switch (Liste) {
                         case F_STECKER:
-                            stecker_verfuegbar_API = sp_CacheF;
                             filter_API_request(F_VERBUND);
                             break;
                         case F_VERBUND:
-                            verbund_verfuegbar_API = sp_CacheF;
                             filter_API_request(F_KARTEN);
                             break;
                         case F_KARTEN:
-                            karten_verfuegbar_API = deserialize_karten(sp_CacheF);
                             break;
                     }
-                }
+
                 NetWorker.handleError(error, NetWorker.TASK_FILTER,Liste);
             }
 
@@ -280,21 +285,25 @@ public class FilterWorks {
 
         /*Request nur starten wenn Netzwerkverbindung einigermaßen gut ist, sonst nehemen wir die gespeicherten*/
 
-        if(NetWorker.getNetworkQuality()>1 || sp_CacheF.size()<1){
+        if(NetWorker.getNetworkQuality()>1||(NetWorker.getNetworkQuality()==1&&(System.currentTimeMillis()/1000 - f_TIMESTAMP)>f_OUTDATED) ){
+
+            //Wenn shcon irgendwelche Listen da sind dann begrenze de Versuche um nicht zuviel Netzwerkkapazität zu nehmen
+            if (filter_initialized()&&NetWorker.getNetworkQuality()<3)
+                filterReq.setRetryPolicy(new DefaultRetryPolicy(5000, 1,1));
          KartenActivity.getInstance().addToRequestQueue(filterReq);
          KartenActivity.incAPI_RQ_Count();}
         else {
             switch (Liste) {
                 case F_STECKER:
-                    stecker_verfuegbar_API = sp_CacheF;
+
                     filter_API_request(F_VERBUND);
                     break;
                 case F_VERBUND:
-                    verbund_verfuegbar_API = sp_CacheF;
+
                     filter_API_request(F_KARTEN);
                     break;
                 case F_KARTEN:
-                    karten_verfuegbar_API = deserialize_karten(sp_CacheF);
+                    
                     break;
             }
         }
@@ -331,16 +340,10 @@ public class FilterWorks {
         editor.putString("currentPreset", PRESET);
         editor.putStringSet("PRESETS", presets);
         if (!editor.commit()) {
-           /* if (KartenActivity.SEND_REPORTS){
-                ErrorReporter ER = ACRA.getErrorReporter();
-                ER.putCustomData("error","commit fehlgeschlagen");
-                ER.putCustomData("PRESET",PRESET);
-                ER.putCustomData("presets",presets.toString());
-                ER.handleSilentException(null);
-            }*/
+
             Toast.makeText(KartenActivity.getInstance(), R.string.SaveFilterError, Toast.LENGTH_LONG);
             if (LogWorker.isVERBOSE())
-                LogWorker.d(LOG_TAG, "FEHLER: Filter für Profil " + PRESET + " nicht gespeichert.");
+                LogWorker.e(LOG_TAG, "FEHLER: Filter für Profil " + PRESET + " nicht gespeichert.");
 
         }
         if (LogWorker.isVERBOSE())
@@ -365,6 +368,7 @@ public class FilterWorks {
 
     private static HashSet<String> serialize_karten(){
         HashSet<String> hs = new HashSet<String>();
+        if(karten_verfuegbar_API!=null && karten_verfuegbar_API.size()>0)
         for (Map.Entry<Integer, String> e : karten_verfuegbar_API.entrySet()) {
             hs.add(e.getKey()+"||"+e.getValue());
         }
@@ -378,6 +382,7 @@ public class FilterWorks {
 
     private static HashMap<Integer,String> deserialize_karten(Set<String> liste_karten){
         HashMap<Integer,String> hm= new HashMap<Integer,String>();
+        if (liste_karten!=null && liste_karten.size()>0)
         for (String l:liste_karten
              ) {
             String[] split = l.split("||");

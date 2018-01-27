@@ -11,6 +11,7 @@ import android.view.animation.BounceInterpolator;
 import android.view.animation.Interpolator;
 import android.widget.Toast;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -222,6 +223,7 @@ public class SaeulenWorks {
                     if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG, "Request added.");
                     requestStartTime=System.currentTimeMillis();
                     KartenActivity.incAPI_RQ_Count();
+                    pRequest.setRetryPolicy(new DefaultRetryPolicy(5000, 3,2));
                     KartenActivity.getInstance().addToRequestQueue(pRequest,RQ_TAG);
                     RQ_PENDING = true;RQ_URL=url;
 

@@ -333,7 +333,7 @@ public class AnimationWorker {
         });
 
         startup.setVisibility(View.VISIBLE);
-        FilterWorks.lade_filterlisten_API();
+        FilterWorks.refresh_filterlisten_API();
 
         if(LogWorker.isVERBOSE())LogWorker.d(LOG_TAG,"showStartup");
         startupScreen=true;

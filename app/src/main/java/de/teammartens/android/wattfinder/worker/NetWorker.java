@@ -10,8 +10,6 @@ import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 
-import java.util.TimerTask;
-
 import de.teammartens.android.wattfinder.KartenActivity;
 import de.teammartens.android.wattfinder.R;
 
@@ -29,7 +27,7 @@ public class NetWorker {
     private static final int DELAY = 5000;
     private static int RETRY = 0;
     private static final int RETRY_MAX = 3;
-    private static int NETWORK_QUALITY = 3;
+    private static int NETWORK_QUALITY = 1;
 
     public static int getNetworkQuality() {
         return NETWORK_QUALITY;
@@ -104,7 +102,9 @@ public class NetWorker {
     public static void handleError(VolleyError error, final int Task, final String Liste) {
 
 
-
+/*******************
+ *Keine manuellen Retries da VOlley bereits welche implementiert. Lieber passen wir das Verhalten von Volley an
+ *
 
         if (RETRY < RETRY_MAX){
             RETRY++;
@@ -116,7 +116,7 @@ public class NetWorker {
                     public void run() {
                         FilterWorks.filter_API_request(Liste);
                     }
-                };*/
+                };
                 FilterWorks.filter_API_request(Liste);
             else
                /* T = new TimerTask() {
@@ -124,14 +124,17 @@ public class NetWorker {
                     public void run() {
                         SaeulenWorks.reloadMarker();
                     }
-                };*/
+                };
                 SaeulenWorks.reloadMarker();
 
             //new Timer().schedule(T ,RETRY*DELAY);
         }else
-        {
+ */
+       // {
+
             Toast.makeText(KartenActivity.getInstance(), "NetzwerkFehler:" + error.getMessage(), Toast.LENGTH_LONG).show();
-            if (LogWorker.isVERBOSE()) LogWorker.e("NETWORKER",error.getMessage());
+            if (LogWorker.isVERBOSE()) LogWorker.e("NETWORKER","Netzwerkfehler: "+Liste+"\n"+error.getMessage()+" \n "+error.getCause().getMessage()+" \n "+error.getCause().toString()
+                    );
             TextView tv = (TextView) KartenActivity.getInstance().findViewById(R.id.errorTitle);
             if (tv != null) tv.setText(getInstance().getString(R.string.error_network_title));
 
@@ -141,7 +144,7 @@ public class NetWorker {
             v.setOnClickListener(new View.OnClickListener() {
                                      @Override
                                      public void onClick(View v) {
-                                         if (Task == TASK_FILTER) FilterWorks.lade_filterlisten_API();
+                                         if (Task == TASK_FILTER) FilterWorks.refresh_filterlisten_API();
                                          else SaeulenWorks.reloadMarker();
                                      }
                                  }
@@ -150,17 +153,11 @@ public class NetWorker {
 
             v = KartenActivity.getInstance().findViewById(R.id.errorMessage);
             if (v != null) AnimationWorker.slideUp(v, 0);
-        }
+
 
 
     }
 
-    public static int getRETRY() {
-        return RETRY;
-    }
-    public static int getRETRY_MAX() {
-        return RETRY_MAX;
-    }
 
     public static boolean isWiFi(){
 
@@ -176,9 +173,5 @@ public class NetWorker {
 
 
     }
-    public static void resetRETRY() {
-        NetWorker.RETRY = 0;
-        View v = KartenActivity.getInstance().findViewById(R.id.errorMessage);
-        if(v!=null) AnimationWorker.slideDown(v,0);
-    }
+
 }

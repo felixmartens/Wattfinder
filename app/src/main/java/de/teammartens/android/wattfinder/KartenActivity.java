@@ -731,6 +731,8 @@ return null;
             Lng=defaultLng;
             zoom=GeoWorks.DEFAULT_ZOOM;
         }
+        //erstmal setzen um zumindest eine POsition zu haben
+        GeoWorks.setmyPosition(new LatLng(Lat,Lng));
 
         Long TS = sharedPref.getLong(sP_Timestamp,0);
 

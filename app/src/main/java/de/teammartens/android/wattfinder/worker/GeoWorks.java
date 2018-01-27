@@ -1,6 +1,7 @@
 package de.teammartens.android.wattfinder.worker;
 
 import android.location.Location;
+import android.util.Log;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -212,6 +213,7 @@ public class GeoWorks {
         Location alt = new Location("MapLocation");
         Location neu = new Location("MapLocation");
 
+        if (Coord1== null || Coord2 == null) {if (LogWorker.isVERBOSE()) Log.e(LOG_TAG,"Distance2Float NPE: Coord1"+Coord1+" - Coord2:"+Coord2);return 0f;}
         alt.setLatitude(Coord1.latitude);
         alt.setLongitude(Coord1.longitude);
         neu.setLatitude(Coord2.latitude);
