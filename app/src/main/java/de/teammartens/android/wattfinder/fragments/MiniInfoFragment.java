@@ -101,7 +101,8 @@ public void onPause(){
             t2.setText(mSaeule.getChargepoints());
             t2 = (TextView) infoView.findViewById(R.id.iEntfernung);
             t2.setVisibility(View.GONE);
-            if (GeoWorks.isAround(GeoWorks.getSuchPosition())){
+            if (GeoWorks.getSuchPosition()!= null && GeoWorks.isAround(GeoWorks.getSuchPosition()))
+            {
                 t2.setText(KartenActivity.getInstance().getResources().getString(R.string.infoEntfernungZiel)+" "+GeoWorks.distanceToString(mPos,GeoWorks.getSuchPosition()));
                 t2.setVisibility(View.VISIBLE);
             }else
