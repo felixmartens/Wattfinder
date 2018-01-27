@@ -1,0 +1,433 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/filter_smart_card_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:padding="5dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/filter_smart_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:text="@string/filterTitel"
+                android:textColor="@color/colorPrimary"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/filter_classic_design"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginRight="15dp"
+                android:gravity="right"
+                android:text="@string/filter_switch_classic"
+                android:textColor="@color/colorAccent" />
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+
+    <LinearLayout
+        android:id="@+id/filter_rest"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingTop="5dp"
+        android:visibility="gone"
+        android:weightSum="1">
+
+
+        <CheckBox
+            android:id="@+id/fBarrierefrei"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:text="@string/filterBarrierefrei" />
+
+        <CheckBox
+            android:id="@+id/fHotels"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/filterHotels"
+            android:visibility="gone" />
+
+        <CheckBox
+            android:id="@+id/fRestaurants"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/filterRestaurants"
+            android:visibility="gone" />
+
+        <Spinner
+            android:id="@+id/f_opening"
+            style="@style/Widget.AppCompat.Spinner.DropDown"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="15dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="15dp"
+            android:layout_weight="0.03"
+            android:spinnerMode="dialog"
+            android:theme="@style/MyLightTheme" />
+
+
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/card_plug"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="8dp"
+                android:layout_marginBottom="12dp"
+                android:padding="5dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="5dp"
+                    android:layout_marginBottom="10dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/card_title_plug"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:text="@string/filterSteckerTitel"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+                        <CheckBox
+                            android:id="@+id/card_plug_typ2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_above="@+id/progressBar"
+                            android:layout_marginLeft="15dp"
+                            android:layout_toLeftOf="@+id/progressBar"
+                            android:layout_toStartOf="@+id/progressBar"
+                            android:layout_weight="1"
+                            android:text="Typ2" />
+
+                        <CheckBox
+                            android:id="@+id/card_plug_chademo"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_above="@+id/progressBar"
+                            android:layout_marginLeft="15dp"
+                            android:layout_toLeftOf="@+id/progressBar"
+                            android:layout_toStartOf="@+id/progressBar"
+                            android:layout_weight="1"
+                            android:text="Chademo" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
+
+                        <CheckBox
+                            android:id="@+id/card_plug_ccs"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_above="@+id/progressBar"
+                            android:layout_marginLeft="15dp"
+                            android:layout_toLeftOf="@+id/progressBar"
+                            android:layout_toStartOf="@+id/progressBar"
+                            android:layout_weight="1"
+                            android:text="CCS" />
+
+                        <CheckBox
+                            android:id="@+id/card_plug_schuko"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_above="@+id/progressBar"
+                            android:layout_marginLeft="15dp"
+                            android:layout_toLeftOf="@+id/progressBar"
+                            android:layout_toStartOf="@+id/progressBar"
+                            android:layout_weight="1"
+                            android:text="Schuko" />
+
+                    </LinearLayout>
+
+                    <CheckBox
+                        android:id="@+id/card_plug_tesla"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_above="@+id/progressBar"
+                        android:layout_marginLeft="15dp"
+                        android:layout_toLeftOf="@+id/progressBar"
+                        android:layout_toStartOf="@+id/progressBar"
+                        android:layout_weight="1"
+                        android:text="Tesla Supercharger" />
+
+                    <TextView
+                        android:id="@+id/filter_show_all_cards"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginRight="15dp"
+                        android:gravity="right"
+                        android:text="@string/filter_show_all_plugs"
+                        android:textColor="@color/colorAccent" />
+
+                    <Switch
+                        android:id="@+id/filter_card_fastcharge"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/filter_fastcharge" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:paddingLeft="10sp"
+                        android:paddingRight="30sp"
+                        android:visibility="gone">
+
+                        <TextView
+                            android:id="@+id/fPower_label"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/fpowerlabel"
+                            android:textColor="@color/primary_text_default_material_light" />
+
+                        <TextView
+                            android:id="@+id/fPowerDisplay"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="right"
+                            android:text="0"
+                            android:textColor="@color/primary_text_default_material_light"
+                            android:textSize="@dimen/abc_text_size_medium_material" />
+
+                    </LinearLayout>
+
+                    <SeekBar
+                        android:id="@+id/fPowerBar"
+                        style="@style/Widget.AppCompat.SeekBar"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="50sp"
+                        android:layout_marginRight="50sp"
+                        android:layout_marginTop="10sp"
+                        android:max="4"
+                        android:progress="0"
+                        android:visibility="gone" />
+
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/card_card"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="8dp"
+                android:layout_marginBottom="12dp"
+                android:padding="5dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="5dp"
+                    android:layout_marginBottom="10dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/card_title_card"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:text="@string/filterLadekartenTitel"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+                        <CheckBox
+                            android:id="@+id/card_plug_typ2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_above="@+id/progressBar"
+                            android:layout_marginLeft="15dp"
+                            android:layout_toLeftOf="@+id/progressBar"
+                            android:layout_toStartOf="@+id/progressBar"
+                            android:layout_weight="1"
+                            android:text="Typ2" />
+
+                        <CheckBox
+                            android:id="@+id/card_plug_chademo"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_above="@+id/progressBar"
+                            android:layout_marginLeft="15dp"
+                            android:layout_toLeftOf="@+id/progressBar"
+                            android:layout_toStartOf="@+id/progressBar"
+                            android:layout_weight="1"
+                            android:text="Chademo" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
+
+                        <CheckBox
+                            android:id="@+id/card_plug_ccs"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_above="@+id/progressBar"
+                            android:layout_marginLeft="15dp"
+                            android:layout_toLeftOf="@+id/progressBar"
+                            android:layout_toStartOf="@+id/progressBar"
+                            android:layout_weight="1"
+                            android:text="CCS" />
+
+                        <CheckBox
+                            android:id="@+id/card_plug_schuko"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_above="@+id/progressBar"
+                            android:layout_marginLeft="15dp"
+                            android:layout_toLeftOf="@+id/progressBar"
+                            android:layout_toStartOf="@+id/progressBar"
+                            android:layout_weight="1"
+                            android:text="Schuko" />
+
+                    </LinearLayout>
+
+                    <CheckBox
+                        android:id="@+id/card_tesla"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_above="@+id/progressBar"
+                        android:layout_marginLeft="15dp"
+                        android:layout_toLeftOf="@+id/progressBar"
+                        android:layout_toStartOf="@+id/progressBar"
+                        android:layout_weight="1"
+                        android:text="Tesla Supercharger" />
+
+                    <TextView
+                        android:id="@+id/filter_show_all_cards"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginRight="15dp"
+                        android:gravity="right"
+                        android:text="@string/filter_shw_all_cards"
+                        android:textColor="@color/colorAccent" />
+
+                    <Switch
+                        android:id="@+id/filter_card_barrierefrei"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/filterBarrierefrei" />
+
+                    <TextView
+                        android:id="@+id/fBarrierefrei_hint"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5sp"
+                        android:layout_marginLeft="10sp" />
+
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/card_extras"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="8dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="5dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/card_title_extras"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:text="@string/filterExtrasTitle"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <CheckBox
+                        android:id="@+id/fKostenlos"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_above="@+id/progressBar"
+                        android:layout_toLeftOf="@+id/progressBar"
+                        android:layout_toStartOf="@+id/progressBar"
+                        android:text="@string/filterKostenlos" />
+
+                    <CheckBox
+                        android:id="@+id/fBestaetigt"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/filterBestaetigt" />
+
+                    <CheckBox
+                        android:id="@+id/fKostenlosparken"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/filterKostenlosParken" />
+
+                    <Switch
+                        android:id="@+id/fStoerung"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/filterOhneStoerung" />
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

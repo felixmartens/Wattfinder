@@ -103,5 +103,12 @@
     <string name="details_loadimages">Load images</string>
     <string name="infoEntfernungZiel">Distance to target position:</string>
     <string name="infoEntfernungPos">Distance from current position:</string>
+    <string name="filter_show_all">Show all</string>
+    <string name="filter_show_all_plugs">show all plugs</string>
+    <string name="filter_switch_classic">Switch to classic view</string>
+    <string name="filter_fastcharge"><![CDATA[only fast charge capable ( >40kW)]]></string>
+    <string name="filter_shw_all_cards">Show all cards</string>
+    <string name="filterExtrasTitle">additional filter options</string>
+    <string name="filter_switch_smart">switch to new design</string>
 
 </resources>
