@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name" translatable="false">Wattfinder</string>
+    <string name="title_activity_maps" translatable="false">Wattfinder</string>
+
+
+
+
+    <!-- Menü -->
+    <string name="menu_currentlocation">Position actuelle</string>
+    <string name="menu_searchdialog">Chercher une adresse</string>
+    <string name="menu_configuration">Paramètres de filtre</string>
+    <string name="menu_clearrecents">Effacer mes recherches</string>
+    <string name="search_hint">Chercher à proximité de…</string>
+    <string name="search_label">Wattfinder bornes de recharge</string>
+    <string name="filterTitel">Configurer le filtre:</string>
+    <string name="filterKostenlos">Bornes de recharge gratuits</string>
+    <string name="filterBarrierefrei">accessibilité  - utilisation sans enregistrement</string>
+    <string name="filter247">ouvert 24/7</string>
+    <string name="filterKostenlosParken">parking gratuit</string>
+    <string name="filterBestaetigt">Montrer que les bornes marquées operables</string>
+    <string name="filterOhneStoerung">Masquer les bornes marquées hors service</string>
+    <string name="filterHotels">Hotels</string>
+    <string name="filterRestaurants">Restaurants</string>
+    <string name="filterSteckerTitel">Prise de charge:</string>
+    <string name="filterLadekartenTitel">Cartes:</string>
+    <string name="filterVerbundTitel">Operateurs:</string>
+    <string name="filterAlle">tous</string>
+    <string name="done">Terminé</string>
+    <string name="browser">Ouvrir au browser</string>
+    <string name="detailsBetreiber">Operateur</string>
+    <string name="details_rating">évaluation</string>
+    <string name="plural">s</string>
+    <string name="details_network">Réseau</string>
+    <string name="details_costs">Coûts:</string>
+    <string name="details_parking">Parking:</string>
+    <string name="details_plugs">Prise de charge:</string>
+    <string name="details_opening">Heurs d’ouverture:</string>
+    <string name="details_ladeweile">Passe-temps:</string>
+    <string name="details_hinweise">Informations générales:</string>
+    <string name="details_disturbance">dysfonctionnement technique:</string>
+    <string name="details_compatibility">Compatibilité:</string>
+    <string name="filterPreset">Profil:</string>
+    <string name="filter_neuesprofil">Ajouter un profil</string>
+    <string name="filter_standardprofil">Profil standard</string>
+    <string name="search_title">Wattfinder recherche</string>
+    <string name="filter_neuesprofil_hint">Entrer nom du nouveau profil</string>
+    <string name="crash_toast_text">Crash rapporté</string>
+    <string name="SaveFilterError">Valeurs du filtre n’ont pas été sauvegardé.</string>
+    <string name="filterPresets">Préréglages</string>
+    <string name="filterBasic">Standard</string>
+    <string name="Backstackexit">Appuyez retour de nouveau pour fermer Wattfinder!</string>
+    <string name="fpowerlabel">Puissance minimale:</string>
+    <string name="filter_selectall">Selectionner tout</string>
+    <string name="details_position">Description des lieux</string>
+    <string name="details_verified">Verifié</string>
+    <string name="details_barrierfree">Borne de recharge accessible</string>
+    <string name="details_freecharging">Borne de recharge gratuit</string>
+    <string name="details_freeparking">Parking gratuit</string>
+    <string name="details_operator">Operateur:</string>
+    <string name="details_247">ouvert 24/7</string>
+    <string name="monday">lundi: </string>
+<string name="thursday">mardi: </string>
+<string name="wednesday">mercredi: </string>
+<string name="tuesday">jeudi: </string>
+<string name="friday">vendredi: </string>
+<string name="saturday">samedi: </string>
+<string name="sunday">dimanche: </string>
+<string name="infoUpdated">via goingelectric.de, actualisé</string>
+<string name="closed">fermé</string>
+<string name="filter_openednow">Ouvert maintenant</string>
+<string name="filter_opananytime">sans heures d’ouverture spécifiques</string>
+<string name="preset_edit">Renomer le profil</string>
+<string name="preset_rename_msg">Svp changez le nom du profil</string>
+<string name="dialog_change">Changer</string>
+<string name="dialog_cancel">Annuler</string>
+<string name="dialog_create">Créer</string>
+<string name="dialog_delete">Effacer le profil</string>
+<string name="ifault_report">Attention! Dysfoncionnement temporaire rapporté pour cette borne de recharge!</string>
+<string name="dialog_text1">Bienvenue à la nouvelle app Wattfinder,\n
+    nous utilisons dès maintenant la nouvelle API officielle de goingelectric.de pour accéder les données sur les bornes de recharge. Comme Wattfinder est seulement un utile pour filtrer et présenter le données collectionnées par goingelectric.de veuillez diriger tous les remerciements pour les données propres à eux, mais aussi les suggestions et les infos sur des erreurs eventuelles. Wattfinder n’est qu’un filtre des données présentées par l’app.\n\n
+    Quelques infos importantes:\n\n
+    1. Wattfinder ne va jamais collectionner , sauvegarder or transmettre vos données personnelles.\n\n
+    2. Wattfinder transmet les options selectionnées du filtre, les données de localisation et demandes de recherche à goingelectric.de et si necessaire à Google Maps API.\n\n
+    3. Veuillez consulter les termes d’utilisation de Google Maps sur l’utilisation de vos données.\n\n
+    4. Wattfinder transmet -- strictement anonyme -- le comte totale des requêtes API pour des raisons de dévelopement.</string>
+<string name="close">Fermer</string>
+<string name="skipMessage">Ne pas montrer de nouveau</string>
+<string name="mapviewlarge">Arrêt de recherche. Extrait de carte trop grand.</string>
+<string name="nonetworkavailable">Pas de réseau. Veuillez connecter à l’internet et redémarrer l’app.</string>
+<string name="error_network_title">Erreur réseau</string>
+<string name="error_network_notconn">Pas de connection internet! Svp vérifier si le mobile est connecté à l’internet!</string>
+<string name="also">aussi</string>
+<string name="only">que</string>
+<string name="filterKartenaktiv">Cartes/Operateurs selectionnés. \“accesibilité\“ montre des points de charge supplémentaires</string>
+<string name="filterkeineKarten">Pas de Cartes/Operateurs selectionnés, c.-à.-d. tous vont être affichés (si \“accessibilité\“) n’a pas été selectionné</string>
+
+    </resources>
