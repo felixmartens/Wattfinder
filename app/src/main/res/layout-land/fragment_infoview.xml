@@ -92,18 +92,26 @@
         android:id="@+id/iUpdated"
         android:gravity="bottom|right" />
 
-</LinearLayout>
-
-    <TextView
-        android:text="@string/ifault_report"
+    <android.support.v7.widget.CardView
+        android:id="@+id/icard_fault"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/ifault_report"
-        android:padding="2dp"
-        android:textColor="@color/textColorPrimaryInverse"
-        android:background="@color/color_fault"
-        android:layout_gravity="bottom"
-        android:visibility="gone" />
+        android:layout_height="match_parent"
+        android:layout_margin="5dp"
+        app:cardBackgroundColor="@color/colorDebug">
+
+        <TextView
+            android:id="@+id/ifault_report"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:background="@color/color_fault"
+            android:padding="2dp"
+            android:text="@string/ifault_report"
+            android:textColor="@color/textColorPrimaryInverse"
+            android:visibility="gone" />
+    </android.support.v7.widget.CardView>
+
+</LinearLayout>
 
     <RelativeLayout
 android:layout_width="match_parent"

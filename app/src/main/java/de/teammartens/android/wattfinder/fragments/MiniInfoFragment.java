@@ -115,10 +115,10 @@ public void onPause(){
 
             t2 = (TextView) infoView.findViewById(R.id.iUpdated);
             t2.setText(KartenActivity.getInstance().getString(R.string.infoUpdated)+mSaeule.getUpdatedString());
-            t2 = (TextView) infoView.findViewById(R.id.ifault_report);
-            if(mSaeule.isFaultreport()) t2.setVisibility(View.VISIBLE); else t2.setVisibility(View.GONE);
+            View v = (View) infoView.findViewById(R.id.icard_fault);
+            if(mSaeule.isFaultreport()) v.setVisibility(View.VISIBLE); else v.setVisibility(View.GONE);
 
-            View v = infoView.findViewById(R.id.loadingPanel);
+            v = infoView.findViewById(R.id.loadingPanel);
             v.setVisibility(View.GONE);
 
            // float f = (infoView.getHeight()/KartenActivity.getDisplayH())*1.0f;

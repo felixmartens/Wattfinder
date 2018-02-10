@@ -1,34 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:layout_height="wrap_content"
-
-        android:layout_alignParentBottom="false"
-        android:layout_gravity="fill_horizontal"
     android:id="@+id/errorMessage"
-        >
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+
+    android:layout_alignParentBottom="false"
+    android:layout_gravity="bottom|fill_horizontal"
+    android:orientation="vertical">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
             android:layout_marginTop="25dp"
             android:background="@color/color_error"
+            android:orientation="vertical"
             android:padding="15dp">
-                <TextView
-                    android:text="TextView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/errorTitle"
 
-                    android:layout_above="@+id/errorText"
-                    android:layout_marginTop="10dp" />
                 <TextView
-                    android:text="TextView"
+                    android:id="@+id/errorTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_above="@+id/errorText"
+
+                    android:layout_marginTop="10dp"
+                    android:text="TextView" />
+
+                <TextView
                     android:id="@+id/errorText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_alignParentBottom="false"
+                    android:text="TextView"
 
                     />
         </LinearLayout>
@@ -37,24 +40,25 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clipToPadding="false"
-            android:gravity="top|right"
-            android:foregroundGravity="top|right">
+            android:foregroundGravity="top|right"
+            android:gravity="top|right">
+
                 <android.support.design.widget.FloatingActionButton
                     android:id="@+id/fab_retry"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
 
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentTop="true"
                     android:layout_marginRight="25dp"
                     android:elevation="16dp"
-                    app:elevation="16dp"
-                    app:pressedTranslationZ="12dp"
-                    app:backgroundTint="@color/white"
-                    app:rippleColor="@color/colorAccent"
-                    android:layout_alignParentTop="true"
-                    android:layout_alignParentRight="true"
-                    app:borderWidth="0dp"
-                    app:fabSize="mini"
+                    android:src="@drawable/ic_autorenew"
                     android:visibility="visible"
-                    android:src="@drawable/ic_autorenew" />
+                    app:backgroundTint="@color/white"
+                    app:borderWidth="0dp"
+                    app:elevation="16dp"
+                    app:fabSize="mini"
+                    app:pressedTranslationZ="12dp"
+                    app:rippleColor="@color/colorAccent" />
         </RelativeLayout>
 </FrameLayout>

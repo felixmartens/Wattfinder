@@ -69,7 +69,7 @@ public class DetailsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        detailsView = inflater.inflate(R.layout.fragment_details, container, false);
+        detailsView = inflater.inflate(R.layout.fragment_details_cards, container, false);
 mContext =this.getContext();
         View v = detailsView.findViewById(R.id.fab_routing);
         v.setOnClickListener(new View.OnClickListener() {
