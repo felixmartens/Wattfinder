@@ -39,7 +39,8 @@ public class NetWorker {
 
     public static void rehabilateNetworkQuality() {
         if(NETWORK_QUALITY<3)NETWORK_QUALITY++;
-
+        View v = KartenActivity.getInstance().findViewById(R.id.errorMessage);
+        if (v != null) AnimationWorker.slideDown(v, 0);
     }
 
     public static void resetNetworkQuality(){
@@ -131,10 +132,12 @@ public class NetWorker {
         }else
  */
        // {
-
+        if (error != null) {
             Toast.makeText(KartenActivity.getInstance(), "NetzwerkFehler:" + error.getMessage(), Toast.LENGTH_LONG).show();
-            if (LogWorker.isVERBOSE()) LogWorker.e("NETWORKER","Netzwerkfehler: "+Liste+"\n"+error.getMessage()+" \n "+error.getCause().getMessage()+" \n "+error.getCause().toString()
-                    );
+            if (LogWorker.isVERBOSE()) LogWorker.e("NETWORKER", "Netzwerkfehler: " + Liste + "\n"
+                    + error.getMessage() + " \n " + (error.getCause()!=null?error.getCause().getMessage()+ " \n "
+                    + error.getCause().toString():"")
+            );
             TextView tv = (TextView) KartenActivity.getInstance().findViewById(R.id.errorTitle);
             if (tv != null) tv.setText(getInstance().getString(R.string.error_network_title));
 
@@ -153,7 +156,7 @@ public class NetWorker {
 
             v = KartenActivity.getInstance().findViewById(R.id.errorMessage);
             if (v != null) AnimationWorker.slideUp(v, 0);
-
+        }
 
 
     }

@@ -1,12 +1,9 @@
 package de.teammartens.android.wattfinder.fragments;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-
-
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
@@ -81,6 +78,14 @@ public class FilterFragment extends Fragment {
 
         TextView v = (TextView) filterView.findViewById(R.id.fPreset);
         v.setText(KartenActivity.getInstance().getString(R.string.filterPreset)+" "+FilterWorks.PRESET);
+
+        v = (TextView) filterView.findViewById(R.id.filter_switch_newdesign);
+        v.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AnimationWorker.toggleSmartFilter();
+            }
+        });
         return filterView;
 
     }

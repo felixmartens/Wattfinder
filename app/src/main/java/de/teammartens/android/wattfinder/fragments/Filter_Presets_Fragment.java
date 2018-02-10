@@ -1,33 +1,26 @@
 package de.teammartens.android.wattfinder.fragments;
 
+import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.content.Context;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.RadioButton;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.zip.Inflater;
 
 import de.teammartens.android.wattfinder.KartenActivity;
 import de.teammartens.android.wattfinder.R;
 import de.teammartens.android.wattfinder.model.PresetAdapter;
 import de.teammartens.android.wattfinder.model.PresetEintrag;
+import de.teammartens.android.wattfinder.worker.AnimationWorker;
 import de.teammartens.android.wattfinder.worker.FilterWorks;
 import de.teammartens.android.wattfinder.worker.LogWorker;
 
@@ -91,14 +84,16 @@ public class Filter_Presets_Fragment extends Fragment {
             });
 
         ;
-        setPreset();
+        //setPreset();
 
     }
 
+
     public void onPause(){
         super.onPause();
-
-
+        if(AnimationWorker.smartFilter)
+            SmartFilterFragment.hide_presets();
+        else FilterFragment.hide_presets();
     }
 
     private void hide_presets(){

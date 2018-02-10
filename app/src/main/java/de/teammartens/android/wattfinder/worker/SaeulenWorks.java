@@ -165,11 +165,12 @@ public class SaeulenWorks {
                         NetWorker.rehabilateNetworkQuality();
                     }
                     RQ_PENDING = false;
-                    NetWorker.resetRETRY();
+                    //NetWorker.resetRETRY();
                     AnimationWorker.hide_mapLoading();
                     try {
                         if (jResponse.getString("status").contentEquals("ok")) {
                             AnimationWorker.hideStartup();
+
                             if (LogWorker.isVERBOSE())
                                 LogWorker.d(LOG_TAG, "Response erhalten, starte AsyncTask");
                             letzterAbrufBeiLLB = new LatLngBounds(new LatLng(swlat, swlng), new LatLng(nwlat, nwlng));

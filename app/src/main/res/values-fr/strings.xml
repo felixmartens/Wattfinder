@@ -95,5 +95,6 @@
 <string name="only">que</string>
 <string name="filterKartenaktiv">Cartes/Operateurs selectionnés. \“accesibilité\“ montre des points de charge supplémentaires</string>
 <string name="filterkeineKarten">Pas de Cartes/Operateurs selectionnés, c.-à.-d. tous vont être affichés (si \“accessibilité\“) n’a pas été selectionné</string>
+    <string name="filter_smart_warnung_verbund">Caution: There are carriers selected, which will reduce the number of charging spots found. Carriers are visible in \"classic mode\".</string>
 
-    </resources>
+</resources>

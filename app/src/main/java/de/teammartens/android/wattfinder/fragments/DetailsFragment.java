@@ -178,9 +178,10 @@ mContext =this.getContext();
             public void onResponse(JSONObject jResponse) {
                 try {
                     if (jResponse.getString("status").contentEquals("ok")) {
+                        NetWorker.rehabilateNetworkQuality();
 
 
-                       //Response verarbeiten
+                        //Response verarbeiten
                         JSONObject jO = jResponse.getJSONArray("chargelocations").getJSONObject(0);
                         if (LogWorker.isVERBOSE())LogWorker.d(LOG_TAG, "Detail Request erhalten. ID:"+jO.getInt("ge_id"));
 

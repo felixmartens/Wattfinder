@@ -1,12 +1,10 @@
 package de.teammartens.android.wattfinder.model;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 
@@ -15,6 +13,8 @@ import java.util.ArrayList;
 import de.teammartens.android.wattfinder.R;
 import de.teammartens.android.wattfinder.fragments.FilterFragment;
 import de.teammartens.android.wattfinder.fragments.Filter_Presets_Fragment;
+import de.teammartens.android.wattfinder.fragments.SmartFilterFragment;
+import de.teammartens.android.wattfinder.worker.AnimationWorker;
 import de.teammartens.android.wattfinder.worker.FilterWorks;
 import de.teammartens.android.wattfinder.worker.LogWorker;
 
@@ -81,7 +81,8 @@ public class PresetAdapter extends ArrayAdapter<PresetEintrag> {
                         Filter_Presets_Fragment.ladeListe();
                         //FilterFragment.updatePagerChild();
                         //direkt schliessen statt done-button
-                        FilterFragment.hide_presets();
+                        if(AnimationWorker.smartFilter)SmartFilterFragment.hide_presets();
+                        else FilterFragment.hide_presets();
                     }
                 });
 

@@ -55,13 +55,13 @@
     <string name="details_freecharging">Kostenloses Laden</string>
     <string name="details_operator">Betreiber:</string>
     <string name="details_247">24/7 geöffnet</string>
-    <string name="friday">"Freitag: "</string>
-    <string name="monday">"Montag: "</string>
-    <string name="saturday">"Samstag: "</string>
-    <string name="sunday">"Sonntag: "</string>
+    <string name="friday">Freitag: </string>
+    <string name="monday">Montag: </string>
+    <string name="saturday">Samstag: </string>
+    <string name="sunday">Sonntag: </string>
     <string name="thursday">Donnerstag:</string>
-    <string name="tuesday">"Dienstag: "</string>
-    <string name="wednesday">"Mittwoch: "</string>
+    <string name="tuesday">Dienstag: </string>
+    <string name="wednesday">Mittwoch: </string>
     <string name="infoUpdated">"via goingelectric.de, aktualisiert um "</string>
     <string name="closed">geschlossen</string>
     <string name="filter_opananytime">beliebige Öffnungszeiten</string>
@@ -101,10 +101,15 @@
     <string name="infoEntfernungPos">Entfernung vom Standort:</string>
     <string name="infoEntfernungZiel">Entfernung zum Ziel:</string>
     <string name="filter_show_all">alle anzeigen</string>
-    <string name="filter_show_all_plugs">Alle Stecker anzeigen</string>
+    <string name="filter_show_all_plugs">Mehr Stecker anzeigen</string>
     <string name="filter_switch_classic">Zurück zur alten Ansicht</string>
     <string name="filter_fastcharge"><![CDATA[nur schnellladefähige Säulen ( >40kW)]]></string>
-    <string name="filter_shw_all_cards">Alle Ladekarten anzeigen</string>
+    <string name="filter_show_all_cards">Mehr Ladekarten anzeigen</string>
     <string name="filterExtrasTitle">weitere Filter:</string>
     <string name="filter_switch_smart">zur neuen Ansicht</string>
+    <string name="filter_smart_moreplugs"> weitere Stecker gewählt</string>
+    <string name="filter_smart_morecards"> weitere Karten gewählt</string>
+    <string name="filter_smart_warnung_verbund">Achtung: Es sind Verbünde ausgewählt, was die sichtbaren Ladestationen einschränkt. Verbünde können nur über die \"alte Ansicht\" verändert werden.</string>
+
+
 </resources>

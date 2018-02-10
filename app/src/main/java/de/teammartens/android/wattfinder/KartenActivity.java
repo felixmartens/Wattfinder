@@ -225,7 +225,7 @@ public static ActionBar actionBar;
 
         skipEula = sharedPref.getBoolean("skipEula",false);
 
-        NetWorker.resetRETRY();
+        //NetWorker.resetRETRY();
 
         fragmentManager = getSupportFragmentManager();
         if (PlayServiceStatus == ConnectionResult.SUCCESS) {

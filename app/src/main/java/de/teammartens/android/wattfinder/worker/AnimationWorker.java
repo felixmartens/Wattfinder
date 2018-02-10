@@ -16,6 +16,7 @@ import de.teammartens.android.wattfinder.fragments.DetailsFragment;
 import de.teammartens.android.wattfinder.fragments.FilterFragment;
 import de.teammartens.android.wattfinder.fragments.ImageZoomFragment;
 import de.teammartens.android.wattfinder.fragments.MiniInfoFragment;
+import de.teammartens.android.wattfinder.fragments.SmartFilterFragment;
 
 import static de.teammartens.android.wattfinder.KartenActivity.fragmentManager;
 import static de.teammartens.android.wattfinder.KartenActivity.getInstance;
@@ -27,6 +28,8 @@ import static de.teammartens.android.wattfinder.KartenActivity.getInstance;
 public class AnimationWorker {
 
     public static boolean startupScreen = true;
+    public static boolean smartFilter = true;
+
     private final static String LOG_TAG = "AnimationWorker";
 
 
@@ -146,12 +149,14 @@ public class AnimationWorker {
                             R.anim.fragment_slide_out,
                             R.anim.fragment_slide_in,
                             R.anim.fragment_slide_out);
-            Fragment iF = fragmentManager.findFragmentByTag("iFragment");
+            Fragment iF = fragmentManager.findFragmentByTag("fFragment");
             if (iF != null) Ft.hide(iF);
+            String fragment = (smartFilter?SmartFilterFragment.class.getName():FilterFragment.class.getName());
             Ft.add(R.id.filterFragment, Fragment
-                            .instantiate(getInstance(), FilterFragment.class.getName()),
+                            .instantiate(getInstance(), fragment),
                     "fFragment"
             ).addToBackStack(null).commit();
+
 
 
             hide_fabs();
@@ -163,6 +168,28 @@ public class AnimationWorker {
         else
         {GeoWorks.movemapPosition("toggleFilter",true);if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG,"ToggleFilter; VErsetz True");}*/
         KartenActivity.BackstackEXIT=false;
+    }
+
+    public static void toggleSmartFilter(){
+        FragmentTransaction Ft = fragmentManager.beginTransaction()
+                .setCustomAnimations(R.anim.fragment_slide_in,
+                        R.anim.fragment_slide_out,
+                        R.anim.fragment_slide_in,
+                        R.anim.fragment_slide_out);
+        Fragment iF = fragmentManager.findFragmentByTag("fFragment");
+        if (iF != null) Ft.hide(iF);
+        fragmentManager.popBackStack();
+        if (smartFilter){
+            Ft.add(R.id.filterFragment,Fragment.instantiate(getInstance(), FilterFragment.class.getName()),"fFragment").addToBackStack(null).commit();
+            smartFilter=false;
+        }else{
+            Ft.add(R.id.filterFragment,Fragment.instantiate(getInstance(), SmartFilterFragment.class.getName()),"fFragment").addToBackStack(null).commit();
+            smartFilter=true;
+
+        }
+
+
+        KartenActivity.sharedPref.edit().putBoolean("smartFilter",smartFilter).commit();
     }
 
     public static void toggleDetails() {
@@ -352,8 +379,28 @@ public class AnimationWorker {
                     .setDuration(500)
             ;
         } else {
+
             V.animate()
                     .translationY(V.getHeight())
+                    .alpha(0.0f)
+                    .setDuration(500)
+            ;
+        }
+    }
+    public static void rollDown (final View V,Integer offset) {
+        if (V== null) return;
+
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+            V.animate()
+                    .setStartDelay(offset)
+                    .y(V.getHeight())
+                    .alpha(0.0f)
+                    .setDuration(500)
+            ;
+        } else {
+
+            V.animate()
+                    .y(V.getHeight())
                     .alpha(0.0f)
                     .setDuration(500)
             ;
@@ -390,6 +437,39 @@ public class AnimationWorker {
                     });
         }
     }
+
+    public static void rollUp (final View V,Integer offset) {
+        if (V== null) return;
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+            V.animate()
+                    .setStartDelay(offset)
+                    .y(0)
+                    .alpha(1.0f)
+                    .setDuration(500)
+                    .setListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            super.onAnimationEnd(animation);
+                            V.setVisibility(View.VISIBLE);
+                            V.bringToFront();
+                        }
+                    });
+        } else {
+            V.animate()
+                    .y(0)
+                    .alpha(1.0f)
+                    .setDuration(500)
+                    .setListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            super.onAnimationEnd(animation);
+                            V.setVisibility(View.VISIBLE);
+                            V.bringToFront();
+                        }
+                    });
+        }
+    }
+
 
 
 
@@ -430,12 +510,27 @@ public class AnimationWorker {
 
                     .alpha(0.0f)
                     .setDuration(500)
+                    .setListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            super.onAnimationEnd(animation);
+                            V.setVisibility(View.GONE);
+                        }
+                    });
             ;
         } else {
             V.animate()
 
                     .alpha(0.0f)
                     .setDuration(500)
+                    .setListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            super.onAnimationEnd(animation);
+                            V.setVisibility(View.GONE);
+
+                        }
+                    });
             ;
         }
     }

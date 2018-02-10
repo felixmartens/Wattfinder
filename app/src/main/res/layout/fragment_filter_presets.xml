@@ -1,80 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <RelativeLayout
+
+    <android.support.v7.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAppearance="@android:style/TextAppearance.Material.Medium"
-            android:text="@string/filterPreset"
-            android:id="@+id/fPreset"
-            android:textSize="22sp"
-            android:background="@color/colorPrimaryDark"
-            android:textColor="@color/primary_material_light"
-            android:clickable="true"
-            android:gravity="left|center_vertical"
-            android:padding="5dp"
-            android:layout_alignParentBottom="false" />
-    <ListView
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:id="@+id/filter_liste_presets"
-
-        android:choiceMode="multipleChoice"
-        android:background="@color/white"
-        android:visibility="visible"
-        android:layout_below="@+id/fPreset"
-        android:paddingBottom="40dp" />
-
-
-    </RelativeLayout>
-
-    <Button
-        android:text="@string/filter_neuesprofil"
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/preset_button_add"
-        android:layout_gravity="bottom|center_horizontal" />
+        android:layout_margin="8dp"
+        android:padding="5dp">
 
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_gravity="top|right"
-        android:paddingBottom="10dp"
-        android:gravity="top|right"
-        android:id="@+id/fab_container"
-        android:paddingRight="10dp"
-        android:background="@color/transparent"
-        android:layout_height="match_parent"
-        android:layout_alignParentBottom="false">
-
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fab_done"
+        <Button
+            android:id="@+id/preset_button_add"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_action_done"
-            android:layout_marginBottom="10dp"
-            android:layout_marginRight="15dp"
-            android:elevation="6dp"
-            app:elevation="6dp"
-            app:pressedTranslationZ="12dp"
-            app:backgroundTint="@color/colorAccent"
-            app:rippleColor="@android:color/white"
-            app:borderWidth="0dp"
-            app:fabSize="normal"
-            android:visibility="gone"
-            android:layout_alignParentRight="true"
+            android:layout_gravity="bottom|center_horizontal"
+            android:text="@string/filter_neuesprofil" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/fPreset"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="false"
+                android:clickable="false"
+                android:gravity="left|center_vertical"
+                android:padding="5dp"
+                android:text="@string/filterPreset"
+                android:textAppearance="@android:style/TextAppearance.Material.Medium"
+                android:textColor="@color/colorPrimary"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <ListView
+                android:id="@+id/filter_liste_presets"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+
+                android:layout_below="@+id/fPreset"
+                android:background="@color/white"
+                android:choiceMode="multipleChoice"
+                android:paddingBottom="40dp"
+                android:visibility="visible" />
+
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/fab_container"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
             android:layout_alignParentBottom="false"
-            android:layout_alignParentTop="true" />
+            android:layout_gravity="top|right"
+            android:background="@color/transparent"
+            android:gravity="top|right"
+            android:paddingBottom="10dp"
+            android:paddingRight="10dp">
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/fab_done"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="false"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginBottom="10dp"
+                android:layout_marginRight="15dp"
+                android:elevation="6dp"
+                android:src="@drawable/ic_action_done"
+                android:visibility="gone"
+                app:backgroundTint="@color/colorAccent"
+                app:borderWidth="0dp"
+                app:elevation="6dp"
+                app:fabSize="normal"
+                app:pressedTranslationZ="12dp"
+                app:rippleColor="@android:color/white" />
 
 
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
 
-
-    </RelativeLayout>
 </FrameLayout>
