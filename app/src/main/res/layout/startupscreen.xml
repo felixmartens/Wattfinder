@@ -5,9 +5,9 @@
     android:id="@+id/startupScreen"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorCard"
+    android:background="@color/colorPrimary"
     android:elevation="9dp"
-    android:visibility="gone">
+    android:visibility="visible">
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_debug"

@@ -1,16 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="cards_de_nord">
+    <string-array name="cards_de_nw">
         <item>NewMotion Ladekarte</item>
         <item>PlugSurfing Ladeschlüssel</item>
         <item>Charge&amp;Fuel</item>
         <item>ChargeNow Flex</item>
         <item>Z.E. Pass</item>
         <item>Charge&amp;Pay</item>
-        <item>ACE Ladekarte POWER ME</item>
-        <item>ACV Ladekarte</item>
+        <item>Park&amp;Charge-Schlüssel</item>
+        <item>EWE-Stromtankkarte</item>
 
     </string-array>
+    <string-array name="cards_de_ne">
+        <item>NewMotion Ladekarte</item>
+        <item>PlugSurfing Ladeschlüssel</item>
+        <item>Charge&amp;Fuel</item>
+        <item>ChargeNow Flex</item>
+        <item>Z.E. Pass</item>
+        <item>Charge&amp;Pay</item>
+        <item>Park&amp;Charge-Schlüssel</item>
+       <item>WSW Strom eMobil Ladekarte</item>
+
+    </string-array>
+
     <string-array name="cards_de_sued">
         <item>NewMotion Ladekarte</item>
         <item>PlugSurfing Ladeschlüssel</item>
@@ -18,8 +30,98 @@
         <item>ChargeNow Flex</item>
         <item>Charge&amp;Fuel</item>
         <item>Z.E. Pass</item>
-        <item>ACE Ladekarte POWER ME</item>
+        <item>Park&amp;Charge-Schlüssel</item>
         <item>ACV Ladekarte</item>
+    </string-array>
+
+
+
+    <string-array name="cards_at">
+        <item>NewMotion Ladekarte</item>
+        <item>PlugSurfing Ladeschlüssel</item>
+        <item>ÖBB Infra Ladekarte</item>
+        <item>VKW VLOTTE Public Pay per Use</item>
+        <item>TANKE WienEnergie</item>
+        <item>EMC Ladekarte</item>
+        <item>EVN Strom Tankkarte</item>
+        <item>Think Blue Card</item>
+
+    </string-array>
+
+    <string-array name="cards_ch">
+        <item>NewMotion Ladekarte</item>
+        <item>PlugSurfing Ladeschlüssel</item>
+        <item>evpass RFID/SMS</item>
+        <item>swisscharge Ladekarte</item>
+        <item>MOVE</item>
+        <item>energy4drive App</item>
+        <item>easy4you</item>
+        <item>Plug'n Roll Basic</item>
+
+    </string-array>
+
+    <string-array name="cards_fr">
+        <item>NewMotion Ladekarte</item>
+        <item>PlugSurfing Ladeschlüssel</item>
+        <item>ChargeMap Pass</item>
+        <item>PREMIUM</item>
+        <item>ZEN</item>
+        <item>JE TESTE</item>
+        <item>Révéo Non abonné</item>
+        <item>KiWhi Pass</item>
+
+    </string-array>
+
+    <string-array name="cards_dk">
+        <item>NewMotion Ladekarte</item>
+        <item>PlugSurfing Ladeschlüssel</item>
+        <item>E.ON DK Card</item>
+        <item>Clever Ladekarte</item>
+        <item>Clever SMS</item>
+
+
+    </string-array>
+
+    <string-array name="cards_no">
+        <item>NewMotion Ladekarte</item>
+        <item>PlugSurfing Ladeschlüssel</item>
+        <item>Fortum Charge &amp; Drive</item>
+        <item>goCharge App</item>
+        <item>Grønn Kontakt RFID Karte</item>
+        <item>Bilkraft Website</item>
+
+    </string-array>
+
+
+    <string-array name="cards_nl">
+        <item>NewMotion Ladekarte</item>
+        <item>PlugSurfing Ladeschlüssel</item>
+        <item>Fastned Standard</item>
+        <item>Fastned Basic</item>
+        <item>chargepoint Ladekarte</item>
+        <item>Ecotap Ladekarte</item>
+        <item>Nomad Power App</item>
+
+    </string-array>
+
+    <string-array name="cards_be">
+        <item>NewMotion Ladekarte</item>
+        <item>PlugSurfing Ladeschlüssel</item>
+        <item>Fastned Standard</item>
+        <item>Fastned Basic</item>
+        <item>PCard+</item>
+        <item>4411 Webseite/App</item>
+
+    </string-array>
+
+
+    <string-array name="cards_fill">
+        <item>NewMotion Ladekarte</item>
+        <item>PlugSurfing Ladeschlüssel</item>
+        <item>ChargeNow Flex</item>
+        <item>Charge&amp;Fuel</item>
+        <item>Z.E. Pass</item>
+        <item>Park&amp;Charge-Schlüssel</item>
     </string-array>
 
 

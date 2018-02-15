@@ -4,14 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/ItemTintedBack">
+    android:background="@color/colorCard">
 
     <RelativeLayout
         android:id="@+id/loadingPanel"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
-        android:background="@android:color/transparent">
+        android:background="@android:color/transparent"
+        android:gravity="center">
 
         <ProgressBar
             android:layout_width="wrap_content"
@@ -24,35 +24,36 @@
         android:layout_height="match_parent">
 
         <TextView
+            android:id="@+id/dBezeichnung"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:id="@+id/dBezeichnung"
-            android:textColor="@color/textColorPrimaryInverse"
             android:background="@color/colorPrimary"
-            android:padding="6dp" />
+            android:padding="6dp"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@color/textColorPrimaryInverse" />
 
         <ScrollView
 
+            android:id="@+id/scrollView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/scrollView"
-            android:paddingBottom="10dp"
-            android:paddingTop="2dp"
+            android:layout_below="@+id/dBezeichnung"
             android:layout_marginTop="4dp"
-            android:layout_below="@+id/dBezeichnung">
+            android:paddingBottom="10dp"
+            android:paddingTop="2dp">
 
             <LinearLayout
-                android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
 
                 <android.support.v7.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_margin="8dp"
-                    android:padding="5dp">
+                    android:padding="5dp"
+                    app:cardBackgroundColor="@color/cardview_light_background">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -627,40 +628,41 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"
         android:paddingBottom="10dp">
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_routing"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_action_directions"
-        android:layout_marginBottom="10dp"
-        android:layout_marginRight="15dp"
-        android:elevation="6dp"
-        app:elevation="6dp"
-        app:pressedTranslationZ="12dp"
-        app:backgroundTint="@color/colorAccent"
-        app:rippleColor="@android:color/white"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        app:borderWidth="0dp"
-        app:fabSize="normal"
-        />
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_browser"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_web_site_weiss"
-        android:layout_marginBottom="10dp"
-        android:layout_marginRight="15dp"
-        android:elevation="6dp"
-        app:elevation="6dp"
-        app:pressedTranslationZ="12dp"
-        app:backgroundTint="@color/colorAccent"
-        app:rippleColor="@color/rand"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="false"
-        android:layout_below="@+id/fab_routing"
-        app:borderWidth="0dp"
-        app:fabSize="normal"
-        android:layout_alignParentBottom="false" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab_routing"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginBottom="10dp"
+            android:layout_marginRight="15dp"
+            android:elevation="6dp"
+            android:src="@drawable/ic_action_directions"
+            app:backgroundTint="@color/colorAccent"
+            app:borderWidth="0dp"
+            app:elevation="6dp"
+            app:fabSize="normal"
+            app:pressedTranslationZ="12dp"
+            app:rippleColor="@android:color/white" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab_browser"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="false"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="false"
+            android:layout_below="@+id/fab_routing"
+            android:layout_marginBottom="10dp"
+            android:layout_marginRight="15dp"
+            android:elevation="6dp"
+            android:src="@drawable/ic_web_site_weiss"
+            app:backgroundTint="@color/colorAccent"
+            app:borderWidth="0dp"
+            app:elevation="6dp"
+            app:fabSize="normal"
+            app:pressedTranslationZ="12dp"
+            app:rippleColor="@color/rand" />
     </RelativeLayout>
 </FrameLayout>

@@ -140,7 +140,6 @@ mContext =this.getContext();
                 holeDetails();
             detailsView.setVisibility(View.VISIBLE);
             detailsView.setAlpha(1.0f);
-            detailsView.setBackgroundColor(getResources().getColor(R.color.white));
 
             View v = detailsView.findViewById(R.id.dLoadImages);
             v.setOnClickListener(new View.OnClickListener() {

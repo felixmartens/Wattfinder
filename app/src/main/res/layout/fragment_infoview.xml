@@ -2,142 +2,143 @@
 
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/InfoContainer"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-        android:id="@+id/InfoContainer"
-    android:elevation="20dp"
-    >
+    android:background="@color/transparent"
+    android:elevation="20dp">
 
-
-
-<LinearLayout
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:showDividers="beginning"
-    android:layout_marginTop="25dp"
-    android:padding="15dp"
-
-    android:gravity="bottom"
-
-    android:background="@color/windowBackground">
 
     <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:background="@color/windowBackground"
+        android:gravity="bottom"
 
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="wrap_content"
+        android:orientation="vertical"
+
+        android:padding="15dp"
+        android:showDividers="beginning">
+
+        <TextView
+            android:id="@+id/iName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TextView
+            android:id="@+id/iAdresse"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TextView
+            android:id="@+id/iAnschluesse"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text=""
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+
+        <TextView
+            android:id="@+id/iEntfernung"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/icard_fault"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1">
-            <TextView
-                android:layout_width="300dp"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text=""
-                android:id="@+id/iName" />
+            android:layout_margin="5dp"
+            android:padding="5dp"
+            app:cardBackgroundColor="@color/colorDebug">
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text=""
-                android:id="@+id/iAdresse" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text=""
-                android:layout_weight="1"
-                android:id="@+id/iAnschluesse" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text=""
-                android:id="@+id/iEntfernung" />
-            <TextView
+                android:id="@+id/ifault_report"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text=""
+                android:layout_gravity="bottom"
+                android:drawableLeft="@drawable/ic_report_problem"
+                android:gravity="center"
+                android:padding="2dp"
+                android:text="@string/ifault_report"
+                android:textColor="@color/textColorPrimaryInverse"
+                android:visibility="visible" />
+        </android.support.v7.widget.CardView>
 
-                android:id="@+id/iUpdated"
-                android:gravity="bottom|right"
-                android:layout_marginTop="10dp" />
+        <TextView
+            android:id="@+id/iSaeulenid"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:visibility="gone" />
 
-            <TextView
+        <TextView
+            android:id="@+id/iUpdated"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+
+            android:gravity="bottom|right"
+            android:text=""
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text=""
-                android:id="@+id/iSaeulenid"
-                android:visibility="gone" />
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+            </LinearLayout>
+
 
         </LinearLayout>
 
-
-
     </LinearLayout>
 
-    <android.support.v7.widget.CardView
-        android:id="@+id/icard_fault"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="5dp"
-        android:padding="5dp"
-        app:cardBackgroundColor="@color/colorDebug">
+        android:clipToPadding="false"
+        android:paddingBottom="5dp">
 
-        <TextView
-            android:id="@+id/ifault_report"
-            android:layout_width="match_parent"
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab_directions"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:drawableLeft="@drawable/ic_report_problem"
-            android:gravity="center"
-            android:padding="2dp"
-            android:text="@string/ifault_report"
-            android:textColor="@color/textColorPrimaryInverse"
-            android:visibility="visible" />
-    </android.support.v7.widget.CardView>
-</LinearLayout>
+            android:layout_alignParentRight="true"
 
+            android:layout_alignParentTop="true"
+            android:layout_marginRight="25dp"
+            android:elevation="16dp"
+            android:src="@drawable/ic_action_directions"
+            android:visibility="visible"
+            app:backgroundTint="@color/colorAccent"
+            app:borderWidth="0dp"
+            app:elevation="16dp"
+            app:fabSize="normal"
+            app:pressedTranslationZ="12dp"
+            app:rippleColor="@color/white" />
+    </RelativeLayout>
 
-
-    <RelativeLayout
-android:layout_width="match_parent"
-android:layout_height="match_parent"
-android:paddingBottom="5dp"
-android:clipToPadding="false">
-<android.support.design.widget.FloatingActionButton
-    android:id="@+id/fab_directions"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:src="@drawable/ic_action_directions"
-
-    android:layout_marginRight="25dp"
-    android:elevation="16dp"
-    app:elevation="16dp"
-    app:pressedTranslationZ="12dp"
-    app:backgroundTint="@color/colorAccent"
-    app:rippleColor="@color/white"
-    android:layout_alignParentTop="true"
-    android:layout_alignParentRight="true"
-    app:borderWidth="0dp"
-    app:fabSize="normal"
-    android:visibility="visible"
-    />
-</RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/loadingPanel"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center" >
+        android:gravity="center">
 
 
         <ProgressBar

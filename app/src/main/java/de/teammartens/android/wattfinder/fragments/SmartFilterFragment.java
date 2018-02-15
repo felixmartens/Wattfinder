@@ -18,9 +18,9 @@ import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -478,7 +478,7 @@ FragmentManager fM = getChildFragmentManager();
 
             case KARTEN:
                 List<FilterEintrag> L = FilterWorks.ListeToArrayList(FilterWorks.F_KARTEN);
-                Collections.sort(L);
+               // Collections.sort(L);
 
                /* Karten = new HashMap<String,Boolean>(L.size());
                 i = L.iterator();
@@ -548,7 +548,17 @@ FragmentManager fM = getChildFragmentManager();
             AnimationWorker.fadeOut(t,0);
         }
 
-        L_Karten = new HashSet<String>(Arrays.asList(KartenActivity.getInstance().getResources().getStringArray(R.array.cards_de_nord)));
+        Integer id = getResId("cards_"+GeoWorks.countryCode);
+        if (id<0) id=R.array.cards_de_nw;
+        L_Karten = new HashSet<String>(Arrays.asList(KartenActivity.getInstance().getResources().getStringArray(id)));
+        if (L_Karten.size()<8){
+            Set<String> L_Fill= new HashSet<String>(Arrays.asList(KartenActivity.getInstance().getResources().getStringArray(R.array.cards_fill)));
+            Iterator<String> iS = L_Fill.iterator();
+            while (iS.hasNext()){
+                if(L_Karten.size()<8) L_Karten.add(iS.next());
+            }
+        }
+
 
         int[] cbid = {R.id.filter_card_1,R.id.filter_card_2,R.id.filter_card_3,R.id.filter_card_4,R.id.filter_card_5,R.id.filter_card_6,R.id.filter_card_7,R.id.filter_card_8};
 
@@ -669,6 +679,16 @@ FragmentManager fM = getChildFragmentManager();
 
     }
 
+    public static int getResId(String resName) {
+        Class<String> c = String.class;
+        try {
+            Field idField = c.getDeclaredField(resName);
+            return idField.getInt(idField);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return -1;
+        }
+    }
 
 
 }

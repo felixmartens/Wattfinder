@@ -3,6 +3,7 @@ package de.teammartens.android.wattfinder.worker;
 import android.location.Location;
 import android.util.Log;
 
+import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
@@ -20,10 +21,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.URLEncoder;
+import java.util.Arrays;
 
 import de.teammartens.android.wattfinder.KartenActivity;
 import de.teammartens.android.wattfinder.R;
 
+import static de.teammartens.android.wattfinder.KartenActivity.getInstance;
 import static de.teammartens.android.wattfinder.KartenActivity.layoutStyle;
 import static de.teammartens.android.wattfinder.KartenActivity.mMap;
 
@@ -43,7 +46,11 @@ public class GeoWorks {
     public static boolean CUSTOM_MAPVIEW=false;
     public static LatLng MarkerTarget;
     public static LatLng myPosition,mapPosition, suchPosition;
-    public static String suchString;
+    public static String suchString,countryCode;
+    private static final String[] countryCodes = {"de","nl","be","no","fr","ch","at","dk"};
+    private static final double NordSuedLat = 50.20;
+    private static final double WestOstLng = 10.085;
+
     private static final int aroundDistance = 3000;
 
     public static Float mapZoom;
@@ -75,6 +82,8 @@ public class GeoWorks {
             myPosition = mPosition;
         }else
             if(LogWorker.isVERBOSE())LogWorker.d(LOG_TAG,"setMyPosition mPosition= null!");
+
+        findmyCountry();
     }
 
     public static void movemapPosition(final String VERURSACHER){
@@ -389,5 +398,64 @@ public class GeoWorks {
             return true;
 
         return false;
+    }
+
+
+    /* get Counrry Code for choosing list of cards*/
+
+    public static void findmyCountry(){
+        final LatLng P = getmyPosition();
+        String Q = "https://maps.googleapis.com/maps/api/geocode/json?latlng="+P.latitude+","+P.longitude+"&result_type=country&key="+getInstance().getString(R.string.GooogleMaps_APIKEY);
+
+        JsonObjectRequest cRequest = new JsonObjectRequest(Request.Method.GET,
+                Q, (String) null, new Response.Listener<JSONObject>() {
+
+
+            @Override
+            public void onResponse(JSONObject jResponse) {
+                try {
+                    JSONObject jO =  jResponse.getJSONArray("results").getJSONObject(0).getJSONArray("address_components").getJSONObject(0);
+                    String s = jO.getString("short_name").toLowerCase();
+                    if(LogWorker.isVERBOSE())LogWorker.d(LOG_TAG,"findmyCountry: "+s);
+                    if (Arrays.asList(countryCodes).contains(s)){
+                        if(s=="de"){
+                            if (P.latitude< NordSuedLat){
+                                GeoWorks.countryCode="de_sued";
+                            }else{
+                                if(P.longitude>WestOstLng){
+                                    GeoWorks.countryCode="de_ne";
+                                }else{
+                                    GeoWorks.countryCode="de_nw";
+                                }
+
+                            }
+                        }else{
+                            GeoWorks.countryCode=s;
+                        }
+                    }
+                    else{
+                        GeoWorks.countryCode="de_nw";
+                    }
+
+                }
+                catch (JSONException e){
+                    LogWorker.e(LOG_TAG,"findmyCountry Exception:"+e.getStackTrace().toString()
+                    );
+                }
+            }
+        }, new Response.ErrorListener() {
+
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    GeoWorks.countryCode = "de_nw";
+                }
+            });
+
+        KartenActivity.getInstance().addToRequestQueue(cRequest);
+
+    }
+
+    public static String getCountryCode() {
+        return countryCode;
     }
 }
