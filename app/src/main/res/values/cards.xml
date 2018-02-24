@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="cards_de_nw">
+    <string-array name="cards_de_nw" >
         <item>NewMotion Ladekarte</item>
         <item>PlugSurfing Ladeschlüssel</item>
         <item>Charge&amp;Fuel</item>
