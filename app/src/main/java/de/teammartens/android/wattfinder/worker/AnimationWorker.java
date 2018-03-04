@@ -239,19 +239,8 @@ public class AnimationWorker {
 
     }
 
-    public static void hide_myloc(){
-        View fabloc = getInstance().findViewById(R.id.fab_mylocation);
-        //erstmal deaktiviert um genaueres testen zuzulassen
-
-        //fadeOut(fabloc,0);
-
-    }
 
 
-    public static void show_myloc(){
-        View fabloc = getInstance().findViewById(R.id.fab_mylocation);
-        fadeIn(fabloc,0,1.0f);
-    }
     public static void show_map(){
         if (KartenActivity.isMapReady()) {
             if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG, "Show Map");
@@ -325,7 +314,7 @@ public class AnimationWorker {
                             KartenActivity.skipEula=cb.isChecked();
                             KartenActivity.sharedPref.edit().putBoolean("skipEula",KartenActivity.skipEula).commit();
                             slideDown(v,0);
-                            getInstance().setupLocationListener();
+                            GeoWorks.setupLocationListener();
 
                             SaeulenWorks.reloadMarker();
 

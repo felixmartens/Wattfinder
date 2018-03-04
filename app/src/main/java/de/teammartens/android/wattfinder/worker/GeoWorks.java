@@ -7,6 +7,10 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -15,6 +19,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -26,6 +31,7 @@ import java.util.Arrays;
 import de.teammartens.android.wattfinder.KartenActivity;
 import de.teammartens.android.wattfinder.R;
 
+import static de.teammartens.android.wattfinder.KartenActivity.Loc2LatLng;
 import static de.teammartens.android.wattfinder.KartenActivity.getInstance;
 import static de.teammartens.android.wattfinder.KartenActivity.layoutStyle;
 import static de.teammartens.android.wattfinder.KartenActivity.mMap;
@@ -50,8 +56,13 @@ public class GeoWorks {
     private static final String[] countryCodes = {"de","nl","be","no","fr","ch","at","dk"};
     private static final double NordSuedLat = 50.20;
     private static final double WestOstLng = 10.085;
-
+    private static final int LOCATION_INTERVAL = 10000;
+    private static final int LOCATION_MIN_INTERVAL = 5000;
     private static final int aroundDistance = 3000;
+
+    private static LocationCallback mLocationCallback;
+    public static FusedLocationProviderClient mFusedLocationClient;
+    private static LocationRequest mLocationRequest;
 
     public static Float mapZoom;
     public static Marker Marker_Ich, Marker_Suche = null;
@@ -66,12 +77,12 @@ public class GeoWorks {
     }
 
     public static void setmyPosition(LatLng mapPosition) {
-        setmyPosition(mapPosition,MY_LOCATION_ZOOM,false);
+        setmyPosition(mapPosition,MY_LOCATION_ZOOM,!CUSTOM_MAPVIEW);
     }
 
     public static void setmyPosition(LatLng mPosition,Float zoom, boolean moveMap) {
 
-        if (mPosition != null ){
+        if (mPosition != null &&validLatLng(mPosition) ){
             if (KartenActivity.mMap != null) {
              if (Marker_Ich != null) Marker_Ich.remove();
              Marker_Ich = KartenActivity.mMap.addMarker(new MarkerOptions().position(mPosition)
@@ -80,10 +91,26 @@ public class GeoWorks {
                     movemapPosition(mPosition, zoom, "setmyPositionZoom");
             }
             myPosition = mPosition;
+
+            findmyCountry();
+
         }else
             if(LogWorker.isVERBOSE())LogWorker.d(LOG_TAG,"setMyPosition mPosition= null!");
 
-        findmyCountry();
+    }
+
+    public static void setMyPosition(Location myPosition) {
+        setMyPosition(myPosition,!CUSTOM_MAPVIEW);
+    }
+
+    public static void setMyPosition(Location myPosition, boolean moveMap) {
+        if (myPosition!=null) {
+            LatLng myloc = Loc2LatLng(myPosition);
+            setmyPosition(myloc,MY_LOCATION_ZOOM,moveMap);
+            if (LogWorker.isVERBOSE())
+                LogWorker.d(LOG_TAG, "Location erhalten:" + (myPosition == null ? "null" : ""));
+
+        }
     }
 
     public static void movemapPosition(final String VERURSACHER){
@@ -458,4 +485,92 @@ public class GeoWorks {
     public static String getCountryCode() {
         return countryCode;
     }
+
+
+
+
+    /*
+    Handle Locations
+     */
+
+
+
+    public static void removeLocationListener(){
+        if(KartenActivity.checkPermissionLocation(KartenActivity.MY_PERMISSIONS_REMOVE_LOCATION)) {
+            mFusedLocationClient.removeLocationUpdates(mLocationCallback);
+        }
+    }
+    public static void setupLocationListener(){
+
+
+        if(KartenActivity.checkPermissionLocation(KartenActivity.MY_PERMISSIONS_REQUEST_LOCATION)) {
+            mLocationCallback = new LocationCallback() {
+                @Override
+                public void onLocationResult(LocationResult locationResult) {
+                    for (Location location : locationResult.getLocations()) {
+                        setMyPosition(location);
+                    }
+                }
+
+                ;
+            };
+
+            mLocationRequest = new LocationRequest();
+            mLocationRequest.setInterval(LOCATION_INTERVAL);
+            mLocationRequest.setFastestInterval(LOCATION_MIN_INTERVAL);
+            mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+            try{
+                mFusedLocationClient.requestLocationUpdates(mLocationRequest,
+                    mLocationCallback,
+                    null /* Looper */);
+
+
+                 mFusedLocationClient.getLastLocation()
+                     .addOnSuccessListener(KartenActivity.getInstance(), new OnSuccessListener<Location>() {
+                        @Override
+                        public void onSuccess(Location location) {
+                       // Got last known location. In some rare situations this can be null.
+                       if (location != null) {
+                           setMyPosition(location);
+                            if(LogWorker.isVERBOSE())Log.d(LOG_TAG,"got LastLocation"+location.toString()+"/"+location.getProvider());
+                       }
+                      }
+                    });
+            }catch(SecurityException e) {
+                Log.e(LOG_TAG, e.getStackTrace().toString());
+            }
+
+        /*
+            mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+
+            Criteria C = new Criteria();
+            C.setAccuracy(Criteria.ACCURACY_FINE);
+            C.setPowerRequirement(Criteria.POWER_MEDIUM);
+            C.setSpeedRequired(false);
+            C.setBearingRequired(false);
+            Location mLocation = mLocationManager.getLastKnownLocation(mLocationManager.getBestProvider(C,false));
+
+
+            // Getting Current Location as of GPS
+
+
+            if(mLocation!=null){
+                GeoWorks.setmyPosition(Loc2LatLng(mLocation));
+                if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG, "getMyPosition "+(GeoWorks.getmyPosition() == null?"null":"notnull")+"CUSTOMMapView:"+GeoWorks.CUSTOM_MAPVIEW );
+            }
+
+            if(mLocation!=null && GeoWorks.validLatLng(Loc2LatLng(mLocation)))
+                AnimationWorker.show_myloc();
+            else
+                AnimationWorker.hide_myloc();
+
+            mLocationManager.removeUpdates(mLocationListener);
+
+            mLocationManager.requestLocationUpdates(mLocationManager.getBestProvider(C,true), 10000, 100, mLocationListener);
+        */
+        }
+
+    }
+
 }

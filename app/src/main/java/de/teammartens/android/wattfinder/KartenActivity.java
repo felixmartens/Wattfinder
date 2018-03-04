@@ -11,9 +11,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
-import android.location.Criteria;
 import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.SearchRecentSuggestions;
@@ -34,6 +32,7 @@ import com.android.volley.toolbox.Volley;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -59,8 +58,8 @@ public class KartenActivity extends FragmentActivity
     public static GoogleMap mMap; // Might be null if Google Play services APK is not available.
     private final static Integer
             CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
-    private final static Integer MY_PERMISSIONS_REQUEST_LOCATION = 17;
-    private final static Integer MY_PERMISSIONS_REMOVE_LOCATION = 18;
+    public final static Integer MY_PERMISSIONS_REQUEST_LOCATION = 17;
+    public final static Integer MY_PERMISSIONS_REMOVE_LOCATION = 18;
     //private LocationClient mLocationClient;
     public static LocationManager mLocationManager;
     //public static Location mCurrentLocation;
@@ -154,6 +153,7 @@ public static ActionBar actionBar;
 
         //}
 
+        GeoWorks.mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
     }
 
@@ -230,7 +230,7 @@ public static ActionBar actionBar;
         fragmentManager = getSupportFragmentManager();
         if (PlayServiceStatus == ConnectionResult.SUCCESS) {
 
-            setupLocationListener();
+            GeoWorks.setupLocationListener();
         }
 
         //TODO
@@ -260,8 +260,7 @@ public static ActionBar actionBar;
     @Override
     protected void onStop() {
         // Disconnecting the client invalidates it.
-        if (mLocationManager != null)
-            removeLocationListener();
+            GeoWorks.removeLocationListener();
 
         super.onStop();
         //setMapReady(false);
@@ -297,102 +296,25 @@ public static ActionBar actionBar;
     }
 
 
-    //Mein eigener Location Listener
-    private  class myLocationListener implements LocationListener {
-
-        // Define the callback method that receives location updates
-        @Override
-        public void onLocationChanged(Location location) {
 
 
-            LatLng myloc = Loc2LatLng(location);
-            if(location!=null)GeoWorks.setmyPosition(myloc);
-            if ( LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG, "Location erhalten:"+(location==null?"null":""));
-            if(GeoWorks.validLatLng(myloc))
-                AnimationWorker.show_myloc();
-
-
-            //GeoWorks.meinMarker();
-
-
-
-        }
-
-
-
-
-        @Override
-        public void onProviderDisabled(String provider) {
-
-        }
-
-        @Override
-        public void onProviderEnabled(String provider) {
-
-        }
-
-        @Override
-        public void onStatusChanged(String provider, int status, Bundle extras) {
-
-        }
-    }
-    public LocationListener  mLocationListener = new myLocationListener();
-
-    private void removeLocationListener(){
-        if (ContextCompat.checkSelfPermission(KartenActivity.getInstance(),
-                Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-            if (LogWorker.isVERBOSE())LogWorker.d(LOG_TAG,"requestLocation Permission REMOVE");
-            ActivityCompat.requestPermissions(KartenActivity.getInstance(),
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                    MY_PERMISSIONS_REMOVE_LOCATION);
-        } else {
-            mLocationManager.removeUpdates(mLocationListener);
-        }
-    }
-    public void setupLocationListener(){
-
+    public static boolean checkPermissionLocation(int id){
 
         if (ContextCompat.checkSelfPermission(KartenActivity.getInstance(),
                 Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
 
-            if (!AnimationWorker.startupScreen && !permissiondenied) {
+            if (!AnimationWorker.startupScreen /*&& !permissiondenied*/) {
                 if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG, "requestLocation Permission");
                 ActivityCompat.requestPermissions(KartenActivity.getInstance(),
                         new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                        MY_PERMISSIONS_REQUEST_LOCATION);
+                        id);
             }
         } else {
-            mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-
-
-            Criteria C = new Criteria();
-            C.setAccuracy(Criteria.ACCURACY_FINE);
-            C.setPowerRequirement(Criteria.POWER_MEDIUM);
-            C.setSpeedRequired(false);
-            C.setBearingRequired(false);
-            Location mLocation = mLocationManager.getLastKnownLocation(mLocationManager.getBestProvider(C,false));
-
-
-            // Getting Current Location as of GPS
-
-
-            if(mLocation!=null){
-                GeoWorks.setmyPosition(Loc2LatLng(mLocation));
-                if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG, "getMyPosition "+(GeoWorks.getmyPosition() == null?"null":"notnull")+"CUSTOMMapView:"+GeoWorks.CUSTOM_MAPVIEW );
-            }
-
-            if(mLocation!=null && GeoWorks.validLatLng(Loc2LatLng(mLocation)))
-                AnimationWorker.show_myloc();
-            else
-                AnimationWorker.hide_myloc();
-
-            mLocationManager.removeUpdates(mLocationListener);
-            mLocationManager.requestLocationUpdates(mLocationManager.getBestProvider(C,true), 10000, 100, mLocationListener);
+            return true;
         }
+        return false;
     }
-
     /*
  * Handle results returned to the FragmentActivity
  * by Google Play services
@@ -460,16 +382,8 @@ public static ActionBar actionBar;
         @Override
         public void onClick(View v) {
 
-            if (ContextCompat.checkSelfPermission(KartenActivity.getInstance(),
-                    Manifest.permission.ACCESS_FINE_LOCATION)
-                    != PackageManager.PERMISSION_GRANTED) {
-
-
-                    ActivityCompat.requestPermissions(KartenActivity.getInstance(),
-                            new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                            MY_PERMISSIONS_REQUEST_LOCATION);
-
-            }else{
+            if (checkPermissionLocation(MY_PERMISSIONS_REQUEST_LOCATION))
+            {
 
             AnimationWorker.show_map();
 
@@ -560,13 +474,13 @@ return null;
 
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults){
 
-        if (requestCode==MY_PERMISSIONS_REQUEST_LOCATION&&grantResults[0]==PackageManager.PERMISSION_GRANTED) setupLocationListener();
+        if (requestCode==MY_PERMISSIONS_REQUEST_LOCATION&&grantResults[0]==PackageManager.PERMISSION_GRANTED) GeoWorks.setupLocationListener();
             else{
             if (LogWorker.isVERBOSE())LogWorker.e(LOG_TAG,"requestLocation Permission DENIED");
                     permissiondenied=true;
 
                 }
-        if (requestCode==MY_PERMISSIONS_REMOVE_LOCATION&&grantResults[0]==PackageManager.PERMISSION_GRANTED) removeLocationListener();
+        if (requestCode==MY_PERMISSIONS_REMOVE_LOCATION&&grantResults[0]==PackageManager.PERMISSION_GRANTED) GeoWorks.removeLocationListener();
     }
 
 
@@ -732,7 +646,7 @@ return null;
             zoom=GeoWorks.DEFAULT_ZOOM;
         }
         //erstmal setzen um zumindest eine POsition zu haben
-        GeoWorks.setmyPosition(new LatLng(Lat,Lng));
+        //GeoWorks.setmyPosition(new LatLng(Lat,Lng));
 
         Long TS = sharedPref.getLong(sP_Timestamp,0);
 
