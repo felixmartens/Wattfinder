@@ -134,19 +134,27 @@ public class NetWorker {
        // {
         if (error != null) {
             Toast.makeText(KartenActivity.getInstance(), "NetzwerkFehler:" + error.getMessage(), Toast.LENGTH_LONG).show();
+
             if (LogWorker.isVERBOSE()) LogWorker.e("NETWORKER", "Netzwerkfehler: " + Liste + "\n"
-                    + error.getMessage() + " \n " + (error.getCause()!=null?error.getCause().getMessage()+ " \n "
-                    + error.getCause().toString():"")
-            );
+                    +(error.networkResponse!=null?error.networkResponse.statusCode+"  "+error.networkResponse.networkTimeMs+"ms":error.getCause().getMessage()));
             TextView tv = (TextView) KartenActivity.getInstance().findViewById(R.id.errorTitle);
             if (tv != null) tv.setText(getInstance().getString(R.string.error_network_title));
 
             tv = (TextView) KartenActivity.getInstance().findViewById(R.id.errorText);
-            if (tv != null) tv.setText(error.getMessage());
-            View v = KartenActivity.getInstance().findViewById(R.id.errorMessage);
+            String errorMessage = KartenActivity.getInstance().getString(R.string.networkerror);
+            if (error.networkResponse!=null) {
+                if (error.networkResponse.networkTimeMs > 10000)
+                    errorMessage = KartenActivity.getInstance().getString(R.string.networkerror_timeout);
+                if (error.networkResponse.statusCode == 404)
+                    errorMessage = KartenActivity.getInstance().getString(R.string.networkerror_404);
+            }
+            if (tv != null) tv.setText(errorMessage);
+            View v = KartenActivity.getInstance().findViewById(R.id.fab_retry);
             v.setOnClickListener(new View.OnClickListener() {
                                      @Override
                                      public void onClick(View v) {
+                                         View V = KartenActivity.getInstance().findViewById(R.id.errorMessage);
+                                         AnimationWorker.slideDown(V,0);
                                          if (Task == TASK_FILTER) FilterWorks.refresh_filterlisten_API();
                                          else SaeulenWorks.reloadMarker();
                                      }

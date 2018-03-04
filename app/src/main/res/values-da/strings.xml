@@ -95,7 +95,7 @@
     <string name="f_but_showall">Reset filter to show all</string>
     <string name="plural">" "</string>
     <string name="details_loadimages">Load images</string>
-    <string name="filter_simpletitle">Simplified filtering options</string>
+    <string name="filter_simpletitle">Filtering options</string>
     <string name="filter_but_erweitert">show all filtering options</string>
     <string name="infoEntfernungPos">Distance from current position:</string>
     <string name="infoEntfernungZiel">Distance to target position:</string>
@@ -104,4 +104,12 @@
     <string name="filter_switch_classic">Switch to classic view</string>
     <string name="filter_fastcharge"><![CDATA[only fast charge ( >40kW)]]></string>
     <string name="filter_smart_warnung_verbund">Caution: There are carriers selected, which will reduce the number of charging spots found. Carriers are visible in \"classic mode\".</string>
+    <string name="filter_show_all_cards">Show more cards</string>
+    <string name="filterExtrasTitle">additional filter options</string>
+    <string name="filter_switch_smart">switch to new design</string>
+    <string name="filter_smart_moreplugs">more plugs selected</string>
+    <string name="filter_smart_morecards">more cards selected</string>
+    <string name="networkerror">An unknown network error occured.</string>
+    <string name="networkerror_timeout">Network Request timed out.</string>
+    <string name="networkerror_404">Network response failed. Server not found. Status:</string>
 </resources>

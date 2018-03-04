@@ -5,7 +5,7 @@
     android:id="@+id/startupScreen"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimary"
+    android:background="@color/colorCard"
     android:elevation="9dp"
     android:visibility="visible">
 

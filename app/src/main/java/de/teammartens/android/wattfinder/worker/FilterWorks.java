@@ -240,8 +240,6 @@ public class FilterWorks {
                                 APIconverter(Liste/, v);
                             }
                         }*/
-                        if (filter_initialized())
-                            AnimationWorker.hideStartup();
 
                         switch (Liste) {
                             case F_STECKER:
@@ -258,6 +256,9 @@ public class FilterWorks {
                                 filter_liste_speichern();
                                 break;
                         }
+                        if (filter_initialized())
+                            AnimationWorker.hideStartup();
+
 
                     } else {
                         if (LogWorker.isVERBOSE())
