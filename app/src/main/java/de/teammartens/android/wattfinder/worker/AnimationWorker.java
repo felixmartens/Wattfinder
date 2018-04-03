@@ -67,10 +67,14 @@ public class AnimationWorker {
     public static void hide_info(){
         Fragment f = fragmentManager.findFragmentByTag("iFragment");
         if (f !=null && f.isVisible()){
-            fragmentManager.beginTransaction().setCustomAnimations(R.anim.fragment_slide_in,
-                    R.anim.fragment_slide_out,
-                    R.anim.fragment_slide_in,
-                    R.anim.fragment_slide_out).hide(f).commit();
+            try {
+                fragmentManager.beginTransaction().setCustomAnimations(R.anim.fragment_slide_in,
+                        R.anim.fragment_slide_out,
+                        R.anim.fragment_slide_in,
+                        R.anim.fragment_slide_out).hide(f).commit();
+            }catch(IllegalStateException e){
+                LogWorker.e(LOG_TAG,"IllegalSTatException on hideInfo "+e.getCause().getMessage());
+            }
             //slideDown(getInstance().findViewById(R.id.fab_directions), 0);
             //slideDown(getInstance().findViewById(R.id.fab_directions), 500);
             //slideUp(getInstance().findViewById(R.id.fab_filter), 200);
@@ -136,7 +140,7 @@ public class AnimationWorker {
     }
 
 
-    public static void toggleFilter(){
+    public static void toggleFilter() {
 
         Fragment f = fragmentManager.findFragmentByTag("fFragment");
         if (f != null) {
@@ -144,6 +148,18 @@ public class AnimationWorker {
 
             show_fabs();
         } else {
+            show_filter();
+
+        }
+          /* if(layoutStyle().equals("default"))
+        {GeoWorks.movemapPosition("toggleFilter",false);if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG,"ToggleFilter; VErsetz False");}
+        else
+        {GeoWorks.movemapPosition("toggleFilter",true);if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG,"ToggleFilter; VErsetz True");}*/
+        KartenActivity.BackstackEXIT=false;
+    }
+
+
+    public static void show_filter(){
             FragmentTransaction Ft = fragmentManager.beginTransaction()
                     .setCustomAnimations(R.anim.fragment_slide_in,
                             R.anim.fragment_slide_out,
@@ -161,14 +177,7 @@ public class AnimationWorker {
 
             hide_fabs();
             hide_mapSearch();
-
         }
-       /* if(layoutStyle().equals("default"))
-        {GeoWorks.movemapPosition("toggleFilter",false);if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG,"ToggleFilter; VErsetz False");}
-        else
-        {GeoWorks.movemapPosition("toggleFilter",true);if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG,"ToggleFilter; VErsetz True");}*/
-        KartenActivity.BackstackEXIT=false;
-    }
 
     public static void toggleSmartFilter(){
         FragmentTransaction Ft = fragmentManager.beginTransaction()
@@ -244,7 +253,7 @@ public class AnimationWorker {
     public static void show_map(){
         if (KartenActivity.isMapReady()) {
             if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG, "Show Map");
-            //if(fragmentManager==null)fragmentManager=getFragmentManager();
+            if(fragmentManager==null)fragmentManager=KartenActivity.getInstance().getSupportFragmentManager();
             if (isDetailsVisibile())
                 fragmentManager.popBackStack();
 
@@ -259,7 +268,7 @@ public class AnimationWorker {
             show_debug();
             show_fabs();
             hide_mapSearch();
-            if (KartenActivity.mapFragment != null)
+            if (KartenActivity.mapFragment != null&&KartenActivity.mapFragment.getView()!=null)
                 KartenActivity.mapFragment.getView().requestFocus();
             //slideDown(getInstance().findViewById(R.id.fab_directions), 500);
             //slideUp(getInstance().findViewById(R.id.fab_filter), 200);
@@ -524,6 +533,40 @@ public class AnimationWorker {
         }
     }
 
+    public static void fade2Invisible (final View V,Integer offset) {
+
+        if (V== null) return;
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+            V.animate()
+                    .setStartDelay(offset)
+
+                    .alpha(0.001f)
+                    .setDuration(500)
+                    .setListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            super.onAnimationEnd(animation);
+                            V.setVisibility(View.INVISIBLE);
+                        }
+                    });
+            ;
+        } else {
+            V.animate()
+
+                    .alpha(0.001f)
+                    .setDuration(500)
+                    .setListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            super.onAnimationEnd(animation);
+                            V.setVisibility(View.INVISIBLE);
+
+                        }
+                    });
+            ;
+        }
+    }
+
     public static void fadeIn (final View V,Integer offset, Float Alpha) {
         if (V== null) return;
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
@@ -639,7 +682,7 @@ public class AnimationWorker {
     public static void showSearchBar(){
 
         View v = getInstance().findViewById(R.id.fab_search);
-        fadeOut(v,0);
+        fade2Invisible(v,200);
         final View V = getInstance().findViewById(R.id.searchContainer);
 
         V.animate()
@@ -653,6 +696,7 @@ public class AnimationWorker {
                         V.setVisibility(View.VISIBLE);
                         V.bringToFront();
                         V.clearFocus();
+                        //v.setVisibility(View.INVISIBLE);
                     }
                 })
         ;

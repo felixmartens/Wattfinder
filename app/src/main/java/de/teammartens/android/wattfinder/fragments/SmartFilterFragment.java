@@ -17,6 +17,7 @@ import android.widget.CompoundButton;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -92,7 +93,7 @@ public void onResume(){
             AnimationWorker.toggleSmartFilter();
         }
     });
-
+    FilterWorks.refresh_filterlisten_API();
 
     View v = (View) filterView.findViewById(R.id.fab_preset);
 
@@ -131,6 +132,12 @@ if(v!=null)
     }
     presetLabel = KartenActivity.getInstance().getResources().getString(R.string.filterPreset);
     setPresetLabel();
+    if (!FilterWorks.filter_initialized())
+    {
+        AnimationWorker.toggleFilter();
+    }
+
+
     refresh_Adapter(KARTEN);
     refresh_Adapter(STECKER);
     ladeFilter();
@@ -285,6 +292,11 @@ if(v!=null)
 
     }
 
+    public static void zeigeToast(){
+        Toast.makeText(KartenActivity.getInstance(),"Filterlisten leer. Versuche sie erneut abzurufen...",Toast.LENGTH_LONG).show();
+
+    }
+
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
          buttonView.setChecked(FilterWorks.liste_aendern(buttonView.getTag().toString(),buttonView.getText().toString()));
@@ -360,42 +372,56 @@ FragmentManager fM = getChildFragmentManager();
 
                     }
                 }
-                AlertDialog.Builder builder = new AlertDialog.Builder(KartenActivity.getInstance())
-                        .setTitle(KartenActivity.getInstance().getResources().getString(R.string.filterSteckerTitel))
-                        .setMultiChoiceItems(SteckerListe, Stecker_C, new DialogInterface.OnMultiChoiceClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which, boolean isChecked) {
-                                //Stecker. setSelected(SteckerListe[which],isChecked);
-                                if (! isChecked == FilterWorks.liste_aendern(FilterWorks.F_STECKER,SteckerListe[which]) ){
-                                    if(LogWorker.isVERBOSE())LogWorker.d(LOG_TAG,"Fehler beim SteckerListe ändern "+isChecked+" nicht erreicht");
-                                };
-                            }
-                        })
-                        .setNeutralButton("Alle zurücksetzen", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        //alle Stecker abwählen und schliessen
-                                        FilterWorks.liste_aendern(FilterWorks.F_STECKER,FilterWorks.BELIEBIG);
-                                        smartview();
-                                        dialog.dismiss();
+                try {
 
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(KartenActivity.getInstance())
+                            .setTitle(KartenActivity.getInstance().getResources().getString(R.string.filterSteckerTitel))
+                            .setMultiChoiceItems(SteckerListe, Stecker_C, new DialogInterface.OnMultiChoiceClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+                                    //Stecker. setSelected(SteckerListe[which],isChecked);
+                                    if (!isChecked == FilterWorks.liste_aendern(FilterWorks.F_STECKER, SteckerListe[which])) {
+                                        if (LogWorker.isVERBOSE())
+                                            LogWorker.d(LOG_TAG, "Fehler beim SteckerListe ändern " + isChecked + " nicht erreicht");
                                     }
+                                    ;
                                 }
-                        )
-                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            })
+                            .setNeutralButton("Alle zurücksetzen", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            //alle Stecker abwählen und schliessen
+                                            FilterWorks.liste_aendern(FilterWorks.F_STECKER, FilterWorks.BELIEBIG);
+                                            smartview();
+                                            dialog.dismiss();
 
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
+                                        }
+                                    }
+                            )
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
 
-                                smartview();
-                                //used to dismiss the dialog upon user selection.
-                                dialog.dismiss();
-                            }
-                        });
-                AlertDialog ad = builder.create();
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
 
-                ad.show();
+                                    smartview();
+                                    //used to dismiss the dialog upon user selection.
+                                    dialog.dismiss();
+                                }
+                            });
 
+                    if(Stecker_C!=null&&Stecker_C.length>0&&SteckerListe!=null&&SteckerListe.length>0) {
+
+
+                        AlertDialog ad = builder.create();
+
+                        ad.show();
+                    }else{
+                        zeigeToast();
+                    }
+                }catch(NullPointerException e){
+                    LogWorker.e(LOG_TAG,"NPE bulding Stecker Dialog");
+                }
                 break;
 
 
@@ -415,42 +441,54 @@ FragmentManager fM = getChildFragmentManager();
                         C++;
                     }
                 }
-                AlertDialog.Builder builder1 = new AlertDialog.Builder(KartenActivity.getInstance())
-                        .setTitle(KartenActivity.getInstance().getResources().getString(R.string.filterLadekartenTitel))
-                        .setMultiChoiceItems(KartenListe, Karten_C, new DialogInterface.OnMultiChoiceClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which, boolean isChecked) {
-                                //Karten.put(KartenListe[which],isChecked);
-                                if (! isChecked == FilterWorks.liste_aendern(FilterWorks.F_KARTEN,KartenListe[which]) ){
-                                    LogWorker.d(LOG_TAG,"Fehler beim KartenListe ändern "+isChecked+" nicht erreicht");
-                                };
-                            }
-                        })
-                        .setNeutralButton("Alle zurücksetzen", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        //alle Karten abwählen und schliessen
-                                        FilterWorks.liste_aendern(FilterWorks.F_KARTEN,FilterWorks.BELIEBIG);
-                                        smartview();
-                                        dialog.dismiss();
+                try {
+
+
+                    AlertDialog.Builder builder1 = new AlertDialog.Builder(KartenActivity.getInstance())
+                            .setTitle(KartenActivity.getInstance().getResources().getString(R.string.filterLadekartenTitel))
+                            .setMultiChoiceItems(KartenListe, Karten_C, new DialogInterface.OnMultiChoiceClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+                                    //Karten.put(KartenListe[which],isChecked);
+                                    if (!isChecked == FilterWorks.liste_aendern(FilterWorks.F_KARTEN, KartenListe[which])) {
+                                        LogWorker.d(LOG_TAG, "Fehler beim KartenListe ändern " + isChecked + " nicht erreicht");
                                     }
+                                    ;
                                 }
-                        )
-                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            })
+                            .setNeutralButton("Alle zurücksetzen", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            //alle Karten abwählen und schliessen
+                                            FilterWorks.liste_aendern(FilterWorks.F_KARTEN, FilterWorks.BELIEBIG);
+                                            smartview();
+                                            dialog.dismiss();
+                                        }
+                                    }
+                            )
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
 
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
 
 
-                                //used to dismiss the dialog upon user selection.
-                                smartview();
-                                dialog.dismiss();
-                            }
-                        });
-                AlertDialog ad1 = builder1.create();
+                                    //used to dismiss the dialog upon user selection.
+                                    smartview();
+                                    dialog.dismiss();
+                                }
+                            });
+                    if(Karten_C!=null&&Karten_C.length>0&&KartenListe!=null&&KartenListe.length>0) {
 
-                ad1.show();
 
+                        AlertDialog ad1 = builder1.create();
+
+                        ad1.show();
+                    }else{
+                        zeigeToast();
+                    }
+                }catch(NullPointerException e){
+                    LogWorker.e(LOG_TAG,"NPE building Karten dialog "+e.getCause().getMessage());
+                }
 
         }
 

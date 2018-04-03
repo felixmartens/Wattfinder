@@ -372,7 +372,8 @@ public static ActionBar actionBar;
     v.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            AnimationWorker.toggleFilter();
+            FilterWorks.refresh_filterlisten_API();
+            AnimationWorker.show_filter();
         }
     });
     //slideDown(v, 0);

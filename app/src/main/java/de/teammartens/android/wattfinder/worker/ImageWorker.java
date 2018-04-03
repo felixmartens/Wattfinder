@@ -1,27 +1,13 @@
 package de.teammartens.android.wattfinder.worker;
 
-import android.app.Activity;
-import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.os.Parcelable;
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.util.AttributeSet;
-import android.view.GestureDetector;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageRequest;
 
 import java.util.HashSet;
-
 import java.util.Set;
 
 import de.teammartens.android.wattfinder.KartenActivity;
@@ -89,8 +75,12 @@ public class ImageWorker {
 
                     if (LogWorker.isVERBOSE())
                         LogWorker.d(LOG_TAG, "PhotoResponse for ID:"+imgID+" " + bitmap.getByteCount() + "Bytes");
+                    if(imgID<ImgBitmaps.length)
+                        ImgBitmaps[imgID] = bitmap;
+                    else
+                        LogWorker.e(LOG_TAG,"IMgBItmap Array IndexOutOfBounds: imgID"+imgID+" ImgBitmaps:"+ImgBitmaps.length);
 
-                    ImgBitmaps[imgID] = bitmap;
+
                     if (imgAdapter != null) imgAdapter.updateItem(imgID,bitmap);
                     else
                         if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG, "Adapter null:");
@@ -134,8 +124,7 @@ if(!loading.contains(imgID)) {
 
     public static void initImages(boolean hd){
 
-        if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG, "ImageIds"+ImgIDs[0]+"-"+ImgIDs[1]+"-"+ImgIDs[2]+"-"+ImgIDs[3]+"-"+ImgIDs[4]);
-
+        if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG, (ImgIDs!=null?"ImageIds"+ImgIDs[0]+"-"+ImgIDs[1]+"-"+ImgIDs[2]+"-"+ImgIDs[3]+"-"+ImgIDs[4]:" ImgIDs null"));
 
         if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG, "ImageCount"+ImgCount);
         //ImgIndex=0;

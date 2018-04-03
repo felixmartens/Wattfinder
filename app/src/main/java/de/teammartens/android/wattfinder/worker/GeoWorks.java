@@ -496,7 +496,8 @@ public class GeoWorks {
 
 
     public static void removeLocationListener(){
-        if(KartenActivity.checkPermissionLocation(KartenActivity.MY_PERMISSIONS_REMOVE_LOCATION)) {
+        if(KartenActivity.checkPermissionLocation(KartenActivity.MY_PERMISSIONS_REMOVE_LOCATION)&&mFusedLocationClient!= null) {
+
             mFusedLocationClient.removeLocationUpdates(mLocationCallback);
         }
     }

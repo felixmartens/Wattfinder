@@ -35,6 +35,7 @@ public class FilterFragment extends Fragment {
     private static final String LOG_TAG = "FilterFragment";
     private static View filterView;
     private static FragmentManager cFm;
+    private static FilterFragment fInstance;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -145,6 +146,7 @@ public class FilterFragment extends Fragment {
 
 
         }
+        fInstance = this;
     }
 
 public void onResume(){
@@ -226,7 +228,9 @@ FragmentManager fM = getChildFragmentManager();
 
 
     public static void hide_presets(){
-
+        if(cFm==null){
+            cFm = fInstance.getChildFragmentManager();
+        }
         Fragment f = cFm.findFragmentByTag("pFragment");
         if (f !=null && f.isVisible()){
             cFm.beginTransaction().setCustomAnimations(R.anim.fragment_slide_in,
