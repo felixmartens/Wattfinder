@@ -51,7 +51,7 @@ public class GeoWorks {
     private static String mQuery="";
     public static boolean CUSTOM_MAPVIEW=false;
     public static LatLng MarkerTarget;
-    public static LatLng myPosition,mapPosition, suchPosition;
+    public static LatLng myPosition,mapPosition, suchPosition,lastCountryPosition;
     public static String suchString,countryCode;
     private static final String[] countryCodes = {"de","nl","be","no","fr","ch","at","dk"};
     private static final double NordSuedLat = 50.20;
@@ -432,45 +432,57 @@ public class GeoWorks {
 
     public static void findmyCountry(){
         final LatLng P = getmyPosition();
-        String Q = "https://maps.googleapis.com/maps/api/geocode/json?latlng="+P.latitude+","+P.longitude+"&result_type=country&key="+getInstance().getString(R.string.GooogleMaps_APIKEY);
 
-        JsonObjectRequest cRequest = new JsonObjectRequest(Request.Method.GET,
-                Q, (String) null, new Response.Listener<JSONObject>() {
+        if (lastCountryPosition==null||distanceToFloat(P,lastCountryPosition)>10000) {
+
+            String Q = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + P.latitude + "," + P.longitude + "&result_type=country&key=" + getInstance().getString(R.string.GooogleMaps_APIKEY);
+
+            JsonObjectRequest cRequest = new JsonObjectRequest(Request.Method.GET,
+                    Q, (String) null, new Response.Listener<JSONObject>() {
 
 
-            @Override
-            public void onResponse(JSONObject jResponse) {
-                try {
-                    JSONObject jO =  jResponse.getJSONArray("results").getJSONObject(0).getJSONArray("address_components").getJSONObject(0);
-                    String s = jO.getString("short_name").toLowerCase();
-                    if(LogWorker.isVERBOSE())LogWorker.d(LOG_TAG,"findmyCountry: "+s);
-                    if (Arrays.asList(countryCodes).contains(s)){
-                        if(s=="de"){
-                            if (P.latitude< NordSuedLat){
-                                GeoWorks.countryCode="de_sued";
-                            }else{
-                                if(P.longitude>WestOstLng){
-                                    GeoWorks.countryCode="de_ne";
-                                }else{
-                                    GeoWorks.countryCode="de_nw";
+                @Override
+                public void onResponse(JSONObject jResponse) {
+                    try {
+                        if(jResponse.getJSONArray("results").length()<1&&jResponse.optString("error_message","xxx")!="xxx")
+                        {                                            GeoWorks.countryCode = "de_nw";
+                            if(LogWorker.isVERBOSE())LogWorker.d(LOG_TAG,"findMyCountry JSON Error"+jResponse.getString("error_message"));}
+                        else {
+
+
+                            JSONObject jO = jResponse.getJSONArray("results").getJSONObject(0).getJSONArray("address_components").getJSONObject(0);
+                            String s = jO.getString("short_name").toLowerCase();
+                            if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG, "findmyCountry: " + s);
+                            lastCountryPosition = P;
+                            if (Arrays.asList(countryCodes).contains(s)) {
+                                if (s == "de") {
+                                    if (P.latitude < NordSuedLat) {
+                                        GeoWorks.countryCode = "de_sued";
+                                    } else {
+                                        if (P.longitude > WestOstLng) {
+                                            GeoWorks.countryCode = "de_ne";
+                                        } else {
+                                            GeoWorks.countryCode = "de_nw";
+                                        }
+
+                                    }
+                                } else {
+                                    GeoWorks.countryCode = s;
                                 }
-
+                            } else {
+                                GeoWorks.countryCode = "de_nw";
                             }
-                        }else{
-                            GeoWorks.countryCode=s;
                         }
-                    }
-                    else{
-                        GeoWorks.countryCode="de_nw";
-                    }
+                    } catch (JSONException e) {
+                        if (LogWorker.isVERBOSE())
+                            LogWorker.e(LOG_TAG, "findmyCountry JSONException:" + (e.getCause()!=null?e.getCause().toString():e.getMessage())
 
+                            );
+                        GeoWorks.countryCode = "de_nw";
+
+                    }
                 }
-                catch (JSONException e){
-                    LogWorker.e(LOG_TAG,"findmyCountry Exception:"+e.getStackTrace().toString()
-                    );
-                }
-            }
-        }, new Response.ErrorListener() {
+            }, new Response.ErrorListener() {
 
                 @Override
                 public void onErrorResponse(VolleyError error) {
@@ -478,8 +490,8 @@ public class GeoWorks {
                 }
             });
 
-        KartenActivity.getInstance().addToRequestQueue(cRequest);
-
+            KartenActivity.getInstance().addToRequestQueue(cRequest);
+        }
     }
 
     public static String getCountryCode() {

@@ -54,14 +54,18 @@ public class NetWorker {
 
             NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
 
-            if (activeNetwork.getType() == ConnectivityManager.TYPE_MOBILE) {
+            if (activeNetwork == null) setNetworkQuality(0);
+            else {
+
+                if (activeNetwork.getType() == ConnectivityManager.TYPE_MOBILE) {
 
 
-                TelephonyManager tm = (TelephonyManager) KartenActivity.getInstance().getSystemService(Context.TELEPHONY_SERVICE);
-                if (tm.getNetworkType() > 2)
-                    setNetworkQuality(2);
-                else
-                    setNetworkQuality(1);
+                    TelephonyManager tm = (TelephonyManager) KartenActivity.getInstance().getSystemService(Context.TELEPHONY_SERVICE);
+                    if (tm.getNetworkType() > 2)
+                        setNetworkQuality(2);
+                    else
+                        setNetworkQuality(1);
+                }
             }
         }
     }

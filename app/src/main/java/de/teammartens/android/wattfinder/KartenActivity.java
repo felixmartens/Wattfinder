@@ -54,6 +54,7 @@ import de.teammartens.android.wattfinder.worker.SaeulenWorks;
 
 public class KartenActivity extends FragmentActivity
         implements GoogleApiClient.OnConnectionFailedListener, ActivityCompat.OnRequestPermissionsResultCallback,OnMapReadyCallback {
+
     private static final String LOG_TAG = "Wattfinder";
     public static GoogleMap mMap; // Might be null if Google Play services APK is not available.
     private final static Integer
