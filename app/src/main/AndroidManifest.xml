@@ -20,30 +20,30 @@
         android:theme="@style/MyLightTheme" >
 
 
-    <meta-data
-        android:name="com.google.android.gms.version"
-        android:value="@integer/google_play_services_version" />
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/GooogleMaps_APIKEY"/>
 
 
-    <service
-        android:name=".LocationService"
-        android:enabled="true"
-        android:exported="true" >
-    </service>
+        <service
+            android:name=".LocationService"
+            android:enabled="true"
+            android:exported="true" >
+        </service>
 
-    <provider
-        android:name=".model.mSuggestionsProvider"
-        android:authorities="de.teammartens.android.wattfinder.model.mSuggestionsProvider"
-        />
         <provider
-        android:name=".model.rSuggestionsProvider"
-        android:authorities="de.teammartens.android.wattfinder.model.rSuggestionsProvider"
-        >
-    </provider>
+            android:name=".model.mSuggestionsProvider"
+            android:authorities="de.teammartens.android.wattfinder.model.mSuggestionsProvider"
+            />
+        <provider
+            android:name=".model.rSuggestionsProvider"
+            android:authorities="de.teammartens.android.wattfinder.model.rSuggestionsProvider"
+            >
+        </provider>
 
         <activity
             android:name=".KartenActivity"

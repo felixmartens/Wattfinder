@@ -426,8 +426,8 @@ FragmentManager fM = getChildFragmentManager();
 
 
             case KARTEN:
-                KartenListe = new String[Karten.size()-L_Karten.size()+1];
-                boolean[] Karten_C = new boolean[Karten.size()-L_Karten.size()+1];
+                KartenListe = new String[Karten.size()-L_Karten.size()];
+                boolean[] Karten_C = new boolean[Karten.size()-L_Karten.size()];
                 if (LogWorker.isVERBOSE())LogWorker.d(LOG_TAG,"KartenSize:"+Karten.size()+" LKarten:"+L_Karten.size());
                 Iterator i1 = Karten.iterator(); int C =0;
 
@@ -441,6 +441,8 @@ FragmentManager fM = getChildFragmentManager();
                         C++;
                     }
                 }
+                if (LogWorker.isVERBOSE())LogWorker.d(LOG_TAG,"KartenListeSize nach: C"+(C+1));
+
                 try {
 
 

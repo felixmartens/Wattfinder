@@ -209,7 +209,7 @@ public class FilterWorks {
                                 jO = JSON_LISTE.getJSONObject(i);
                                 listeAPI_hm.put(jO.getInt("card_id"), jO.getString("name"));
 
-                                //if (LogWorker.isVERBOSE())  LogWorker.d(LOG_TAG, "Karte:" + jO.getString("name"));
+                              //  if (LogWorker.isVERBOSE())  LogWorker.d(LOG_TAG, "Karte "+(i+1)+"/"+Listenlaenge+":" + jO.getString("name"));
                             }
                             if (listeAPI_hm.size()<Listenlaenge){
                                 if (LogWorker.isVERBOSE())  LogWorker.d(LOG_TAG, "Liste Karten zu kurz!!!");
