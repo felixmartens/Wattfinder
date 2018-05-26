@@ -53,6 +53,7 @@ public class SmartFilterFragment extends DialogFragment implements CheckBox.OnCh
     private static String[] SteckerListe, KartenListe;
     private static Set<String> L_Stecker,L_Karten = new HashSet<String>();
     private static String presetLabel = "";
+    private static boolean initialized = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -154,28 +155,43 @@ if(v!=null)
 
 
     public static void ladeFilter(){
-
+        initialized=false;
         if ( LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG,"LadeListe");
         CheckBox c  = (CheckBox) filterView.findViewById(R.id.fKostenlos);
         L_Stecker = new HashSet<String>(5);
         L_Stecker.add("Typ2");L_Stecker.add("Schuko");L_Stecker.add("CHAdeMO");L_Stecker.add("CCS");L_Stecker.add("Tesla Supercharger");
         c  = (CheckBox) filterView.findViewById(R.id.card_plug_typ2);
+        c.setOnCheckedChangeListener(null);
+        c.setChecked(false);
+
         c.setChecked(FilterWorks.lese_liste(FilterWorks.F_STECKER,"Typ2"));
         c.setTag(FilterWorks.F_STECKER);
         c.setOnCheckedChangeListener(instance);
+
+
         c  = (CheckBox) filterView.findViewById(R.id.card_plug_ccs);
+        c.setOnCheckedChangeListener(null);        c.setChecked(false);
+
         c.setChecked(FilterWorks.lese_liste(FilterWorks.F_STECKER,"CCS"));
         c.setTag(FilterWorks.F_STECKER);
         c.setOnCheckedChangeListener(instance);
+
+
         c  = (CheckBox) filterView.findViewById(R.id.card_plug_chademo);
+        c.setOnCheckedChangeListener(null);        c.setChecked(false);
+
         c.setChecked(FilterWorks.lese_liste(FilterWorks.F_STECKER,"CHAdeMO"));
         c.setTag(FilterWorks.F_STECKER);
         c.setOnCheckedChangeListener(instance);
         c  = (CheckBox) filterView.findViewById(R.id.card_plug_schuko);
+        c.setOnCheckedChangeListener(null);        c.setChecked(false);
+
         c.setChecked(FilterWorks.lese_liste(FilterWorks.F_STECKER,"Schuko"));
         c.setTag(FilterWorks.F_STECKER);
         c.setOnCheckedChangeListener(instance);
         c  = (CheckBox) filterView.findViewById(R.id.card_plug_tesla);
+        c.setOnCheckedChangeListener(null);        c.setChecked(false);
+
         c.setChecked(FilterWorks.lese_liste(FilterWorks.F_STECKER,"Tesla Supercharger"));
         c.setTag(FilterWorks.F_STECKER);
         c.setOnCheckedChangeListener(instance);
@@ -185,6 +201,7 @@ if(v!=null)
 
 
         s = (Switch) filterView.findViewById(R.id.filter_card_barrierefrei);
+        s.setOnCheckedChangeListener(null);
         s.setChecked(FilterWorks.lese_filter(FilterWorks.F_BARRIEREFREI));
         s.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -204,6 +221,7 @@ if(v!=null)
         });
 
         c  = (CheckBox) filterView.findViewById(R.id.fKostenlos);
+        c.setOnCheckedChangeListener(null);
         c.setChecked(FilterWorks.lese_filter(FilterWorks.F_KOSTENLOS));
         c.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -213,6 +231,7 @@ if(v!=null)
             }
         });
         c = (CheckBox) filterView.findViewById(R.id.fBestaetigt);
+        c.setOnCheckedChangeListener(null);
         c.setChecked(FilterWorks.lese_filter(FilterWorks.F_BESTAETIGT));
         c.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -222,6 +241,7 @@ if(v!=null)
             }
         });
         c = (CheckBox) filterView.findViewById(R.id.fKostenlosparken);
+        c.setOnCheckedChangeListener(null);
         c.setChecked(FilterWorks.lese_filter(FilterWorks.F_PARKEN));
         c.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -281,6 +301,7 @@ if(v!=null)
 
 */
         s = (Switch) filterView.findViewById(R.id.fStoerung);
+        s.setOnCheckedChangeListener(null);
         s.setChecked(FilterWorks.lese_filter(FilterWorks.F_KEINESTOERUNG));
         s.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -290,6 +311,7 @@ if(v!=null)
             }
         });
 
+        initialized=true;
     }
 
     public static void zeigeToast(){
@@ -299,8 +321,10 @@ if(v!=null)
 
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-         buttonView.setChecked(FilterWorks.liste_aendern(buttonView.getTag().toString(),buttonView.getText().toString()));
-         smartview();
+        if(initialized) {
+            buttonView.setChecked(FilterWorks.liste_aendern(buttonView.getTag().toString(), buttonView.getText().toString(),isChecked));
+            smartview();
+        }
     }
 
     public static void setPresetLabel(){
@@ -381,7 +405,7 @@ FragmentManager fM = getChildFragmentManager();
                                 @Override
                                 public void onClick(DialogInterface dialog, int which, boolean isChecked) {
                                     //Stecker. setSelected(SteckerListe[which],isChecked);
-                                    if (!isChecked == FilterWorks.liste_aendern(FilterWorks.F_STECKER, SteckerListe[which])) {
+                                    if (!isChecked == FilterWorks.liste_aendern(FilterWorks.F_STECKER, SteckerListe[which],isChecked)) {
                                         if (LogWorker.isVERBOSE())
                                             LogWorker.d(LOG_TAG, "Fehler beim SteckerListe ändern " + isChecked + " nicht erreicht");
                                     }
@@ -452,7 +476,7 @@ FragmentManager fM = getChildFragmentManager();
                                 @Override
                                 public void onClick(DialogInterface dialog, int which, boolean isChecked) {
                                     //Karten.put(KartenListe[which],isChecked);
-                                    if (!isChecked == FilterWorks.liste_aendern(FilterWorks.F_KARTEN, KartenListe[which])) {
+                                    if (!isChecked == FilterWorks.liste_aendern(FilterWorks.F_KARTEN, KartenListe[which],isChecked)) {
                                         LogWorker.d(LOG_TAG, "Fehler beim KartenListe ändern " + isChecked + " nicht erreicht");
                                     }
                                     ;
@@ -565,6 +589,7 @@ FragmentManager fM = getChildFragmentManager();
 
 
     private static void smartview(){
+        initialized=false;
         //dynamische ANzeige von relevanten Filtern
 
         CheckBox c = (CheckBox) filterView.findViewById(R.id.filter_card_1);
@@ -616,6 +641,7 @@ FragmentManager fM = getChildFragmentManager();
             c= (CheckBox) filterView.findViewById(cbid[in]);
             String K = (String) it.next();
             c.setText(K);
+            c.setChecked(false);
             c.setChecked(FilterWorks.lese_liste(FilterWorks.F_KARTEN,K));
             c.setTag(FilterWorks.F_KARTEN);
             c.setOnCheckedChangeListener(instance);
@@ -716,7 +742,7 @@ FragmentManager fM = getChildFragmentManager();
             AnimationWorker.fadeOut(v,0);
         }
 
-
+        initialized=true;
     }
 
     public static int getResId(String resName) {

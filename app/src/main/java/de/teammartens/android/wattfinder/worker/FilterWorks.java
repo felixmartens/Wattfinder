@@ -111,8 +111,8 @@ public class FilterWorks {
         filter.add(sPref.getBoolean(PRESET + "opennow", false));
 
         filter_minpower = sPref.getInt(PRESET + "MINPOWER", 0);
-
-        stecker = sPref.getStringSet(PRESET + "STECKER", new HashSet<String>());
+        stecker.clear();
+        stecker.addAll(sPref.getStringSet(PRESET + "STECKER", new HashSet<String>()));
         if (LogWorker.isVERBOSE())
             LogWorker.d(LOG_TAG, "Stecker aus DB geladen:" + stecker.toString());
 
@@ -123,7 +123,7 @@ public class FilterWorks {
         karten = sPref.getStringSet(PRESET + "KARTEN", new HashSet<String>());
         if (LogWorker.isVERBOSE())
             LogWorker.d(LOG_TAG, "Karten aus DB geladen:" + karten.toString());
-        convert2API();
+        //convert2API();
 
 
         f_TIMESTAMP = sPref.getLong("fTimestamp",0);
@@ -295,7 +295,7 @@ public class FilterWorks {
 
         /*Request nur starten wenn Netzwerkverbindung einigermaßen gut ist, sonst nehemen wir die gespeicherten*/
 
-        if(NetWorker.getNetworkQuality()>1||(NetWorker.getNetworkQuality()==1&&(System.currentTimeMillis()/1000 - f_TIMESTAMP)>f_OUTDATED) ){
+        if(!filter_initialized()||NetWorker.getNetworkQuality()>1||(NetWorker.getNetworkQuality()==1&&(System.currentTimeMillis()/1000 - f_TIMESTAMP)>f_OUTDATED) ){
 
             //Wenn shcon irgendwelche Listen da sind dann begrenze de Versuche um nicht zuviel Netzwerkkapazität zu nehmen
             if (filter_initialized()&&NetWorker.getNetworkQuality()<3)
@@ -419,13 +419,14 @@ public class FilterWorks {
      */
     public static boolean setze_filter(Integer F, Boolean Value) {
 
-        filter.set(F, Value);
+        if(filter.get(F)!=Value) {
+            filter.set(F, Value);
 
-        if (LogWorker.isVERBOSE())
-            LogWorker.d(LOG_TAG, "Filter" + F + "(" + FilterInt2StrHelper(F) + ") gesetzt: " + filter.get(F));
-        filter_speichern();
-        SaeulenWorks.checkMarkerCache("setze Filter "+FilterInt2StrHelper(F));
-
+            if (LogWorker.isVERBOSE())
+                LogWorker.d(LOG_TAG, "Filter" + F + "(" + FilterInt2StrHelper(F) + ") gesetzt: " + filter.get(F));
+            filter_speichern();
+            SaeulenWorks.checkMarkerCache("setze Filter " + FilterInt2StrHelper(F));
+        }
         return filter.get(F);
 
 
@@ -468,9 +469,10 @@ public class FilterWorks {
 
     public static int setze_power(Integer progress) {
 
-        filter_minpower = F_POWER_VALUE[progress];
+        if(filter_minpower != F_POWER_VALUE[progress]){
+            filter_minpower = F_POWER_VALUE[progress];
         if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG, "Filter POWER gesetzt: " + filter_minpower);
-        filter_speichern();
+        filter_speichern();}
         return filter_minpower;
 
 
@@ -607,6 +609,84 @@ public class FilterWorks {
         return false;
     }
 
+    public static boolean liste_aendern(String Liste, String Value, Boolean add) {
+        switch (Liste) {
+            case F_STECKER:
+                if (Value.equals(BELIEBIG)) {
+                    if (LogWorker.isVERBOSE())
+                        LogWorker.d(LOG_TAG, "ListeAendern: SteckerFilter: BELIEBIG");
+                    stecker.clear();
+                    SaeulenWorks.checkMarkerCache("setze Liste "+Liste+" "+Value);
+                    return true;
+                }
+
+                if((!add&&stecker.contains(Value))||(add&&!stecker.contains(Value))) {
+                    if (!add && stecker.contains(Value)) stecker.remove(Value);
+                    else {
+                        if (add && !stecker.contains(Value)) stecker.add(Value);
+                    }
+
+                    if (LogWorker.isVERBOSE())
+                        LogWorker.d(LOG_TAG, "ListeAendern: SteckerFilter:" + Value + " = " + stecker.contains(Value));
+                    filter_speichern();
+                    SaeulenWorks.checkMarkerCache("setze Liste " + Liste + " " + Value);
+
+                    if (stecker.contains(Value)) {
+                        return true;
+                    }else return false;
+                }
+
+            case F_VERBUND:
+                if (Value.equals(BELIEBIG)) {
+                    if (LogWorker.isVERBOSE())
+                        LogWorker.d(LOG_TAG, "ListeAendern: VerbundFilter: BELIEBIG");
+                    verbund.clear();
+                    SaeulenWorks.checkMarkerCache("setze Liste "+Liste+" "+Value);
+                    return true;
+                }
+
+                if (verbund.contains(Value)) verbund.remove(Value);
+                else verbund.add(Value);
+                if (LogWorker.isVERBOSE())
+                    LogWorker.d(LOG_TAG, "ListeAendern: VerbundFilter:" + Value + " = " + verbund.contains(Value));
+                filter_speichern();
+                if (verbund.contains(Value)) {        SaeulenWorks.checkMarkerCache("setze Liste "+Liste+" "+Value);
+                    return true;}
+                else return false;
+
+            case F_KARTEN:
+                //Erstmal Titel zu Id umsetzen
+                String cardid = "0";
+                if (Value.equals(BELIEBIG)) {
+                    if (LogWorker.isVERBOSE())
+                        LogWorker.d(LOG_TAG, "ListeAendern: KartenFilter: BELIEBIG");
+                    karten.clear();
+                    SaeulenWorks.checkMarkerCache("setze Liste "+Liste+" "+Value);
+                    return true;
+                }
+
+
+                if (karten_verfuegbar_API.containsValue(Value))
+                    for (Map.Entry<Integer, String> e : karten_verfuegbar_API.entrySet()) {
+                        if (e.getValue().equals(Value)) {
+                            cardid = String.valueOf(e.getKey());
+                            break;
+                        }
+                    }
+                if (LogWorker.isVERBOSE())
+                    LogWorker.d(LOG_TAG, "ListeAendern: KartenFilter ändern:" + cardid + " = bisher " + karten.contains(cardid));
+                if (karten.contains(cardid)) karten.remove(cardid);
+                else karten.add(cardid);
+                if (LogWorker.isVERBOSE())
+                    LogWorker.d(LOG_TAG, "ListeAendern: KartenFilter geändert:" + cardid + " = " + karten.contains(cardid));
+                filter_speichern();
+                SaeulenWorks.checkMarkerCache("setze Liste "+Liste+" "+Value);
+
+                return karten.contains(cardid);
+
+        }
+        return false;
+    }
     /*
         public static String lese_liste(String Liste){
             String L = "";
@@ -1050,6 +1130,9 @@ public class FilterWorks {
                     " Filter:" + filter.toString() +
                     "MapReady: " + KartenActivity.isMapReady());
 
+
+        if (filter!=null && filter.size()<5) lade_filter_db();
+
         boolean ret = stecker_verfuegbar_API != null && stecker_verfuegbar_API.size() > 0
                 && verbund_verfuegbar_API != null && verbund_verfuegbar_API.size() > 0
                 && karten_verfuegbar_API != null && karten_verfuegbar_API.size() > 0
@@ -1066,6 +1149,7 @@ public class FilterWorks {
     private static void convert2API() {
         try {
             if (!stecker_verfuegbar_API.isEmpty()) {
+                stecker_convertTemp.clear();
                 stecker_convertTemp.addAll(stecker);
                 for (String s : stecker) {
                     if (!stecker_verfuegbar_API.contains(s)) {
@@ -1078,6 +1162,7 @@ public class FilterWorks {
 
 
             if (!verbund_verfuegbar_API.isEmpty()) {
+                verbund_convertTemp.clear();
                 verbund_convertTemp.addAll(verbund);
                 for (String v : verbund) {
                     if (!verbund_verfuegbar_API.contains(v)) {

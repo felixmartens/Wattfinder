@@ -10,6 +10,9 @@ import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
 
 import de.teammartens.android.wattfinder.KartenActivity;
+import de.teammartens.android.wattfinder.R;
+
+import static de.teammartens.android.wattfinder.KartenActivity.getInstance;
 
 /**
  * Created by felix on 24.08.17.
@@ -17,7 +20,7 @@ import de.teammartens.android.wattfinder.KartenActivity;
 
 public class ExceptionWorker  implements Thread.UncaughtExceptionHandler {
 
-    private static final String[]  mailAddress = {"wattfinder_crash@7martens.de"};
+    private static final String[]  mailAddress = {"support@wattfinder.de"};
         public static final String EXTRA_MY_EXCEPTION_HANDLER = "EXTRA_MY_EXCEPTION_HANDLER";
         private final Activity context;
         private final Thread.UncaughtExceptionHandler rootHandler;
@@ -38,8 +41,8 @@ public class ExceptionWorker  implements Thread.UncaughtExceptionHandler {
         intent.putExtra(Intent.EXTRA_EMAIL, mailAddress);
         intent.putExtra(Intent.EXTRA_SUBJECT, subject);
         intent.putExtra(Intent.EXTRA_TEXT, message);
-        if (intent.resolveActivity(KartenActivity.getInstance().getPackageManager()) != null) {
-            KartenActivity.getInstance().startActivity(intent);
+        if (intent.resolveActivity(getInstance().getPackageManager()) != null) {
+            getInstance().startActivity(intent);
         }
     }
 
@@ -47,7 +50,7 @@ public class ExceptionWorker  implements Thread.UncaughtExceptionHandler {
         public void uncaughtException(final Thread thread, final Throwable e) {
 
             StackTraceElement[] arr = e.getStackTrace();
-            GoogleApiClient mGoogleApiClient = KartenActivity.getInstance().setupGoogleAPI();
+            GoogleApiClient mGoogleApiClient = getInstance().setupGoogleAPI();
             final StringBuffer report = new StringBuffer(e.toString());
             final String DOUBLE_LINE_SEP = "\n\n";
             final String SINGLE_LINE_SEP = "\n";
@@ -95,7 +98,7 @@ public class ExceptionWorker  implements Thread.UncaughtExceptionHandler {
             report.append(lineSeperator);
             report.append("--------- PlayServices ---------\n\n");
             report.append("Connection: ");
-            report.append(GoogleApiAvailability.getInstance().getErrorString(GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(KartenActivity.getInstance().getBaseContext())));
+            report.append(GoogleApiAvailability.getInstance().getErrorString(GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(getInstance().getBaseContext())));
             report.append(SINGLE_LINE_SEP);
             report.append("Version: ");
             report.append(GoogleApiAvailability.GOOGLE_PLAY_SERVICES_VERSION_CODE);
@@ -115,7 +118,8 @@ public class ExceptionWorker  implements Thread.UncaughtExceptionHandler {
             report.append(LogWorker.getlogID());
             report.append(SINGLE_LINE_SEP);
             report.append(lineSeperator);
-
+            report.append(lineSeperator);
+            report.append(getInstance().getString(R.string.crashmail_legalnotice));
 
 
             Log.e("Report ::", report.toString());

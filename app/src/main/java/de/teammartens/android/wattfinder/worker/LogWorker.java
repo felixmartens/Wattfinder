@@ -34,7 +34,7 @@ public class LogWorker {
     private static final String LOG_TAG = "LOG_WORKER";
     private static Set<LogEntry> LogCache = new HashSet<LogEntry>();
     public static boolean isVERBOSE() {
-        return VERBOSE;
+        return (DEFAULT_DEBUGGING||VERBOSE);
     }
 
     public static void setVERBOSE(boolean VERBOSE) {
@@ -103,7 +103,7 @@ public class LogWorker {
     public static void sendLog(final Set<LogEntry> logs){
         String uri="http://wattfinder.7martens.de/LogWorkerAPI.php";
 
-        if(logs.size()>0) {
+        if(logs.size()>0&&isVERBOSE()) {
             StringRequest stringRequest = new StringRequest(Request.Method.POST, uri,
                     new Response.Listener<String>() {
                         @Override

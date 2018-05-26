@@ -3,6 +3,7 @@ package de.teammartens.android.wattfinder.fragments;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -28,18 +29,27 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.sql.Timestamp;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Locale;
+import java.util.Map;
 
 import de.teammartens.android.wattfinder.KartenActivity;
 import de.teammartens.android.wattfinder.R;
+import de.teammartens.android.wattfinder.model.ChargeEvent;
 import de.teammartens.android.wattfinder.model.ImagePagerAdapter;
+import de.teammartens.android.wattfinder.model.Saeule;
 import de.teammartens.android.wattfinder.worker.AnimationWorker;
 import de.teammartens.android.wattfinder.worker.GeoWorks;
 import de.teammartens.android.wattfinder.worker.ImageWorker;
 import de.teammartens.android.wattfinder.worker.LogWorker;
 import de.teammartens.android.wattfinder.worker.NetWorker;
+import de.teammartens.android.wattfinder.worker.Utils;
 
+import static android.content.Context.LAYOUT_INFLATER_SERVICE;
 import static android.view.View.GONE;
 
 /**
@@ -76,7 +86,7 @@ mContext =this.getContext();
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("geo:" + mPos.latitude + "," + mPos.longitude + "?q=" + mPos.latitude + "," + mPos.longitude + "(" + mTitel + ")"));
-                if (intent.resolveActivity(KartenActivity.getInstance().getPackageManager()) != null) {
+                if (intent.resolveActivity(mContext.getPackageManager()) != null) {
                     startActivity(intent);
                 }
             }
@@ -87,7 +97,7 @@ mContext =this.getContext();
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(mUrl));
-                    if (intent.resolveActivity(KartenActivity.getInstance().getPackageManager()) != null) {
+                    if (intent.resolveActivity(mContext.getPackageManager()) != null) {
                         startActivity(intent);
                     }
                 }
@@ -98,16 +108,16 @@ mContext =this.getContext();
 
         iS.setFactory(new ViewSwitcher.ViewFactory() {
                                      public View makeView() {
-                                         ImageView myView = new ImageView(KartenActivity.getInstance().getApplicationContext());
+                                         ImageView myView = new ImageView(mContext.getApplicationContext());
                                          myView.setScaleType(ImageView.ScaleType.FIT_CENTER);
 
                                          return myView;
                                      }
                                  });
         iS.setImageResource(R.drawable.icon_mono);
-        Animation in = AnimationUtils.loadAnimation(KartenActivity.getInstance(),android.R.anim.slide_in_left);
+        Animation in = AnimationUtils.loadAnimation(mContext,android.R.anim.slide_in_left);
         iS.setInAnimation(in);
-        in=AnimationUtils.loadAnimation(KartenActivity.getInstance(),android.R.anim.slide_out_right);
+        in=AnimationUtils.loadAnimation(mContext,android.R.anim.slide_out_right);
         iS.setOutAnimation(in);
 
 
@@ -157,6 +167,7 @@ mContext =this.getContext();
         super.onResume();
         AnimationWorker.hide_mapSearch();
         AnimationWorker.hide_fabs();
+        load_events();
 
     }
 
@@ -167,7 +178,7 @@ mContext =this.getContext();
         v.setVisibility(View.VISIBLE);
         TextView t = (TextView) detailsView.findViewById(R.id.dSaeulenid);
         t.setText("ID"+String.valueOf(mID));
-        String url=fAPIUrl + "?key=" + KartenActivity.getInstance().getString(R.string.GoingElectric_APIKEY) + "&ge_id="+mID;
+        String url=fAPIUrl + "?key=" + mContext.getString(R.string.GoingElectric_APIKEY) + "&ge_id="+mID;
         GeoWorks.movemapPosition(mPos,GeoWorks.DETAIL_ZOOM,"DetailFragment");
         if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG, "JSONUrl:"+url);
 
@@ -290,17 +301,25 @@ mContext =this.getContext();
                                 t1.setVisibility(View.VISIBLE);
                                 JSONObject j2 = O.getJSONObject("days");
 
-                                t1.setText(KartenActivity.getInstance().getString(R.string.monday)+formatOpening(j2.getString("monday"))+KartenActivity.lineSeparator+
-                                        KartenActivity.getInstance().getString(R.string.tuesday)+formatOpening(j2.getString("tuesday"))+KartenActivity.lineSeparator+
-                                        KartenActivity.getInstance().getString(R.string.wednesday)+formatOpening(j2.getString("wednesday"))+KartenActivity.lineSeparator+
-                                        KartenActivity.getInstance().getString(R.string.thursday)+formatOpening(j2.getString("thursday"))+KartenActivity.lineSeparator+
-                                        KartenActivity.getInstance().getString(R.string.friday)+formatOpening(j2.getString("friday"))+KartenActivity.lineSeparator+
-                                        KartenActivity.getInstance().getString(R.string.saturday)+formatOpening(j2.getString("saturday"))+KartenActivity.lineSeparator+
-                                        KartenActivity.getInstance().getString(R.string.sunday)+formatOpening(j2.getString("sunday")));
+                                t1.setText(mContext.getString(R.string.monday)+formatOpening(j2.getString("monday"))+KartenActivity.lineSeparator+
+                                        mContext.getString(R.string.tuesday)+formatOpening(j2.getString("tuesday"))+KartenActivity.lineSeparator+
+                                        mContext.getString(R.string.wednesday)+formatOpening(j2.getString("wednesday"))+KartenActivity.lineSeparator+
+                                        mContext.getString(R.string.thursday)+formatOpening(j2.getString("thursday"))+KartenActivity.lineSeparator+
+                                        mContext.getString(R.string.friday)+formatOpening(j2.getString("friday"))+KartenActivity.lineSeparator+
+                                        mContext.getString(R.string.saturday)+formatOpening(j2.getString("saturday"))+KartenActivity.lineSeparator+
+                                        mContext.getString(R.string.sunday)+formatOpening(j2.getString("sunday")));
                             }
                             if (!O.optBoolean("description",true)) t2.setVisibility(GONE);
                             else {t2.setVisibility(View.VISIBLE);
                              t2.setText(decodeHTML(O.getString("description")));}
+
+
+
+                        //Retrieve Charge Events
+
+                        load_events();
+
+
 
 
 
@@ -514,6 +533,82 @@ public static String formatOpening(String s){
         return Html.fromHtml(text).toString();
 
         return "";
+    }
+
+    private static void load_events(){
+        if(mID>0) {
+            final View eventView = detailsView.findViewById(R.id.dEvents);
+            AnimationWorker.fadeOut(eventView,0);
+            String evUrl = "https://wattfinder.de/api/get.php?key=" + mContext.getString(R.string.Wattfinder_APIKey) + "&p=0&cp=" + mID;
+
+            JsonObjectRequest pRequest = new JsonObjectRequest(Request.Method.GET,
+                    evUrl, (String) null, new Response.Listener<JSONObject>() {
+
+
+                @Override
+                public void onResponse(JSONObject jResponse) {
+
+                    if (jResponse.optBoolean("success", false) && jResponse.optInt("count", 0) > 0) {
+                        try {
+                            JSONArray jA = jResponse.getJSONArray("events");
+                            LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(LAYOUT_INFLATER_SERVICE);
+                            ViewGroup parentView = (ViewGroup) detailsView.findViewById(R.id.dEvents_list);
+                            parentView.removeAllViews();
+                            //Sort Entries
+                            HashMap<Integer, Long> hmap = new HashMap<Integer, Long>();
+                            for (int i = 0; i < jA.length(); i++) {
+                                hmap.put(i, jA.getJSONObject(i).optLong("Timestamp", 0));
+                            }
+                            Map<Integer, Long> map = Utils.sortByValues(hmap);
+
+                            Iterator i = map.keySet().iterator();
+                            while (i.hasNext()) {
+                                Integer i1 = (Integer) i.next();
+                                View childLayout = inflater.inflate(R.layout.layout_chargeevent, null);
+                                childLayout.setId((Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1 ? View.generateViewId() : Utils.generateViewId()));
+                                ChargeEvent CE = new ChargeEvent();
+                                if (CE.extractFromJSON(jA.getJSONObject(i1))) {
+                                    TextView tv = (TextView) childLayout.findViewById(R.id.evDate);
+                                               /* Date d = new Date();
+                                                d.setTime(CE.getTimestamp());
+                                                 */
+                                    tv.setText(CE.getTimestampString());
+                                    tv.setTag(CE.getEntryId());
+
+                                    tv = childLayout.findViewById(R.id.evNick);
+                                    tv.setText(CE.getNickname());
+
+                                    tv = childLayout.findViewById(R.id.evPlug);
+                                    tv.setText(CE.getPlug()+"("+CE.getReason()+")");
+
+                                    tv = childLayout.findViewById(R.id.evComment);
+                                    tv.setText(CE.getComment());
+
+                                    View v = childLayout.findViewById(R.id.evIconFault);
+                                    if(CE.isIsfault())v.setVisibility(View.VISIBLE);
+
+                                    parentView.addView(childLayout);
+                                } else {
+                                    LogWorker.e("JSON Event Extract", jA.getJSONObject(i1).toString());
+
+                                }
+                            }
+                        } catch (JSONException jE) {
+                            LogWorker.e("JSON Event Count", jE.getLocalizedMessage());
+                        }
+
+                        AnimationWorker.fadeIn(eventView, 0, 1.0f);
+                    }
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+
+                }
+            });
+
+            KartenActivity.getInstance().addToRequestQueue(pRequest);
+        }
     }
 }
 

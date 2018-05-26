@@ -140,7 +140,7 @@ public class NetWorker {
             Toast.makeText(KartenActivity.getInstance(), "NetzwerkFehler:" + error.getMessage(), Toast.LENGTH_LONG).show();
 
             if (LogWorker.isVERBOSE()) LogWorker.e("NETWORKER", "Netzwerkfehler: " + Liste + "\n"
-                    +(error.networkResponse!=null?error.networkResponse.statusCode+"  "+error.networkResponse.networkTimeMs+"ms":error.getCause().getMessage()));
+                    +(error.networkResponse!=null?error.networkResponse.statusCode+"  "+error.networkResponse.networkTimeMs+"ms":error.getMessage()));
             TextView tv = (TextView) KartenActivity.getInstance().findViewById(R.id.errorTitle);
             if (tv != null) tv.setText(getInstance().getString(R.string.error_network_title));
 

@@ -15,11 +15,12 @@ import java.util.Date;
 public class Saeule implements ClusterItem {
     private  LatLng mPosition;
     private final Integer mID;
-    private  Integer mTyp;
-    private String mChargepoints;
-    private String mAddress;
-    private String mName;
-    private boolean faultreport;
+    private  Integer mTyp=0;
+    private String mChargepoints="";
+    private String mAddress="";
+    private String mName="";
+    private boolean faultreport=false;
+    private Integer ev_count=0;
 
 
     private Long updated;
@@ -108,5 +109,13 @@ public class Saeule implements ClusterItem {
 
     public void setFaultreport(boolean faultreport) {
         this.faultreport = faultreport;
+    }
+
+    public Integer getEventCount() {
+        return (ev_count==null?0:ev_count);
+    }
+
+    public void setEventCount(Integer ev_count) {
+        this.ev_count = ev_count;
     }
 }

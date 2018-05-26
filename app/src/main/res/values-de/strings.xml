@@ -75,15 +75,18 @@
     <string name="ifault_report">Achtung! Temporäre Störung für diese Säule gemeldet!</string>
     <string name="close">Schließen</string>
     <string name="skipMessage">Nicht wieder anzeigen</string>
-    <string name="dialog_text1">Willkommen zur neuen Wattfinder-App,\n
-    die App nutzt jetzt die neue offizielle GoingElectric-API um die Ladesäulendaten abzurufen. Da Wattfinder die Daten nur filtert und anzeigt, bitte ich alles Lob und Dank
+    <string name="dialog_text1">Willkommen zur Wattfinder-App,\n
+    die App nutzt die offizielle GoingElectric-API um die Ladesäulendaten abzurufen. Da Wattfinder die Daten nur filtert und anzeigt, bitte ich alles Lob und Dank
     für die eigentlichen Daten an die Community von goingelectric.de zu geben. Fehler und Verbesserungsvorschläge, die die eigentlichen Daten betreffen allerdings auch.
     Wie gesagt, Wattfinder filtert nur und zeigt an.\n\n
-    Einige wichtige Hinweise:\n\n
-    1. Wattfinder sammelt, speichert und überträgt keine personenbezogenen Daten und wird dies auch nie tun.\n\n
-    2. Wattfinder überträgt Standortdaten, Filtereinstellungen und Suchbegriffe an goingelectric.de und ggf. an Google Maps.\n\n
-    3. Ob Google Maps Daten speichert oder verarbeitet muss bitte den separaten Bedingungen von Google Maps entnommen werden.\n\n
-    4. Wattfinder überträgt - streng anonym - die Gesamtzahl an API-Abfragen, für zukünftige Weiterentwicklungen.
+    Einige wichtige Hinweise zum Datenschutz:\n\n
+        Ich als Entwickler von Wattfinder nehme Datenschutz (und Datensparsamkeit) von Beginn sehr ernst. Im Rahmen der DSGVO möchte ich hier nochmal einige Punkte klarstellen.\n\n
+        Kurz gefasst:\n An potentiell personenbezogenen Daten wird nur der Standort erfasst (nicht aber Name, Adresse, E-Mail, Telefonnummer etc.). Er wird nur zur Zentrierung der Karte und zur Berechnung von Entfernungen verwendet und dabei weder dauerhaft gespeichert, noch übertragen oder ausgewertet.
+        Von mir ("Wattfinder") werden keine Daten verarbeitet, gespeichert oder weitergegeben, sofern dies nicht zwingend für die Zurverfügungstellung des Angebotes erforderlich ist.
+        \n Offensichtlicherweise müssen die Filtereinstellungen und der gewünschte Kartenausschnitt an goingelectric.de übertragen werden. Ladeberichte werden von einem von mir gemieteten Server abgerufen bzw. dorthin übertragen.
+        \n Dabei werden IP- und Geräteadressen in dem Maße übertragen und verarbeitet, soweit es für die Zurverfügungstellung der Daten nötig ist (und auch im Browser erfolgen würde). \n\n
+        \n Die Einwilligung zu dieser Nutzung der Daten kann jederzeit widerrufen werden. Dazu kann einerseits im Android-System die Standort-Berechtigung entzogen und die übrige App weiter genutzt werden. Soll die Einwilligung zur Verarbeitung der übrigen o.b. Daten widerrufen werden, so ist die App offensichtlich nicht mehr nutzbar und kann einfach deinstalliert werden.
+        \n\nAusnahme zu den vorstehende Aussagen ist die Nutzung von Google Maps für die Kartenanzeige und die Suche nach Orten, auf die ich keinen Einfluss habe:\n
     </string>
     <string name="mapviewlarge">Keine Ladesäulen abgerufen. Kartenausschnitt zu groß.</string>
     <string name="nonetworkavailable">Keine Netzwerkverbindung aktiv. Bitte stellen Sie sicher, dass Sie mit dem Internet verbunden sind und starten Sie die App erneut.</string>
@@ -113,6 +116,7 @@
     <string name="networkerror">Ein unbekannter Netzwerkfehler ist aufgetreten.</string>
     <string name="networkerror_timeout">Netzwerkanfrage dauert zu lange. (Error: Timeout)</string>
     <string name="networkerror_404">Netzwerkanfrage fehlgeschlagen. Server nicht erreichbar, Status:</string>
-
+    <string name="devents_title">Ladeberichte / CheckIns</string>
+    <string name="next">Weiter</string>
 
 </resources>

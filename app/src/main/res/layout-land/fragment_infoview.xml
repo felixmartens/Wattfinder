@@ -41,6 +41,15 @@
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <TextView
+                android:id="@+id/iEvCount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:gravity="right"
+                android:textColor="@color/place_autocomplete_search_hint"
+                android:textIsSelectable="false" />
+
+            <TextView
                 android:id="@+id/iAdresse"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

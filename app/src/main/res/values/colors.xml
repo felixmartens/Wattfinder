@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="divider">#BEBFC2</color>
+    <color name="divider">#bebfc2</color>
     <color name="divider2">#65A6C9</color>
     <color name="hellblau">#B7D7ED</color>
     <color name="info">#f2f2f2</color>
@@ -15,7 +15,7 @@
     <color name="ItemTintedBack">#f9fbfb</color>
     <color name="windowBackground">#ffffff</color>
     <color name="navigationBarColor">#000000</color>
-    <color name="colorAccent">#4caeda</color>
+    <color name="colorAccent">#25a7fe</color>
     <color name="colorAccentSave">#217eeb</color>
     <color name="colorDebug">#feed2d</color>
     <color name="foreground_material_light">#000000</color>
@@ -24,5 +24,6 @@
     <color name="color_error">#bf4141</color>
     <color name="colorTextsec">#14328a</color>
     <color name="colorCard">#eeeeee</color>
+    <color name="colorAccent2">#4caeda</color>
 
 </resources>

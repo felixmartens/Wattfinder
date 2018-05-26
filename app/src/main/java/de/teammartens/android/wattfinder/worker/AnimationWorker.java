@@ -5,9 +5,12 @@ import android.animation.AnimatorListenerAdapter;
 import android.os.Build;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.text.Html;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import de.teammartens.android.wattfinder.KartenActivity;
@@ -20,6 +23,7 @@ import de.teammartens.android.wattfinder.fragments.SmartFilterFragment;
 
 import static de.teammartens.android.wattfinder.KartenActivity.fragmentManager;
 import static de.teammartens.android.wattfinder.KartenActivity.getInstance;
+import static de.teammartens.android.wattfinder.KartenActivity.privacyConsent;
 
 /**
  * Created by felix on 02.08.17.
@@ -43,7 +47,7 @@ public class AnimationWorker {
                         R.anim.fragment_slide_out);
         Fragment f = fragmentManager.findFragmentByTag("iFragment");
         Fragment df = fragmentManager.findFragmentByTag("dFragment");
-        if(df!=null&&df.isVisible())return;else {
+        if(startupScreen||(df!=null&&df.isVisible()))return;else {
             //wenn Details zusehen sind dann nix Info
 
             if (f == null) {
@@ -308,35 +312,81 @@ public class AnimationWorker {
 
         View startup = getInstance().findViewById(R.id.startupScreen);
         if (startupScreen) {
-            if(!KartenActivity.skipEula && (System.currentTimeMillis() - KartenActivity.sharedPref.getLong(KartenActivity.sP_Timestamp,0))>3600*1000){//Zeige Eula wenn skipEula nicht aktiviert und letztes Programmende ist mindestens eine Stunde eher
-                final View v = getInstance().findViewById(R.id.eulaScreen);
-                if (v!=null) {
-                    final CheckBox cb = (CheckBox) getInstance().findViewById(R.id.skipEula);
+            if(LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG,"privacyConsent "+privacyConsent);
+            //if(!KartenActivity.privacyConsent && (System.currentTimeMillis() - KartenActivity.sharedPref.getLong(KartenActivity.sP_Timestamp,0))>3600*1000) {//Zeige Eula wenn privacyConsent nicht aktiviert und letztes Programmende ist mindestens eine Stunde eher
+              if(!KartenActivity.privacyConsent){
+                  if(LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG,"privacyConsent treffer ");
 
-                    hide_mapSearch();
-                    show_fabs();
+                  final View v = getInstance().findViewById(R.id.eulaScreen);
+                if (v != null) {
                     fadeIn(v, 0, 1.0f);
+                    hide_mapSearch();
+
+                    TextView tv = getInstance().findViewById(R.id.welcomeText);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+                        tv.setText(Html.fromHtml(getInstance().getString(R.string.privacy_text_short), Html.FROM_HTML_MODE_COMPACT));
+                    else
+                        tv.setText(Html.fromHtml(getInstance().getString(R.string.privacy_text_short)));
+
+
                     Button b = (Button) getInstance().findViewById(R.id.eulaButton);
                     b.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            KartenActivity.skipEula=cb.isChecked();
-                            KartenActivity.sharedPref.edit().putBoolean("skipEula",KartenActivity.skipEula).commit();
-                            slideDown(v,0);
-                            GeoWorks.setupLocationListener();
 
-                            SaeulenWorks.reloadMarker();
+                            final CheckBox cb = (CheckBox) getInstance().findViewById(R.id.privacy_consent);
+                            TextView tv = getInstance().findViewById(R.id.privacyText);
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+                                tv.setText(Html.fromHtml(getInstance().getString(R.string.privacy_desc_long), Html.FROM_HTML_MODE_COMPACT));
+                            else
+                                tv.setText(Html.fromHtml(getInstance().getString(R.string.privacy_desc_long)));
+                             tv = getInstance().findViewById(R.id.privacyLicense);
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+                                tv.setText(Html.fromHtml(getInstance().getString(R.string.privacy_license), Html.FROM_HTML_MODE_COMPACT));
+                            else
+                                tv.setText(Html.fromHtml(getInstance().getString(R.string.privacy_license)));
 
                             show_fabs();
-                            show_debug();
+                            View vv = getInstance().findViewById(R.id.welcome_scroll);
+                            fadeOut(vv,0);
+                            vv = getInstance().findViewById(R.id.privacy_long);
+                            fadeIn(vv,0,1.0f);
+                            vv = getInstance().findViewById(R.id.eulaSubTitle);
+                            fadeIn(vv,0,1.0f);
+
+                            Button b = (Button) getInstance().findViewById(R.id.eulaButton);
+                            b.setText(R.string.close);
+                            b.setEnabled(false);
+                            b.setAlpha(0.3f);
+                            b.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    KartenActivity.privacyConsent = cb.isChecked();
+                                    KartenActivity.sharedPref.edit().putBoolean("privacyConsent", KartenActivity.privacyConsent).commit();
+                                    slideDown(v, 0);
+                                    GeoWorks.setupLocationListener();
+
+                                    SaeulenWorks.reloadMarker();
+
+                                    show_fabs();
+                                    show_debug();
+
+                                }
+                            });
+                            cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                                @Override
+                                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                                    Button b = (Button) getInstance().findViewById(R.id.eulaButton);
+                                    if(isChecked)b.setAlpha(1.0f);else b.setAlpha(0.3f);
+                                    b.setEnabled(isChecked);
+                                }
+                            });
 
                         }
                     });
 
                 }
-
             }
-
             KartenActivity.setMapCenter();
 
             slideDown(startup, 500);
@@ -569,6 +619,10 @@ public class AnimationWorker {
 
     public static void fadeIn (final View V,Integer offset, Float Alpha) {
         if (V== null) return;
+        if(V.getVisibility()==View.GONE){
+            V.setAlpha(0f);
+            V.setVisibility(View.VISIBLE);
+        }
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
             V.animate()
                     .setStartDelay(offset)

@@ -93,6 +93,9 @@ public void onPause(){
             else return;
             mTitel = "Ladepunkt: " + mSaeule.getName();
 
+            t2 = (TextView) infoView.findViewById(R.id.iEvCount);
+            int evc = mSaeule.getEventCount();
+            t2.setText((evc>0?evc:"Keine")+ " Bewertung"+(evc>1?"en":""));
 
             t2 = (TextView) infoView.findViewById(R.id.iAdresse);
             t2.setText(mSaeule.getAddress());

@@ -188,6 +188,52 @@
                     android:visibility="gone" />
 
                 <android.support.v7.widget.CardView
+                    android:id="@+id/dStoerung"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="8dp"
+                    android:padding="5dp"
+                    app:cardBackgroundColor="@color/colorDebug">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@color/color_fault"
+                            android:minHeight="25dp"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/dStoerungTitel"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:drawableLeft="@drawable/ic_report_problem"
+                                android:text="@string/details_disturbance"
+                                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                            <TextView
+                                android:id="@+id/dStoerung_c"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:paddingLeft="10dp"
+                                android:textAppearance="?android:attr/textAppearanceSmall" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/dStoerung_b"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="50dp"
+                            android:textAppearance="?android:attr/textAppearanceSmall" />
+
+                    </LinearLayout>
+                </android.support.v7.widget.CardView>
+
+                <android.support.v7.widget.CardView
                     android:id="@+id/dKosten"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -227,56 +273,11 @@
                             android:id="@+id/dKosten_b"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:autoLink="web|email|phone"
                             android:paddingLeft="10dp"
                             android:paddingRight="10dp"
                             android:textAppearance="?android:attr/textAppearanceSmall" />
 
-                    </LinearLayout>
-                </android.support.v7.widget.CardView>
-
-                <android.support.v7.widget.CardView
-                    android:id="@+id/dStecker"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_margin="8dp"
-                    android:padding="5dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:orientation="horizontal"
-                            android:paddingLeft="10dp"
-                            android:paddingRight="10dp">
-
-                            <TextView
-                                android:id="@+id/dSteckerTitel"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/details_plugs"
-                                android:textAppearance="?android:attr/textAppearanceMedium"
-                                android:textColor="@color/colorPrimary"
-                                android:textStyle="bold" />
-
-                            <TextView
-                                android:id="@+id/dStecker_c"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:paddingLeft="10dp"
-                                android:textAppearance="?android:attr/textAppearanceSmall" />
-                        </LinearLayout>
-
-                        <TextView
-                            android:id="@+id/dStecker_b"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:paddingLeft="10dp"
-                            android:paddingRight="10dp"
-                            android:textAppearance="?android:attr/textAppearanceSmall" />
                     </LinearLayout>
                 </android.support.v7.widget.CardView>
 
@@ -358,6 +359,54 @@
                 </android.support.v7.widget.CardView>
 
                 <android.support.v7.widget.CardView
+                    android:id="@+id/dLadeweile"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="8dp"
+                    android:padding="5dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:minHeight="25dp"
+                            android:orientation="horizontal"
+                            android:paddingLeft="10dp"
+                            android:paddingRight="10dp">
+
+                            <TextView
+                                android:id="@+id/dLadeweileTitel"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/details_ladeweile"
+                                android:textAppearance="?android:attr/textAppearanceMedium"
+                                android:textColor="@color/colorPrimary"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/dLadeweile_c"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:paddingLeft="10dp"
+                                android:textAppearance="?android:attr/textAppearanceSmall" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/dLadeweile_b"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="50dp"
+                            android:autoLink="web|email|phone"
+                            android:paddingLeft="10dp"
+                            android:textAppearance="?android:attr/textAppearanceSmall" />
+                    </LinearLayout>
+                </android.support.v7.widget.CardView>
+
+                <android.support.v7.widget.CardView
                     android:id="@+id/dZeiten"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -422,57 +471,11 @@
                             android:id="@+id/dZeiten_b"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:autoLink="web|email|phone"
                             android:paddingLeft="10dp"
                             android:paddingRight="10dp"
                             android:textAppearance="?android:attr/textAppearanceSmall" />
 
-                    </LinearLayout>
-                </android.support.v7.widget.CardView>
-
-                <android.support.v7.widget.CardView
-                    android:id="@+id/dLadeweile"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_margin="8dp"
-                    android:padding="5dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:minHeight="25dp"
-                            android:orientation="horizontal"
-                            android:paddingLeft="10dp"
-                            android:paddingRight="10dp">
-
-                            <TextView
-                                android:id="@+id/dLadeweileTitel"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/details_ladeweile"
-                                android:textAppearance="?android:attr/textAppearanceMedium"
-                                android:textColor="@color/colorPrimary"
-                                android:textStyle="bold" />
-
-                            <TextView
-                                android:id="@+id/dLadeweile_c"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:paddingLeft="10dp"
-                                android:textAppearance="?android:attr/textAppearanceSmall" />
-                        </LinearLayout>
-
-                        <TextView
-                            android:id="@+id/dLadeweile_b"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginRight="50dp"
-                            android:paddingLeft="10dp"
-                            android:textAppearance="?android:attr/textAppearanceSmall" />
                     </LinearLayout>
                 </android.support.v7.widget.CardView>
 
@@ -518,7 +521,54 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginRight="50dp"
+                            android:autoLink="web|email|phone"
                             android:paddingLeft="10dp"
+                            android:textAppearance="?android:attr/textAppearanceSmall" />
+                    </LinearLayout>
+                </android.support.v7.widget.CardView>
+
+                <android.support.v7.widget.CardView
+                    android:id="@+id/dStecker"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="8dp"
+                    android:padding="5dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal"
+                            android:paddingLeft="10dp"
+                            android:paddingRight="10dp">
+
+                            <TextView
+                                android:id="@+id/dSteckerTitel"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/details_plugs"
+                                android:textAppearance="?android:attr/textAppearanceMedium"
+                                android:textColor="@color/colorPrimary"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/dStecker_c"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:paddingLeft="10dp"
+                                android:textAppearance="?android:attr/textAppearanceSmall" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/dStecker_b"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingLeft="10dp"
+                            android:paddingRight="10dp"
                             android:textAppearance="?android:attr/textAppearanceSmall" />
                     </LinearLayout>
                 </android.support.v7.widget.CardView>
@@ -565,53 +615,54 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginRight="50dp"
+                            android:autoLink="web|email|phone"
                             android:paddingLeft="10dp"
                             android:textAppearance="?android:attr/textAppearanceSmall" />
                     </LinearLayout>
                 </android.support.v7.widget.CardView>
 
                 <android.support.v7.widget.CardView
-                    android:id="@+id/dStoerung"
+                    android:id="@+id/dEvents"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_margin="8dp"
-                    android:padding="5dp"
-                    app:cardBackgroundColor="@color/colorDebug">
+                    android:padding="5dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:orientation="vertical">
 
-                        <TextView
-                            android:id="@+id/dStoerung_b"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginRight="50dp"
-                            android:textAppearance="?android:attr/textAppearanceSmall" />
-
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:background="@color/color_fault"
+                            android:layout_height="wrap_content"
                             android:minHeight="25dp"
-                            android:orientation="horizontal">
+                            android:orientation="horizontal"
+                            android:paddingLeft="10dp"
+                            android:paddingRight="10dp">
 
                             <TextView
-                                android:id="@+id/dStoerungTitel"
+                                android:id="@+id/dEventsTitel"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:drawableLeft="@drawable/ic_report_problem"
-                                android:text="@string/details_disturbance"
-                                android:textAppearance="?android:attr/textAppearanceMedium" />
+                                android:text="@string/devents_title"
+                                android:textAppearance="?android:attr/textAppearanceMedium"
+                                android:textColor="@color/colorPrimary"
+                                android:textStyle="bold" />
 
                             <TextView
-                                android:id="@+id/dStoerung_c"
+                                android:id="@+id/dEvents_c"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:paddingLeft="10dp"
                                 android:textAppearance="?android:attr/textAppearanceSmall" />
                         </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/dEvents_list"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical"></LinearLayout>
 
                     </LinearLayout>
                 </android.support.v7.widget.CardView>

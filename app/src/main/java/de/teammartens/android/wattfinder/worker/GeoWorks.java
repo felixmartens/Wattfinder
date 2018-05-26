@@ -15,6 +15,7 @@ import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
@@ -60,6 +61,9 @@ public class GeoWorks {
     private static final int LOCATION_MIN_INTERVAL = 5000;
     private static final int aroundDistance = 3000;
 
+
+
+    private static boolean location_permission = false;
     private static LocationCallback mLocationCallback;
     public static FusedLocationProviderClient mFusedLocationClient;
     private static LocationRequest mLocationRequest;
@@ -68,6 +72,7 @@ public class GeoWorks {
     public static Marker Marker_Ich, Marker_Suche = null;
 
     public static LatLng getmyPosition() {
+        if(myPosition==null||!location_permission||!validLatLng(myPosition))return null;
         return myPosition;
     }
 
@@ -508,7 +513,8 @@ public class GeoWorks {
 
 
     public static void removeLocationListener(){
-        if(KartenActivity.checkPermissionLocation(KartenActivity.MY_PERMISSIONS_REMOVE_LOCATION)&&mFusedLocationClient!= null) {
+        if(location_permission&&KartenActivity.checkPermissionLocation(KartenActivity.MY_PERMISSIONS_REMOVE_LOCATION)
+                &&mFusedLocationClient!= null&&mLocationCallback!=null) {
 
             mFusedLocationClient.removeLocationUpdates(mLocationCallback);
         }
@@ -582,8 +588,27 @@ public class GeoWorks {
 
             mLocationManager.requestLocationUpdates(mLocationManager.getBestProvider(C,true), 10000, 100, mLocationListener);
         */
+        }else{
+            //if Permission is denied und Map ist not correctly iniatilized
+            if(KartenActivity.mMap!=null) {
+                CameraPosition cp = KartenActivity.mMap.getCameraPosition();
+                if (cp.zoom < 5 || !validLatLng(cp.target)) {
+                    //Karten nicht zentriert
+                    if (getMapPosition() == null) KartenActivity.setMapCenter();
+                    else setMapPosition(getMapPosition());
+                }
+            }
         }
 
+    }
+
+
+    public static boolean isLocation_permission() {
+        return location_permission;
+    }
+
+    public static void setLocation_permission(boolean location_permission) {
+        GeoWorks.location_permission = location_permission;
     }
 
 }

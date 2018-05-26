@@ -40,6 +40,10 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 import de.teammartens.android.wattfinder.model.ArrayAdapterSearchView;
 import de.teammartens.android.wattfinder.model.rSuggestionsProvider;
 import de.teammartens.android.wattfinder.worker.AnimationWorker;
@@ -92,7 +96,7 @@ public class KartenActivity extends FragmentActivity
     private static final LatLng defaultLatLng = new LatLng(defaultLat,defaultLng);
     private static boolean permissiondenied = false;
     public static boolean mapReady = false;
-    public static boolean skipEula = false;
+    public static boolean privacyConsent = false;
 
 public static ActionBar actionBar;
     /**
@@ -223,8 +227,10 @@ public static ActionBar actionBar;
 
         API_RQ_Count = sharedPref.getInt(sP_APIRQCount,0);
         if(LogWorker.isVERBOSE())LogWorker.d(LOG_TAG,"APIRQCOUNT:"+getAPI_RQ_Count());
+        if(LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG,"privacyConsent "+privacyConsent);
 
-        skipEula = sharedPref.getBoolean("skipEula",false);
+        privacyConsent = sharedPref.getBoolean("privacyConsent",false);
+        if(LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG,"privacyConsent "+privacyConsent);
 
         //NetWorker.resetRETRY();
 
@@ -312,6 +318,7 @@ public static ActionBar actionBar;
                         id);
             }
         } else {
+            GeoWorks.setLocation_permission(true);
             return true;
         }
         return false;
@@ -414,6 +421,18 @@ public static ActionBar actionBar;
     AnimationWorker.slideUp(v, 0);
 
 
+     v = findViewById(R.id.buttonMapStyle);
+    v.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            int i = KartenActivity.mMap.getMapType();
+            if (i<4)KartenActivity.mMap.setMapType(i+1);
+            else KartenActivity.mMap.setMapType(1);
+
+        }
+    });
+
+         KartenActivity.mMap.setMapType(1);
         BackstackEXIT=false;
         FilterWorks.lade_filter_db();
          SaeulenWorks.setUpClusterer();
@@ -476,13 +495,20 @@ return null;
 
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults){
 
-        if (requestCode==MY_PERMISSIONS_REQUEST_LOCATION&&grantResults[0]==PackageManager.PERMISSION_GRANTED) GeoWorks.setupLocationListener();
+        if (requestCode==MY_PERMISSIONS_REQUEST_LOCATION&&
+                grantResults!=null&&grantResults.length>0&&
+                grantResults[0]==PackageManager.PERMISSION_GRANTED) {
+            GeoWorks.setupLocationListener();
+            GeoWorks.setLocation_permission(true);
+        }
             else{
             if (LogWorker.isVERBOSE())LogWorker.e(LOG_TAG,"requestLocation Permission DENIED");
                     permissiondenied=true;
-
+                    GeoWorks.setLocation_permission(false);
                 }
-        if (requestCode==MY_PERMISSIONS_REMOVE_LOCATION&&grantResults[0]==PackageManager.PERMISSION_GRANTED) GeoWorks.removeLocationListener();
+        if (requestCode==MY_PERMISSIONS_REMOVE_LOCATION&&
+                grantResults!=null&&grantResults.length>0&&
+                grantResults[0]==PackageManager.PERMISSION_GRANTED) GeoWorks.removeLocationListener();
     }
 
 
@@ -652,9 +678,9 @@ return null;
 
         Long TS = sharedPref.getLong(sP_Timestamp,0);
 
-        if((System.currentTimeMillis()-TS)<TimestampValid) {
 
-            if (!(Lat.equals(defaultLat) && Lng.equals(defaultLng)) && zoom > GeoWorks.MAX_ZOOM) {
+            if ( ((System.currentTimeMillis()-TS)<TimestampValid) &&
+                    !(Lat.equals(defaultLat) && Lng.equals(defaultLng)) && zoom > GeoWorks.MAX_ZOOM) {
                 GeoWorks.CUSTOM_MAPVIEW = true;
 
                 LogWorker.d("SetMapCenter", "Lat: " + Lat + "Lng: " + Lng + "Z: " + zoom + " geladen");
@@ -678,10 +704,6 @@ return null;
                 GeoWorks.Suchmarker(new LatLng(Lat,Lng),sharedPref.getString(zP_String,""));
             }
 
-        }
-
-
-
 
 
     }
@@ -690,6 +712,7 @@ return null;
     {
         return new LatLng(l.getLatitude(),l.getLongitude());
     }
+
 
     public static boolean isMapReady() {
         return mapReady;

@@ -78,8 +78,8 @@
     <string name="dialog_create">Create</string>
     <string name="dialog_delete">Delete preset</string>
     <string name="ifault_report">Caution! Temporary fault reported for this chargepoint!</string>
-    <string name="dialog_text1">Welcome to the new Wattfinder app,\n
-    we are now using the new official API by goingelectric.de to retrieve the chargepoint data. As Wattfinder only displays the data collected by goingelectric.de all your thanks and love for
+    <string name="dialog_text1">Welcome to Wattfinder,\n
+    we are using the official API by goingelectric.de to retrieve the chargepoint data. As Wattfinder only displays the data collected by goingelectric.de all your thanks and love for
     the data should go to them. Errors and ideas according the data should do also. Wattfinder only filters and displays the data.\n\n
     Please note the following:\n\n
     1. Wattfinder does not and will never collect, save or transmit any individual-related data.\n\n
@@ -116,6 +116,8 @@
     <string name="networkerror">An unknown network error occured.</string>
     <string name="networkerror_timeout">Network Request timed out.</string>
     <string name="networkerror_404">Network response failed. Server not found. Status:</string>
+    <string name="devents_title">Chargeevents / CheckIns</string>
+    <string name="next">Next</string>
 
 
 </resources>

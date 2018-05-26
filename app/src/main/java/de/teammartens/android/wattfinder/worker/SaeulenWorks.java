@@ -35,7 +35,9 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 import de.teammartens.android.wattfinder.KartenActivity;
 import de.teammartens.android.wattfinder.R;
@@ -54,7 +56,7 @@ public class SaeulenWorks {
     private static final Integer[] Markers = {R.drawable.marker_1,R.drawable.marker_1,R.drawable.marker_2,R.drawable.marker_3,R.drawable.marker_4,R.drawable.marker_5};
     private static final Integer[] Markers_Fault = {R.drawable.marker_1_h,R.drawable.marker_1_h,R.drawable.marker_2_h,R.drawable.marker_3_h,R.drawable.marker_4_h,R.drawable.marker_5_h};
     private static final Integer[] Markers_Clicked = {R.drawable.marker_1_c,R.drawable.marker_1_c,R.drawable.marker_2_c,R.drawable.marker_3_c,R.drawable.marker_4_c,R.drawable.marker_5_c};
-    private static final Integer[] Markers_Fault_Clicked = {R.drawable.marker_1_ch,R.drawable.marker_1_ch,R.drawable.marker_2_ch,R.drawable.marker_3_ch,R.drawable.marker_4_ch,R.drawable.marker_5_ch};
+    private static final Integer[] Markers_Fault_Clicked = {R.drawable.marker_1_ch,R.drawable.marker_1_ch, R.drawable.marker_2_ch,R.drawable.marker_3_ch,R.drawable.marker_4_ch,R.drawable.marker_5_ch};
 
     private static final Integer CACHE_OUTDATED_MILLIS =  1800000;//30min
     private static final Integer CACHE_EXPIRED_MILLIS = 86400000;//24Stunden
@@ -308,7 +310,6 @@ public class SaeulenWorks {
                     mClusterManager.addItem(S);
                     SaeulenCache.put(S.getID(),S);
 
-
                     response++;
 
 
@@ -328,8 +329,71 @@ public class SaeulenWorks {
                 if (LogWorker.isVERBOSE()) LogWorker.d("AsyncMarkerWorks", "Habe " + result + "/"+Saeulen.size()+" Marker erzeugt");
                 //mClusterManager.addItems((Collection) Saeulen);
                 //mGMap.animateCamera(CameraUpdateFactory.zoomTo(12), 500, null);
-                mClusterManager.cluster();
+            //Lade ChargeEvents
 
+            String saeulenids="";
+           // Integer[] i = (Integer[]) Saeulen.keySet().toArray();
+            int n=0;
+
+           // while (n*10<Saeulen.keySet().size()) {
+
+             /*   for(int ii=n*10;ii<((n*10+10)<Saeulen.keySet().size()?(n*10+10):Saeulen.keySet().size());ii++)
+                {
+
+                    saeulenids += "&points[]=" + i[ii];
+                }*/
+             Iterator i = Saeulen.keySet().iterator();
+
+             while(i.hasNext()){saeulenids += "&points[]=" + i.next();}
+
+
+                 String evUrl = "https://wattfinder.de/api/get.php?key=" + KartenActivity.getInstance().getString(R.string.Wattfinder_APIKey)+"&p=0" + saeulenids;
+                if (LogWorker.isVERBOSE()) LogWorker.d("AsyncMarkerWorks", "JSON Request " + evUrl);
+
+                JsonObjectRequest pRequest = new JsonObjectRequest(Request.Method.GET,
+                        evUrl, (String) null, new Response.Listener<JSONObject>() {
+
+
+                    @Override
+                    public void onResponse(JSONObject jResponse) {
+                        if (LogWorker.isVERBOSE())
+                            LogWorker.d("AsyncMarkerWorks", "JSON Response " + jResponse.toString());
+
+                        if (jResponse.optBoolean("success", false)) {
+                            try {
+                                JSONArray jA = jResponse.getJSONArray("points");
+
+                                for (int i = 0; i < jA.length(); i++) {
+                                    JSONObject jO = jA.getJSONObject(i);
+                                    LogWorker.d("AsyncMarkerWorks", "JSON Response ID " + jO.toString());
+
+                                    Saeule S = Saeulen.get(jO.getInt("id"));
+                                    if (S != null) {
+                                        mClusterManager.removeItem(S);
+                                        S.setEventCount(jO.getInt("count"));
+                                        mClusterManager.addItem(S);
+                                        if(LogWorker.isVERBOSE()&&jO.getInt("count")>0)LogWorker.d("AsyncEventJSON",jO.getInt("id")+": EventCount:"+S.getEventCount());
+                                        Saeulen.put(jO.getInt("id"),S);
+                                    }
+                                }
+                                mClusterManager.cluster();
+
+                            } catch (JSONException jE) {
+                                LogWorker.e("JSON Event Count", jE.getLocalizedMessage());
+                            }
+                        }
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+
+                    }
+                });
+
+                KartenActivity.getInstance().addToRequestQueue(pRequest);
+           /* n++;
+            }*/
+            mClusterManager.cluster();
 
         }
 
@@ -474,7 +538,7 @@ public class SaeulenWorks {
             if(clickedMarker !=null && clickedSaeule !=null){
                 BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(Markers[0]);
 
-                if ( clickedSaeule.getTyp() < 5 && clickedSaeule.getTyp() >= 0 )
+                if ( clickedSaeule.getTyp() < Markers.length && clickedSaeule.getTyp() >= 0 )
                     if (clickedSaeule.isFaultreport())
                         icon = BitmapDescriptorFactory.fromResource(Markers_Fault_Clicked[clickedSaeule.getTyp()]);
                     else

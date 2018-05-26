@@ -11,77 +11,153 @@
 
 
     <TextView
-        android:text="@string/app_name"
-        android:layout_width="match_parent"
-        android:layout_height="60sp"
         android:id="@+id/eulaTitel"
+        android:layout_width="match_parent"
+        android:layout_height="40sp"
         android:layout_centerHorizontal="true"
-        android:drawableLeft="@drawable/icon"
         android:layout_marginBottom="20dp"
-        android:textSize="20sp"
-        android:textAlignment="center"
-        android:textIsSelectable="false"
-        android:textColor="@color/colorPrimaryDark"
-        android:typeface="sans"
+        android:drawableLeft="@drawable/icon"
+        android:editable="false"
         android:gravity="center"
-        android:editable="false" />
+        android:text="@string/app_name"
+        android:textAlignment="center"
+        android:textColor="@color/colorPrimaryDark"
+        android:textIsSelectable="false"
+        android:textSize="20sp"
+        android:typeface="sans" />
+
+    <TextView
+        android:id="@+id/eulaSubTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="20sp"
+        android:layout_below="@+id/eulaTitel"
+        android:text="@string/privacy_title"
+        android:textSize="16sp"
+        android:visibility="invisible" />
 
     <ScrollView
+        android:id="@+id/welcome_scroll"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/eulaTitel"
+        android:layout_above="@+id/eulaButton"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:scrollbarStyle="insideOverlay"
-        android:id="@+id/eulaScroll"
-        android:layout_above="@+id/eulaButton"
-        android:layout_margin="5sp">
+        android:layout_below="@+id/eulaSubTitle"
+        android:layout_margin="5sp"
+        android:scrollbarStyle="insideOverlay">
+
         <TextView
-            android:text="@string/dialog_text1"
+            android:id="@+id/welcomeText"
             android:layout_width="match_parent"
-            android:id="@+id/eulaText"
 
 
-
-            android:textSize="14sp"
-            android:textAlignment="center"
-            android:textColor="@color/colorPrimaryDark"
-            android:typeface="sans"
-            android:gravity="top"
             android:layout_height="wrap_content"
-            android:singleLine="false"
-            android:inputType="none"
             android:layout_margin="6sp"
-            android:textIsSelectable="false"
             android:cursorVisible="false"
             android:editable="false"
-            android:focusableInTouchMode="false"
             android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:gravity="top"
+            android:inputType="none"
+            android:paddingBottom="10dp"
             android:selectAllOnFocus="false"
+            android:singleLine="false"
+            android:text="@string/privacy_text_short"
+            android:textAlignment="center"
+            android:textColor="@color/colorPrimaryDark"
+            android:textIsSelectable="false"
+            android:textSize="14sp"
+            android:typeface="sans"
             tools:textIsSelectable="false" />
-
-
 
     </ScrollView>
 
-    <CheckBox
-        android:text="@string/skipMessage"
+
+    <ScrollView
+        android:id="@+id/privacy_long"
         android:layout_width="match_parent"
-        android:layout_height="30sp"
-        android:id="@+id/skipEula"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="15sp"
-        android:layout_toLeftOf="@+id/eulaButton" />
+        android:layout_height="match_parent"
+        android:layout_above="@+id/eulaButton"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/eulaSubTitle"
+        android:layout_margin="5sp"
+        android:scrollbarStyle="insideOverlay"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/privacyText"
+                android:layout_width="match_parent"
+
+
+                android:layout_height="wrap_content"
+                android:layout_margin="6sp"
+                android:autoLink="web|email"
+                android:cursorVisible="false"
+                android:editable="false"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:gravity="top"
+                android:inputType="none"
+                android:selectAllOnFocus="false"
+                android:singleLine="false"
+                android:text="@string/privacy_desc_long"
+                android:textAlignment="center"
+                android:textColor="@color/colorPrimaryDark"
+                android:textIsSelectable="false"
+                android:textSize="12sp"
+                android:typeface="sans"
+                tools:textIsSelectable="false" />
+
+            <TextView
+                android:id="@+id/privacyLicense"
+                android:layout_width="match_parent"
+
+
+                android:layout_height="wrap_content"
+                android:layout_margin="6sp"
+                android:cursorVisible="false"
+                android:editable="false"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:gravity="top"
+                android:inputType="none"
+                android:selectAllOnFocus="false"
+                android:singleLine="false"
+                android:text="@string/privacy_license"
+                android:textAlignment="center"
+                android:textColor="@color/colorPrimaryDark"
+                android:textIsSelectable="false"
+                android:textSize="10sp"
+                android:typeface="sans"
+                tools:textIsSelectable="false" />
+
+            <CheckBox
+                android:id="@+id/privacy_consent"
+                android:layout_width="match_parent"
+                android:layout_height="30sp"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="15sp"
+                android:layout_toLeftOf="@+id/eulaButton"
+                android:text="@string/privacy_consent" />
+        </LinearLayout>
+    </ScrollView>
+
 
     <Button
-        android:text="@string/close"
+        android:id="@+id/eulaButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/eulaButton"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:background="?attr/colorButtonNormal"
         android:layout_marginBottom="10sp"
-        android:layout_marginRight="10sp" />
+        android:layout_marginRight="10sp"
+        android:background="?attr/colorButtonNormal"
+        android:text="@string/next" />
 
 </RelativeLayout>

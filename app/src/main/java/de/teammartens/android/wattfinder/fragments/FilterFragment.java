@@ -228,6 +228,7 @@ FragmentManager fM = getChildFragmentManager();
 
 
     public static void hide_presets(){
+        if(fInstance==null) return;
         if(cFm==null){
             cFm = fInstance.getChildFragmentManager();
         }
