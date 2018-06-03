@@ -11,7 +11,7 @@ https://wattfinder.de&lt;br />&lt;br />
     &lt;ul>
     &lt;li> Standortdaten&lt;/li>
     &lt;li> Kommunikationsadressen (E-Mail), nur im Einzelfall&lt;/li>
-    &lt;li> Inhaltsdaten (z.B., Texteingaben, Fotografien, Videos) und Einstellungen.&lt;/li>
+    &lt;li> Inhaltsdaten (z.B. Texteingaben, Fotografien, Videos) und Einstellungen.&lt;/li>
     &lt;li> Meta-/Kommunikationsdaten (z.B., Geräte-Informationen, IP-Adressen).&lt;/li>
     &lt;/ul>&lt;br />
     &lt;h5>Kategorien betroffener Personen&lt;/h5>
@@ -76,22 +76,22 @@ Dies setzt immer voraus, dass die Drittanbieter dieser Inhalte, die IP-Adresse d
         Solltet ihr Fehler, Verbesserungsvorschläge oder Wünsche für die App haben so schickt mir einfach eine Mail an info@wattfinder.de&lt;br />&lt;br />
      &lt;h4>Einige wichtige Hinweise zum Datenschutz:&lt;/h4>
         &lt;br />Ich als Entwickler von Wattfinder nehme Datenschutz (und Datensparsamkeit) sehr ernst. Im Rahmen der DSGVO muss ich hier nochmal einige Punkte klarstellen. Auf der nächsten Seite folgt die gesetzlich erwartete Langfassung, hier in Kürze das wichtigste:&lt;br />
-        &lt;br />&lt;h4>Welche Daten werden wird erfasst?&lt;/h4>&lt;b>Der Standort&lt;/b>. Er weder dauerhaft gespeichert, noch übertragen oder ausgewertet.&lt;br />
-        &lt;br />&lt;h4>Welche Daten werden gespeichert?&lt;/h4>Filter- und Appeinstellungen, der letzte Kartenausschnitt und Suchbegriffe. In Zukunft auch als Favorit markierte Säulen und deren Daten.&lt;br />
-        &lt;br />&lt;h4>Welche Daten werden übertragen und an wen?&lt;/h4>&lt;b>goingelectric.de :&lt;/b>Alle Filtereinstellungen und der aktuelle Kartenausschnitt, bzw die aktuell aufgerufene Säule
+        &lt;br />&lt;h5>Welche Daten werden erfasst?&lt;/h5>&lt;b>Der Standort&lt;/b>. Er weder dauerhaft gespeichert, noch übertragen oder ausgewertet.&lt;br />
+        &lt;br />&lt;h5>Welche Daten werden gespeichert?&lt;/h5>Filter- und Appeinstellungen, der letzte Kartenausschnitt und Suchbegriffe. In Zukunft auch als Favorit markierte Säulen und deren Daten.&lt;br />
+        &lt;br />&lt;h5>Welche Daten werden übertragen und an wen?&lt;/h5>&lt;b>goingelectric.de :&lt;/b>Alle Filtereinstellungen und der aktuelle Kartenausschnitt, bzw die aktuell aufgerufene Säule
         &lt;br />&lt;b>wattfinder.de :&lt;/b>Angezeigte Säulen für den Abruf von Ladeberichten, ggf. auch von dir erstellte Ladeberichte inkl. Nickname und Kommentar.
                 &lt;br />Falls nötig: Schwerwiegende Fehler inkl. möglicher Ursachen (garantiert vollständig anonym)&lt;br />
         &lt;br />&lt;b>ChargevDB(chargevdb.herokuapp.com) :&lt;/b> Von dir erstellte Ladeberichte inkl. Nickname und Kommentar (falls angegeben).&lt;br />
-        &lt;br />&lt;h4>Wie werden meine Daten verarbeitet?&lt;/h4>
+        &lt;br />&lt;h5>Wie werden meine Daten verarbeitet?&lt;/h5>
         Es werden von uns keine Daten verarbeitet, gespeichert oder weitergegeben, sofern dies nicht für die Zurverfügungstellung oder Weiterentwicklung des Angebotes erforderlich ist.
-        &lt;br />&lt;b>Goingelectric.de&lt;/b> kann die für den Abruf nötigen Daten speichern und ggf. auch auswerten. Eine Zuordnung zum einzelnen Nutzer kann über die IP-Adresse und den Browser mit Cookies möglich sein.
-        &lt;br />&lt;b>ChargevDB&lt;/b> Von dir erstellte Ladeberichte werden mit der ChargevDB auf einem Server in den USA synchronisiert und an Nutzer von allen beteiligten Apps weitergegeben.&lt;br />
-        &lt;br />&lt;h4>Was kann ich dagegen tun?&lt;/h4>
+        &lt;br />&lt;b>Goingelectric.de&lt;/b> kann die für den Abruf nötigen Daten speichern und ggf. auch auswerten. Eine Zuordnung zum einzelnen Nutzer kann über die IP-Adresse und den Browser mit entsprechenden Cookies möglich sein.
+        &lt;br />&lt;b>ChargevDB&lt;/b> Von dir erstellte Ladeberichte werden mit der ChargevDB auf dem Server eines Dienstleisters in den USA synchronisiert und an Nutzer von allen verbundenen Apps weitergegeben.&lt;br />
+        &lt;br />&lt;h5>Was kann ich dagegen tun?&lt;/h5>
         Die &lt;b>Standortberechtigung&lt;/b> kann jederzeit abgelehnt oder widerrufen werden, die App bleibt trotzdem nutzbar.
-        &lt;br />Wenn du keine &lt;b>Ladeberichte&lt;/b> erstellst werden auch keine Daten von dir weitergegeben. Bereits erstellte Berichte werden auf Verlangen gelöscht.
+        &lt;br />Wenn du keine &lt;b>Ladeberichte&lt;/b> erstellst werden auch keine persönlichen Daten von dir weitergegeben. Bereits erstellte Berichte werden auf Verlangen gelöscht.
         &lt;br />Wenn du auch die anderen Daten oder deren Verarbeitung ablehnen möchtest, so ist die App offensichtlich nicht mehr nutzbar und sollte einfach deinstalliert werden.&lt;br />
-       &lt;br />&lt;h4>Was ist mit Google Maps?&lt;/h4>
-        &lt;b>Die Ausnahme&lt;/b> von den vorstehende Aussagen ist &lt;b>Google Maps&lt;/b>, das für die Kartenanzeige und die Suche nach Orten in der App. Dabei können Daten erfasst, übertragen und verarbeitet werden, wie dies in den Datenschutzbedingen der Google Play Services geregelt ist.&lt;br />
+       &lt;br />&lt;h5>Was ist mit Google Maps?&lt;/h5>
+        &lt;b>Die Ausnahme&lt;/b> von den vorstehende Aussagen ist &lt;b>Google Maps&lt;/b>, das für die Kartenanzeige und die Suche nach Orten in der App genutzt wird. Dabei können Daten erfasst, übertragen und verarbeitet werden, wie dies in den Datenschutzbedingen der Google Play Services geregelt ist.&lt;br />
 
 </string>
     <string name="privacy_maps"></string>

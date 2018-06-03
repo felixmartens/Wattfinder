@@ -565,7 +565,7 @@ public static String formatOpening(String s){
                             while (i.hasNext()) {
                                 Integer i1 = (Integer) i.next();
                                 View childLayout = inflater.inflate(R.layout.layout_chargeevent, null);
-                                childLayout.setId((Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1 ? View.generateViewId() : Utils.generateViewId()));
+                                childLayout.setId((Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN_MR1 ? View.generateViewId() : Utils.generateViewId()));
                                 ChargeEvent CE = new ChargeEvent();
                                 if (CE.extractFromJSON(jA.getJSONObject(i1))) {
                                     TextView tv = (TextView) childLayout.findViewById(R.id.evDate);
@@ -579,7 +579,7 @@ public static String formatOpening(String s){
                                     tv.setText(CE.getNickname());
 
                                     tv = childLayout.findViewById(R.id.evPlug);
-                                    tv.setText(CE.getPlug()+"("+CE.getReason()+")");
+                                    tv.setText(CE.getPlug());
 
                                     tv = childLayout.findViewById(R.id.evComment);
                                     tv.setText(CE.getComment());

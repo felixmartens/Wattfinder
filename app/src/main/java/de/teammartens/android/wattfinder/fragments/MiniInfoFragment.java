@@ -96,6 +96,7 @@ public void onPause(){
             t2 = (TextView) infoView.findViewById(R.id.iEvCount);
             int evc = mSaeule.getEventCount();
             t2.setText((evc>0?evc:"Keine")+ " Bewertung"+(evc>1?"en":""));
+            if (evc<0)t2.setVisibility(View.INVISIBLE);
 
             t2 = (TextView) infoView.findViewById(R.id.iAdresse);
             t2.setText(mSaeule.getAddress());

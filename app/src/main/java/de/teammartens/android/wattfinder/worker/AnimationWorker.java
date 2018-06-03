@@ -33,7 +33,9 @@ public class AnimationWorker {
 
     public static boolean startupScreen = true;
     public static boolean smartFilter = true;
-
+    private static final String FLAG_INFO = "infoFragment";
+    private static final String FLAG_DETAILS = "detailFragment";
+    private static final String FLAG_FILTER = "filterFragment";
     private final static String LOG_TAG = "AnimationWorker";
 
 
@@ -45,18 +47,18 @@ public class AnimationWorker {
                         R.anim.fragment_slide_out,
                         R.anim.fragment_slide_in,
                         R.anim.fragment_slide_out);
-        Fragment f = fragmentManager.findFragmentByTag("iFragment");
-        Fragment df = fragmentManager.findFragmentByTag("dFragment");
+        Fragment f = fragmentManager.findFragmentByTag(FLAG_INFO);
+        Fragment df = fragmentManager.findFragmentByTag(FLAG_DETAILS);
         if(startupScreen||(df!=null&&df.isVisible()))return;else {
             //wenn Details zusehen sind dann nix Info
 
             if (f == null) {
                 if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG, "info wird neu gebildet");
-                fT.add(R.id.infoFragment, Fragment.instantiate(getInstance(), MiniInfoFragment.class.getName()), "iFragment").addToBackStack(null).commit();
+                fT.add(R.id.infoFragment, Fragment.instantiate(getInstance(), MiniInfoFragment.class.getName()), FLAG_INFO).addToBackStack(FLAG_INFO).commit();
             } else if (f.isHidden()) {
                 if (LogWorker.isVERBOSE())
                     LogWorker.d(LOG_TAG, "info schon vorhanden" + f.isHidden() + " --" + f.isVisible() + "--" + f.isAdded());
-                fT.show(f).addToBackStack(null).commit(); //replace(R.id.infoFragment, Fragment.instantiate(getInstance(), MiniInfoFragment.class.getName()), "iFragment");
+                fT.show(f).addToBackStack(FLAG_INFO).commit(); //replace(R.id.infoFragment, Fragment.instantiate(getInstance(), MiniInfoFragment.class.getName()), "iFragment");
 
             }
 
@@ -69,7 +71,7 @@ public class AnimationWorker {
     }
 
     public static void hide_info(){
-        Fragment f = fragmentManager.findFragmentByTag("iFragment");
+        Fragment f = fragmentManager.findFragmentByTag(FLAG_INFO);
         if (f !=null && f.isVisible()){
             try {
                 fragmentManager.beginTransaction().setCustomAnimations(R.anim.fragment_slide_in,
@@ -107,9 +109,9 @@ public class AnimationWorker {
         View v = getInstance().findViewById(R.id.imageZoomFragment);
         fadeIn(v,0,1.0f);
         v.bringToFront();
-        Fragment iF = fragmentManager.findFragmentByTag("iFragment");
+        Fragment iF = fragmentManager.findFragmentByTag(FLAG_INFO);
         if (iF != null) fT.hide(iF);
-        Fragment dF = fragmentManager.findFragmentByTag("dFragment");
+        Fragment dF = fragmentManager.findFragmentByTag(FLAG_DETAILS);
         if (dF != null) fT.hide(dF);
 
         if (f == null) {
@@ -136,19 +138,19 @@ public class AnimationWorker {
                         R.anim.fragment_slide_out);
         View v = getInstance().findViewById(R.id.imageZoomFragment);
         fadeOut(v,0);
-        Fragment dF = fragmentManager.findFragmentByTag("dFragment");
+        Fragment dF = fragmentManager.findFragmentByTag(FLAG_DETAILS);
         if (dF != null) fT.show(dF);
-        dF = fragmentManager.findFragmentByTag("iFragment");
+        dF = fragmentManager.findFragmentByTag(FLAG_INFO);
         if (dF != null) fT.hide(dF);
-        fT.addToBackStack("details").commit();
+        fT.addToBackStack(FLAG_DETAILS).commit();
     }
 
 
     public static void toggleFilter() {
 
-        Fragment f = fragmentManager.findFragmentByTag("fFragment");
+        Fragment f = fragmentManager.findFragmentByTag(FLAG_FILTER);
         if (f != null) {
-            fragmentManager.popBackStack();
+            fragmentManager.popBackStack(FLAG_FILTER,0);
 
             show_fabs();
         } else {
@@ -169,13 +171,13 @@ public class AnimationWorker {
                             R.anim.fragment_slide_out,
                             R.anim.fragment_slide_in,
                             R.anim.fragment_slide_out);
-            Fragment iF = fragmentManager.findFragmentByTag("fFragment");
+            Fragment iF = fragmentManager.findFragmentByTag(FLAG_FILTER);
             if (iF != null) Ft.hide(iF);
             String fragment = (smartFilter?SmartFilterFragment.class.getName():FilterFragment.class.getName());
             Ft.add(R.id.filterFragment, Fragment
                             .instantiate(getInstance(), fragment),
-                    "fFragment"
-            ).addToBackStack(null).commit();
+                    FLAG_FILTER
+            ).addToBackStack(FLAG_FILTER).commit();
 
 
 
@@ -189,14 +191,15 @@ public class AnimationWorker {
                         R.anim.fragment_slide_out,
                         R.anim.fragment_slide_in,
                         R.anim.fragment_slide_out);
-        Fragment iF = fragmentManager.findFragmentByTag("fFragment");
+        Fragment iF = fragmentManager.findFragmentByTag(FLAG_FILTER);
         if (iF != null) Ft.hide(iF);
-        fragmentManager.popBackStack();
+        fragmentManager.popBackStack(FLAG_FILTER,0);
+
         if (smartFilter){
-            Ft.add(R.id.filterFragment,Fragment.instantiate(getInstance(), FilterFragment.class.getName()),"fFragment").addToBackStack(null).commit();
+            Ft.add(R.id.filterFragment,Fragment.instantiate(getInstance(), FilterFragment.class.getName()),FLAG_FILTER).addToBackStack(FLAG_FILTER).commit();
             smartFilter=false;
         }else{
-            Ft.add(R.id.filterFragment,Fragment.instantiate(getInstance(), SmartFilterFragment.class.getName()),"fFragment").addToBackStack(null).commit();
+            Ft.add(R.id.filterFragment,Fragment.instantiate(getInstance(), SmartFilterFragment.class.getName()),FLAG_FILTER).addToBackStack(FLAG_FILTER).commit();
             smartFilter=true;
 
         }
@@ -209,7 +212,7 @@ public class AnimationWorker {
 
         Fragment f = fragmentManager.findFragmentByTag("dFragment");
         if (f != null) {
-            fragmentManager.popBackStack();
+            fragmentManager.popBackStack(FLAG_DETAILS,0);
 
             show_fabs();
             GeoWorks.movemapPosition("hideDetails");
@@ -221,11 +224,13 @@ public class AnimationWorker {
                             R.anim.fragment_slide_in,
                             R.anim.fragment_slide_out);
             Fragment iF = fragmentManager.findFragmentByTag("iFragment");
-            if (iF != null) Ft.hide(iF);
+            if (iF != null){
+                fragmentManager.popBackStack(FLAG_INFO,0);
+                Ft.hide(iF);}
             Ft.add(R.id.detailFragment, Fragment
                             .instantiate(getInstance(), DetailsFragment.class.getName()),
                     "dFragment"
-            ).addToBackStack(null).commit();
+            ).addToBackStack(FLAG_DETAILS).commit();
 
 
             hide_mapSearch();
@@ -258,12 +263,12 @@ public class AnimationWorker {
         if (KartenActivity.isMapReady()) {
             if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG, "Show Map");
             if(fragmentManager==null)fragmentManager=KartenActivity.getInstance().getSupportFragmentManager();
-            if (isDetailsVisibile())
-                fragmentManager.popBackStack();
+            //if (isVisible(FLAG_DETAILS))
+                fragmentManager.popBackStack(FLAG_DETAILS,0);
 
 
-            if (isFilterVisibile())
-                fragmentManager.popBackStack();
+            //if (isVisible(FLAG_FILTER))
+                fragmentManager.popBackStack(FLAG_FILTER,0);
 
 
             hide_info();
@@ -779,23 +784,12 @@ public class AnimationWorker {
         ;
     }
 
-    public static boolean isDetailsVisibile(){
 
-        Fragment dFragment = fragmentManager.findFragmentByTag("dFragment");
 
-        if (dFragment != null && dFragment.isVisible()){
-            // if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG,"Details Fragment visible.");
-            return true;
-        }
+    public static boolean isVisible(String FLAG){
 
-        //  if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG,"Details Fragment NOT visible.");
-        return false;
-    }
-
-    public static boolean isFilterVisibile(){
-
-        Fragment fFragment = fragmentManager.findFragmentByTag("fFragment");
-        if (fFragment != null && fFragment.isVisible()){
+        Fragment fragment = fragmentManager.findFragmentByTag(FLAG);
+        if (fragment != null && fragment.isVisible()){
             // if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG,"Filter Fragment visible.");
             return true;
         }
@@ -803,6 +797,14 @@ public class AnimationWorker {
         //if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG,"Filter Fragment NOT visible.");
 
         return false;
+    }
+
+    public static boolean isFilterVisibile(){
+       return isVisible(FLAG_FILTER);
+    }
+
+    public static boolean isDetailsVisibile(){
+        return isVisible(FLAG_DETAILS);
     }
 
 }

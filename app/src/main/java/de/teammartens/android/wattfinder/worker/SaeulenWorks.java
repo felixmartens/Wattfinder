@@ -304,7 +304,7 @@ public class SaeulenWorks {
                     S.setTyp(sTyp);
 
                     S.setFaultreport(M.optBoolean("fault_report",false));
-
+                    S.setEventCount(-1);
                     Saeulen.put(S.getID(),S);
 
                     mClusterManager.addItem(S);
@@ -358,30 +358,30 @@ public class SaeulenWorks {
                     public void onResponse(JSONObject jResponse) {
                         if (LogWorker.isVERBOSE())
                             LogWorker.d("AsyncMarkerWorks", "JSON Response " + jResponse.toString());
-
-                        if (jResponse.optBoolean("success", false)) {
-                            try {
-                                JSONArray jA = jResponse.getJSONArray("points");
-
-                                for (int i = 0; i < jA.length(); i++) {
-                                    JSONObject jO = jA.getJSONObject(i);
+                        try{
+                            JSONArray jA = jResponse.getJSONArray("points");
+                            boolean success = jResponse.optBoolean("success", false);
+                            for (int i = 0; i < jA.length(); i++) {
+                                JSONObject jO = jA.getJSONObject(i);
+                                if (LogWorker.isVERBOSE())
                                     LogWorker.d("AsyncMarkerWorks", "JSON Response ID " + jO.toString());
 
-                                    Saeule S = Saeulen.get(jO.getInt("id"));
-                                    if (S != null) {
-                                        mClusterManager.removeItem(S);
-                                        S.setEventCount(jO.getInt("count"));
-                                        mClusterManager.addItem(S);
-                                        if(LogWorker.isVERBOSE()&&jO.getInt("count")>0)LogWorker.d("AsyncEventJSON",jO.getInt("id")+": EventCount:"+S.getEventCount());
-                                        Saeulen.put(jO.getInt("id"),S);
-                                    }
+                                if (success) {
+
+                                    setEvCount_helper(Saeulen.get(jO.getInt("id")), jO.getInt("count"));
+
+                                } else {
+                                    setEvCount_helper(Saeulen.get(jO.getInt("id")), -1);
+
                                 }
+                            }
                                 mClusterManager.cluster();
 
                             } catch (JSONException jE) {
                                 LogWorker.e("JSON Event Count", jE.getLocalizedMessage());
                             }
-                        }
+
+
                     }
                 }, new Response.ErrorListener() {
                     @Override
@@ -402,6 +402,16 @@ public class SaeulenWorks {
 
 }
 
+private static void setEvCount_helper(Saeule S,Integer c){
+    if (S != null) {
+        mClusterManager.removeItem(S);
+
+        S.setEventCount(c);
+        mClusterManager.addItem(S);
+        if(LogWorker.isVERBOSE()&&c>0)LogWorker.d("AsyncEventJSON",S.getID()+": EventCount:"+S.getEventCount());
+        Saeulen.put(S.getID(),S);
+    }
+}
 
     public static void setUpClusterer() {
         // Declare a variable for the cluster manager.

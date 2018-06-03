@@ -365,6 +365,7 @@ public static ActionBar actionBar;
         public void onMapClick(LatLng latLng) {
             if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG, "MapClick");
             GeoWorks.movemapPosition("showMapClick");
+            fragmentManager.popBackStack();
             AnimationWorker.show_map();
             //und noch den geklickten Marker wieder resetten
             SaeulenWorks.resetClickMarker();

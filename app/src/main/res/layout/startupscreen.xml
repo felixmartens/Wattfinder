@@ -19,7 +19,7 @@
         android:layout_marginTop="30dp"
         android:elevation="6dp"
         android:src="@drawable/ic_adb"
-        android:visibility="visible"
+        android:visibility="gone"
         app:backgroundTint="@color/colorDebug"
         app:borderWidth="0dp"
         app:elevation="6dp"
