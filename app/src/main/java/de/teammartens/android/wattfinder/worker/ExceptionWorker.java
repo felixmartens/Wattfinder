@@ -9,7 +9,6 @@ import android.util.Log;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
 
-import de.teammartens.android.wattfinder.KartenActivity;
 import de.teammartens.android.wattfinder.R;
 
 import static de.teammartens.android.wattfinder.KartenActivity.getInstance;
@@ -57,11 +56,12 @@ public class ExceptionWorker  implements Thread.UncaughtExceptionHandler {
             final String lineSeperator = "-------------------------------\n\n";
             report.append(DOUBLE_LINE_SEP);
             report.append("--------- Stack trace ---------\n\n");
-            for (int i = 0; i < arr.length; i++) {
+            for(StackTraceElement element:arr){
                 report.append( "    ");
-                report.append(arr[i].toString());
-                report.append(SINGLE_LINE_SEP);
+                    report.append(element.toString());
+                    report.append(SINGLE_LINE_SEP);
             }
+
             report.append(lineSeperator);
             // If the exception was thrown in a background thread inside
             // AsyncTask, then the actual exception can be found with getCause
@@ -71,9 +71,9 @@ public class ExceptionWorker  implements Thread.UncaughtExceptionHandler {
                 report.append(cause.toString());
                 report.append(DOUBLE_LINE_SEP);
                 arr = cause.getStackTrace();
-                for (int i = 0; i < arr.length; i++) {
+                for (StackTraceElement element:arr) {
                     report.append("    ");
-                    report.append(arr[i].toString());
+                    report.append(element.toString());
                     report.append(SINGLE_LINE_SEP);
                 }
             }

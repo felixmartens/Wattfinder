@@ -6,7 +6,6 @@ import android.os.Build;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.text.Html;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -49,7 +48,7 @@ public class AnimationWorker {
                         R.anim.fragment_slide_out);
         Fragment f = fragmentManager.findFragmentByTag(FLAG_INFO);
         Fragment df = fragmentManager.findFragmentByTag(FLAG_DETAILS);
-        if(startupScreen||(df!=null&&df.isVisible()))return;else {
+        if(!startupScreen&&!(df!=null&&df.isVisible())){
             //wenn Details zusehen sind dann nix Info
 
             if (f == null) {
@@ -205,7 +204,7 @@ public class AnimationWorker {
         }
 
 
-        KartenActivity.sharedPref.edit().putBoolean("smartFilter",smartFilter).commit();
+        KartenActivity.sharedPref.edit().putBoolean("smartFilter",smartFilter).apply();
     }
 
     public static void toggleDetails() {
@@ -367,7 +366,7 @@ public class AnimationWorker {
                                 @Override
                                 public void onClick(View view) {
                                     KartenActivity.privacyConsent = cb.isChecked();
-                                    KartenActivity.sharedPref.edit().putBoolean("privacyConsent", KartenActivity.privacyConsent).commit();
+                                    KartenActivity.sharedPref.edit().putBoolean("privacyConsent", KartenActivity.privacyConsent).apply();
                                     slideDown(v, 0);
                                     GeoWorks.setupLocationListener();
 
@@ -570,7 +569,7 @@ public class AnimationWorker {
                             V.setVisibility(View.GONE);
                         }
                     });
-            ;
+
         } else {
             V.animate()
 
@@ -584,7 +583,7 @@ public class AnimationWorker {
 
                         }
                     });
-            ;
+
         }
     }
 
@@ -604,7 +603,7 @@ public class AnimationWorker {
                             V.setVisibility(View.INVISIBLE);
                         }
                     });
-            ;
+
         } else {
             V.animate()
 
@@ -618,7 +617,7 @@ public class AnimationWorker {
 
                         }
                     });
-            ;
+
         }
     }
 
@@ -789,14 +788,7 @@ public class AnimationWorker {
     public static boolean isVisible(String FLAG){
 
         Fragment fragment = fragmentManager.findFragmentByTag(FLAG);
-        if (fragment != null && fragment.isVisible()){
-            // if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG,"Filter Fragment visible.");
-            return true;
-        }
-
-        //if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG,"Filter Fragment NOT visible.");
-
-        return false;
+        return (fragment != null && fragment.isVisible());
     }
 
     public static boolean isFilterVisibile(){

@@ -40,10 +40,6 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
 import de.teammartens.android.wattfinder.model.ArrayAdapterSearchView;
 import de.teammartens.android.wattfinder.model.rSuggestionsProvider;
 import de.teammartens.android.wattfinder.worker.AnimationWorker;
@@ -402,7 +398,7 @@ public static ActionBar actionBar;
                 //GeoWorks.movemapPosition(GeoWorks.getmyPosition(),GeoWorks.MY_LOCATION_ZOOM,"fab_Mylocation");
                 GeoWorks.setmyPosition();
             }else{
-                Toast.makeText(getInstance(),getString(R.string.novalidlocation),Toast.LENGTH_SHORT);
+                Toast.makeText(getInstance(),getString(R.string.novalidlocation),Toast.LENGTH_SHORT).show();
                 if(LogWorker.isVERBOSE())LogWorker.d(LOG_TAG,"StandortButton: Kein gültiger Standort");
             }
 
@@ -457,9 +453,8 @@ public GoogleApiClient setupGoogleAPI(){
         // Showing status
         if (PlayServiceStatus != ConnectionResult.SUCCESS) { // Google Play Services are not available
             LogWorker.e(LOG_TAG, "PlayServices not connected:"+GoogleApiAvailability.getInstance().getErrorString(PlayServiceStatus));
-            Integer requestCode = CONNECTION_FAILURE_RESOLUTION_REQUEST;
 
-            Dialog dialog = GoogleApiAvailability.getInstance().getErrorDialog(this, PlayServiceStatus, requestCode, new DialogInterface.OnCancelListener() {
+            Dialog dialog = GoogleApiAvailability.getInstance().getErrorDialog(this, PlayServiceStatus, CONNECTION_FAILURE_RESOLUTION_REQUEST, new DialogInterface.OnCancelListener() {
                 @Override
                 public void onCancel(DialogInterface dialog) {
                     LogWorker.e(LOG_TAG, "onConnectionFailed: ConnectionResult.getErrorCode() = "

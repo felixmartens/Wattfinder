@@ -28,6 +28,7 @@ import org.json.JSONObject;
 
 import java.net.URLEncoder;
 import java.util.Arrays;
+import java.util.Locale;
 
 import de.teammartens.android.wattfinder.KartenActivity;
 import de.teammartens.android.wattfinder.R;
@@ -425,11 +426,8 @@ public class GeoWorks {
 
         if(mLatLng== null ) return false;
         if (LogWorker.isVERBOSE())LogWorker.d(LOG_TAG,"mLatLng: "+mLatLng);
-        if (llb != null
-                && llb.contains(mLatLng))
-            return true;
-
-        return false;
+        return (llb != null
+                && llb.contains(mLatLng));
     }
 
 
@@ -531,7 +529,7 @@ public class GeoWorks {
                     }
                 }
 
-                ;
+
             };
 
             mLocationRequest = new LocationRequest();

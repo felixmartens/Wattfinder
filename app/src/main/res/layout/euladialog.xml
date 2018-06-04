@@ -17,7 +17,6 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="20dp"
         android:drawableLeft="@drawable/icon"
-        android:editable="false"
         android:gravity="center"
         android:text="@string/app_name"
         android:textAlignment="center"
@@ -54,7 +53,6 @@
             android:layout_height="wrap_content"
             android:layout_margin="6sp"
             android:cursorVisible="false"
-            android:editable="false"
             android:focusable="false"
             android:focusableInTouchMode="false"
             android:gravity="top"
@@ -99,7 +97,6 @@
                 android:layout_margin="6sp"
                 android:autoLink="web|email"
                 android:cursorVisible="false"
-                android:editable="false"
                 android:focusable="false"
                 android:focusableInTouchMode="false"
                 android:gravity="top"
@@ -122,7 +119,6 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="6sp"
                 android:cursorVisible="false"
-                android:editable="false"
                 android:focusable="false"
                 android:focusableInTouchMode="false"
                 android:gravity="top"
@@ -157,7 +153,6 @@
         android:layout_alignParentRight="true"
         android:layout_marginBottom="10sp"
         android:layout_marginRight="10sp"
-        android:background="?attr/colorButtonNormal"
         android:text="@string/next" />
 
 </RelativeLayout>

@@ -409,7 +409,7 @@ FragmentManager fM = getChildFragmentManager();
                                         if (LogWorker.isVERBOSE())
                                             LogWorker.d(LOG_TAG, "Fehler beim SteckerListe ändern " + isChecked + " nicht erreicht");
                                     }
-                                    ;
+
                                 }
                             })
                             .setNeutralButton("Alle zurücksetzen", new DialogInterface.OnClickListener() {
@@ -479,7 +479,7 @@ FragmentManager fM = getChildFragmentManager();
                                     if (!isChecked == FilterWorks.liste_aendern(FilterWorks.F_KARTEN, KartenListe[which],isChecked)) {
                                         LogWorker.d(LOG_TAG, "Fehler beim KartenListe ändern " + isChecked + " nicht erreicht");
                                     }
-                                    ;
+
                                 }
                             })
                             .setNeutralButton("Alle zurücksetzen", new DialogInterface.OnClickListener() {
@@ -527,7 +527,7 @@ FragmentManager fM = getChildFragmentManager();
         switch (Liste) {
             case STECKER:
 
-                List<FilterEintrag> l = FilterWorks.ListeToArrayList(FilterWorks.F_STECKER);
+                //List<FilterEintrag> l = FilterWorks.ListeToArrayList(FilterWorks.F_STECKER);
                 /**Stecker = new HashMap<String,Boolean>(l.size());
                 Collections.sort(l);
 
@@ -537,11 +537,12 @@ FragmentManager fM = getChildFragmentManager();
                     if (f != null && !f.getTitel().isEmpty())
                             Stecker.put(f.getTitel(),f.isSelected());
                 }*/
-                Stecker =l;
+                Stecker =  FilterWorks.ListeToArrayList(FilterWorks.F_STECKER);
+
                 break;
 
             case KARTEN:
-                List<FilterEintrag> L = FilterWorks.ListeToArrayList(FilterWorks.F_KARTEN);
+                //List<FilterEintrag> L = FilterWorks.ListeToArrayList(FilterWorks.F_KARTEN);
                // Collections.sort(L);
 
                /* Karten = new HashMap<String,Boolean>(L.size());
@@ -550,7 +551,7 @@ FragmentManager fM = getChildFragmentManager();
                     FilterEintrag f = (FilterEintrag) i.next();
                     Karten.put(f.getTitel(),f.isSelected());
                 }*/
-               Karten = L;
+               Karten = FilterWorks.ListeToArrayList(FilterWorks.F_KARTEN);
                 break;
 
         }

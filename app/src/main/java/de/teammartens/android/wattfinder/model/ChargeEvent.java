@@ -1,10 +1,6 @@
 package de.teammartens.android.wattfinder.model;
 
-import android.util.Log;
-
-import org.json.JSONException;
 import org.json.JSONObject;
-
 
 import de.teammartens.android.wattfinder.worker.Utils;
 

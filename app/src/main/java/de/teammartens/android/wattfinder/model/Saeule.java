@@ -7,6 +7,7 @@ import com.google.maps.android.clustering.ClusterItem;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * Created by felix on 29.12.16.
@@ -26,7 +27,7 @@ public class Saeule implements ClusterItem {
     private Long updated;
 
     public Saeule(Integer ID,String name) {
-        mID = new Integer(ID);
+        mID = ID;
         mName = name;
         setUpdated();
     }
@@ -94,7 +95,7 @@ public class Saeule implements ClusterItem {
        if ( DateUtils.isToday(updated) ) format = "HH:mm";
         //TODO GESTERN ergänzen
         //if ( DateUtils.isToday (updated-24*3600*1000) ) format = "gestern, HH:mm";
-        SimpleDateFormat dateFormat = new SimpleDateFormat(format);
+        SimpleDateFormat dateFormat = new SimpleDateFormat(format, Locale.GERMANY);
         return dateFormat.format(new Date());
 
     }

@@ -150,18 +150,18 @@ public class LogWorker {
     private static String generate_id(){
         final String alphabet = "0123456789abcdefghijklmnopqrstuvwxyz";
         final int N = alphabet.length();
-        String id="";
+        StringBuilder id= new StringBuilder();
 
         Random r = new Random();
 
         for (int i = 0; i < 6; i++) {
-            id+=(alphabet.charAt(r.nextInt(N)));
+            id.append(alphabet.charAt(r.nextInt(N)));
         }
         d(LOG_TAG,"New id generated: "+id);
         SharedPreferences.Editor editor = KartenActivity.sharedPref.edit();
-        editor.putString("LoggingID",id);
-        editor.commit();
-        return id;
+        editor.putString("LoggingID", id.toString());
+        editor.apply();
+        return id.toString();
     }
 
 private static class LogEntry {

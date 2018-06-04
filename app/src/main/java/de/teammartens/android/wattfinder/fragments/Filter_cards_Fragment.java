@@ -64,7 +64,7 @@ public void onStart(){
 
     cB.setChecked(FilterWorks.Liste_beliebig(LISTE));
 
-    filterListe.addAll(FilterWorks.ListeToArrayList(LISTE));
+    filterListe = new ArrayList<>(FilterWorks.ListeToArrayList(LISTE));
     //if(LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG," FilterListe "+LISTE+" enthält "+filterListe.size()+" Objekte." );
     listView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
     CardAdapter = new mFilterListAdapter(this.getContext(),

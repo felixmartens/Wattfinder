@@ -29,9 +29,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.sql.Timestamp;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Locale;
@@ -41,7 +39,6 @@ import de.teammartens.android.wattfinder.KartenActivity;
 import de.teammartens.android.wattfinder.R;
 import de.teammartens.android.wattfinder.model.ChargeEvent;
 import de.teammartens.android.wattfinder.model.ImagePagerAdapter;
-import de.teammartens.android.wattfinder.model.Saeule;
 import de.teammartens.android.wattfinder.worker.AnimationWorker;
 import de.teammartens.android.wattfinder.worker.GeoWorks;
 import de.teammartens.android.wattfinder.worker.ImageWorker;
@@ -375,7 +372,7 @@ http://indragni.com/blog/2013/03/31/android-imageswitcher-example/
 
                         KartenActivity.setMapPadding(detailsView);
                     } else {
-                        Toast.makeText(KartenActivity.getInstance(), "Fehler beim Abrufen der Detailinformation. Bitte nochmal versuchen.", Toast.LENGTH_LONG);
+                        Toast.makeText(KartenActivity.getInstance(), "Fehler beim Abrufen der Detailinformation. Bitte nochmal versuchen.", Toast.LENGTH_LONG).show();
                         if (LogWorker.isVERBOSE())
                             LogWorker.d(LOG_TAG, "ERROR:" + jResponse.getString("status"));
                     }
@@ -524,8 +521,7 @@ public static String formatOpening(String s){
             t = Long.valueOf(time);
         Calendar cal = Calendar.getInstance(Locale.GERMAN);
         cal.setTimeInMillis(t*1000);
-        String date = DateFormat.format("dd-MM-yyyy", cal).toString();
-        return date;
+        return  DateFormat.format("dd-MM-yyyy", cal).toString();
     }
 
     private static String decodeHTML (String text){

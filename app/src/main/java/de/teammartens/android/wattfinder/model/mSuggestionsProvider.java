@@ -143,13 +143,13 @@ public class mSuggestionsProvider extends ContentProvider {
         if (query.length()>2)
         try {
             ArrayList<PlaceAutocomplete> list = getPlaceSuggestions(query);
+            if(list!=null&&list.size()>0)
+                for (PlaceAutocomplete s : list) {
+                 if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG, "Prediction:" + s.description);
 
-            for (PlaceAutocomplete s : list) {
-                if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG, "Prediction:" + s.description);
-
-                cursor.addRow(createRow(new Integer(n), s));
-                n++;
-            }
+                 cursor.addRow(createRow(new Integer(n), s));
+                  n++;
+                }
         } catch (Exception e) {
             LogWorker.e(LOG_TAG, "Failed to lookup " + query, e);
         }

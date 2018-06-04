@@ -37,7 +37,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
 
 import de.teammartens.android.wattfinder.KartenActivity;
 import de.teammartens.android.wattfinder.R;
@@ -195,7 +194,7 @@ public class SaeulenWorks {
                             new erzeugeMarkerTask(KartenActivity.getInstance(), KartenActivity.mMap).execute(jResponse); //Ergebnis Async verarbeiten wegen UI Thread blocking
                         } else {
 
-                            Toast.makeText(KartenActivity.getInstance(), "Fehler beim Abrufen der Säulen.", Toast.LENGTH_LONG);
+                            Toast.makeText(KartenActivity.getInstance(), "Fehler beim Abrufen der Säulen.", Toast.LENGTH_LONG).show();
                             if (LogWorker.isVERBOSE())
                                 LogWorker.d(LOG_TAG, "ERROR:" + jResponse.getString("status"));
                         }

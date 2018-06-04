@@ -83,7 +83,7 @@ public class Filter_Presets_Fragment extends Fragment {
                 }
             });
 
-        ;
+
         //setPreset();
 
     }

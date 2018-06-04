@@ -10,6 +10,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -38,7 +39,7 @@ public class Utils {
         Calendar c = Calendar.getInstance();
         c.setTimeInMillis(timestamp*1000);
         Date d = c.getTime();
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.GERMANY);
         return sdf.format(d);
     }
     public static HashMap sortByValues(HashMap map) {

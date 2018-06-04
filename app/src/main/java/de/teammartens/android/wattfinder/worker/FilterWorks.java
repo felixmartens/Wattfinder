@@ -349,7 +349,7 @@ public class FilterWorks {
         editor.putStringSet("PRESETS", presets);
         if (!editor.commit()) {
 
-            Toast.makeText(KartenActivity.getInstance(), R.string.SaveFilterError, Toast.LENGTH_LONG);
+            Toast.makeText(KartenActivity.getInstance(), R.string.SaveFilterError, Toast.LENGTH_LONG).show();
             if (LogWorker.isVERBOSE())
                 LogWorker.e(LOG_TAG, "FEHLER: Filter für Profil " + PRESET + " nicht gespeichert.");
 
@@ -378,7 +378,7 @@ public class FilterWorks {
         editor.putStringSet("KARTEN_API", serialize_karten());
         if (!editor.commit()) {
 
-            Toast.makeText(KartenActivity.getInstance(), R.string.SaveFilterError, Toast.LENGTH_LONG);
+            Toast.makeText(KartenActivity.getInstance(), R.string.SaveFilterError, Toast.LENGTH_LONG).show();
             if (LogWorker.isVERBOSE())
                 LogWorker.e(LOG_TAG, "FEHLER: FilterLISTEN nicht gespeichert.");
 
@@ -631,9 +631,7 @@ public class FilterWorks {
                     filter_speichern();
                     SaeulenWorks.checkMarkerCache("setze Liste " + Liste + " " + Value);
 
-                    if (stecker.contains(Value)) {
-                        return true;
-                    }else return false;
+                        return stecker.contains(Value);
                 }
 
             case F_VERBUND:
@@ -720,18 +718,17 @@ public class FilterWorks {
 
         switch (Liste) {
             case F_STECKER:
-                if (stecker.size() > 0) return false;
-                else return true;
+                return (stecker.size() > 0);
 
 
             case F_VERBUND:
-                if (verbund.size() > 0) return false;
-                else return true;
+                return (verbund.size() > 0);
+
 
 
             case F_KARTEN:
-                if (karten.size() > 0) return false;
-                else return true;
+                return (karten.size() > 0);
+
 
 
         }
@@ -745,20 +742,17 @@ public class FilterWorks {
         switch (Liste) {
             case F_STECKER:
                 stecker.clear();
-                if (stecker.size() > 0) return false;
-                else return true;
+                return (stecker.size() > 0);
 
 
             case F_VERBUND:
                 verbund.clear();
-                if (verbund.size() > 0) return false;
-                else return true;
+                return (verbund.size() > 0);
 
 
             case F_KARTEN:
                 karten.clear();
-                if (karten.size() > 0) return false;
-                else return true;
+                return (karten.size() > 0);
 
 
         }
@@ -774,30 +768,31 @@ public class FilterWorks {
 
         if (verbund.isEmpty()) param += "verbund[]=alle";
         else {
-            String vb = "";
+            StringBuilder vb = new StringBuilder();
             for (String v : verbund) {
-                if (!vb.isEmpty()) vb += "&";
-                vb += "verbund[]=" + v;
+                if (vb.length() > 0) vb.append("&");
+                vb.append("verbund[]=").append(v);
             }
+
             param += vb;
         }
         param += "&";
         if (stecker.isEmpty()) param = "stecker[]=alle";
         else {
-            String st = "";
+            StringBuilder st = new StringBuilder();
             for (String s : stecker) {
-                if (!st.isEmpty()) st += "&";
-                st += "stecker[]=" + s;
+                if (st.length() > 0) st.append("&");
+                st.append("stecker[]=").append(s);
             }
             param += st;
         }
         param += "&";
         if (karten.isEmpty()) param += "ladekarte[]=alle";
         else {
-            String kt = "";
+            StringBuilder kt = new StringBuilder();
             for (String k : karten) {
-                if (kt.isEmpty()) kt += "&";
-                kt += "ladekarte[]=" + k;
+                if (kt.length() == 0) kt.append("&");
+                kt.append("ladekarte[]=").append(k);
             }
             param += kt;
         }

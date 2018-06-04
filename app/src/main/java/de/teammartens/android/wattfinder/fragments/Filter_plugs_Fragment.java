@@ -1,12 +1,11 @@
 package de.teammartens.android.wattfinder.fragments;
 
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
-import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ListView;
@@ -67,7 +66,7 @@ public void onStart(){
 
     cB.setChecked(FilterWorks.Liste_beliebig(LISTE));
 
-    filterListe.addAll(FilterWorks.ListeToArrayList(LISTE));
+    filterListe = new ArrayList<>(FilterWorks.ListeToArrayList(LISTE));
     if(LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG," FilterListe "+LISTE+" enthält "+filterListe.size()+" Objekte." );
     listView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
     dataAdapter = new mFilterListAdapter(this.getContext(),

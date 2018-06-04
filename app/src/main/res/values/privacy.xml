@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources><string name="privacy_desc_long">Diese Datenschutzerklärung klärt Sie über die Art, den Umfang und Zweck der Verarbeitung von personenbezogenen Daten (nachfolgend kurz „Daten“) innerhalb unseres Onlineangebotes, der Android-App und der mit ihm verbundenen Webseiten, Funktionen und Inhalte sowie externen Onlinepräsenzen, wie z.B. unser Social Media Profile auf (nachfolgend gemeinsam bezeichnet als „Onlineangebot“). Im Hinblick auf die verwendeten Begrifflichkeiten, wie z.B. „Verarbeitung“ oder „Verantwortlicher“ verweisen wir auf die Definitionen im Art. 4 der Datenschutzgrundverordnung (DSGVO).&lt;br />
+<resources><string name="privacy_desc_long" translatable="false">Diese Datenschutzerklärung klärt Sie über die Art, den Umfang und Zweck der Verarbeitung von personenbezogenen Daten (nachfolgend kurz „Daten“) innerhalb unseres Onlineangebotes, der Android-App und der mit ihm verbundenen Webseiten, Funktionen und Inhalte sowie externen Onlinepräsenzen, wie z.B. unser Social Media Profile auf (nachfolgend gemeinsam bezeichnet als „Onlineangebot“). Im Hinblick auf die verwendeten Begrifflichkeiten, wie z.B. „Verarbeitung“ oder „Verantwortlicher“ verweisen wir auf die Definitionen im Art. 4 der Datenschutzgrundverordnung (DSGVO).&lt;br />
 &lt;br />
 &lt;h4>Verantwortlicher&lt;/h4>&lt;br />Felix Martens&lt;br />
 Backhausfeld 20&lt;br />
@@ -69,7 +69,7 @@ Dies setzt immer voraus, dass die Drittanbieter dieser Inhalte, die IP-Adresse d
 
 </string>
 
-    <string name="privacy_text_short">&lt;h2>Willkommen,&lt;/h2>&lt;br />
+    <string name="privacy_text_short" translatable="false">&lt;h2>Willkommen,&lt;/h2>&lt;br />
     diese App nutzt Ladesäulendaten von GoingElectric.de über eine offizielle API. Da Wattfinder die Daten nur filtert und anzeigt, bitte ich alles Lob und Dank
     für die eigentlichen Daten an die Community von goingelectric.de zu geben. Fehler und Verbesserungsvorschläge, die die eigentlichen Daten (und nicht diese App) betreffen allerdings auch.
     Wie gesagt, Wattfinder filtert nur und zeigt an.&lt;br />&lt;br />
@@ -94,10 +94,10 @@ Dies setzt immer voraus, dass die Drittanbieter dieser Inhalte, die IP-Adresse d
         &lt;b>Die Ausnahme&lt;/b> von den vorstehende Aussagen ist &lt;b>Google Maps&lt;/b>, das für die Kartenanzeige und die Suche nach Orten in der App genutzt wird. Dabei können Daten erfasst, übertragen und verarbeitet werden, wie dies in den Datenschutzbedingen der Google Play Services geregelt ist.&lt;br />
 
 </string>
-    <string name="privacy_maps"></string>
+    <string name="privacy_maps" translatable="false"></string>
 <string name="privacy_title">Datenschutz bei Wattfinder</string>
     <string name="privacy_consent">Ich bin einverstanden</string>
-    <string name="privacy_license">Erstellt mit Datenschutz-Generator.de von RA Dr. Thomas Schwenke&lt;br />Angepasst durch den Betreiber.</string>
+    <string name="privacy_license" translatable="false">Erstellt mit Datenschutz-Generator.de von RA Dr. Thomas Schwenke&lt;br />Angepasst durch den Betreiber.</string>
     <string name="crashmail_legalnotice">Mit dem Verschicken dieser Mail erklärst du dich damit einverstanden dass die Inhalte der Mail, sowie deine Mailadresse zum Zwecke der Fehlerbehebung Vererbeitet udn gespeichert werden. Solltest du explizit NICHT wünschen, dass ich mich bei weiteren nachfragen per Mail bei dir melden darf, so schreibe bitte einen kurzen Vermerk in die Mail. Daten von denen du nicht möchtest, dass sie gespeichert oder verarbeitet werden kannst du einfach vor dem Verschicken löschen.</string>
 
 
