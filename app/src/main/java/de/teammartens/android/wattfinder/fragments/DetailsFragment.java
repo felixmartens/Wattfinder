@@ -144,7 +144,7 @@ mContext =this.getContext();
         super.onStart();
         if (detailsView != null) {
             TextView t = (TextView) detailsView.findViewById(R.id.dSaeulenid);
-            if (t != null && !t.getText().equals(mID))
+            if (t != null && !t.getText().equals(mID)&&mID>0)
                 holeDetails();
             detailsView.setVisibility(View.VISIBLE);
             detailsView.setAlpha(1.0f);
@@ -167,6 +167,13 @@ mContext =this.getContext();
         AnimationWorker.hide_fabs();
         if(S==null)setzeSaeule(SaeulenWorks.getCurrentSaeule());
         load_events();
+
+        if(mID>0){
+            load_events();
+            detailsView.setVisibility(View.VISIBLE);
+            detailsView.setAlpha(1.0f);
+
+        }
 
     }
 

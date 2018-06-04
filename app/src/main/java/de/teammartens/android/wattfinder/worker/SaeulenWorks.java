@@ -518,6 +518,10 @@ public class SaeulenWorks {
             if(AnimationWorker.isFilterVisibile()) AnimationWorker.toggleFilter();
             if(!AnimationWorker.isDetailsVisibile())AnimationWorker.show_info();else AnimationWorker.show_details(item);
 
+            //if(AnimationWorker.isFilterVisibile()) AnimationWorker.toggleFilter();
+            //if(!AnimationWorker.isDetailsVisibile())AnimationWorker.show_info();else AnimationWorker.hide_info();
+            if(AnimationWorker.getSTATE()>AnimationWorker.INFO)AnimationWorker.showDetails();
+            else AnimationWorker.show_info();
 
 
             return true;

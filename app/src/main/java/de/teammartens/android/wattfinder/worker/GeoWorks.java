@@ -386,9 +386,10 @@ public class GeoWorks {
                 Marker_Suche = mMap.addMarker(new MarkerOptions().position(Coord).title(Desc).icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_suche)));
 
                 CUSTOM_MAPVIEW=true;
-                AnimationWorker.hide_info();
-                if(AnimationWorker.isDetailsVisibile())AnimationWorker.toggleDetails();
-                if(AnimationWorker.isFilterVisibile())AnimationWorker.toggleFilter();
+                //AnimationWorker.hide_info();
+                //if(AnimationWorker.isDetailsVisibile())AnimationWorker.toggleDetails();
+                //if(AnimationWorker.isFilterVisibile())AnimationWorker.toggleFilter();
+                AnimationWorker.show_map();
                 movemapPosition(Coord,MY_LOCATION_ZOOM,"GeoWorks.Suchmarker");
 
             }

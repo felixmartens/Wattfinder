@@ -119,7 +119,7 @@ public static ActionBar actionBar;
         sInstance = this;
         GoogleApiAvailability.getInstance().makeGooglePlayServicesAvailable(this);
 
-        setContentView(R.layout.mainlayout);
+        setContentView(R.layout.mainlayout_flat);
         sharedPref = getPreferences(Context.MODE_PRIVATE);
         fragmentManager = getSupportFragmentManager();
 
@@ -165,6 +165,8 @@ public static ActionBar actionBar;
         LogWorker.init_logging();
 
         lineSeparator =System.getProperty("line.separator");
+
+        //if (!AnimationWorker.smartFilter)AnimationWorker.toggleSmartFilter();
 
     }
     @Override
@@ -272,7 +274,7 @@ public static ActionBar actionBar;
 
     @Override
     public void onBackPressed() {
-        if(fragmentManager.getBackStackEntryCount() != 0) {
+       /* if(fragmentManager.getBackStackEntryCount() != 0) {
 
 // TODO: Hier muss unbedingt nachgearbeitet werden. Momentan funktioniert die Erkennung ob Map visible ist nur ab Android15
 
@@ -286,7 +288,9 @@ public static ActionBar actionBar;
                 GeoWorks.movemapPosition("showMapBackPress");
                 AnimationWorker.show_map();
                 //show_info();
-            }
+            }*/
+       if(AnimationWorker.getSTATE()>AnimationWorker.MAP){
+           AnimationWorker.show_map();
         } else {
             // Damit muss Back zweimal gedrückt werden um die App zu verlassen.
             if(BackstackEXIT) {
@@ -436,7 +440,7 @@ public static ActionBar actionBar;
          SaeulenWorks.setUpClusterer();
         SaeulenWorks.reset();
         SaeulenWorks.checkMarkerCache("MapReady");
-    AnimationWorker.show_map();AnimationWorker.hide_info();
+    AnimationWorker.show_map();
         if (FilterWorks.filter_initialized()) AnimationWorker.hideStartup();
     }
 
