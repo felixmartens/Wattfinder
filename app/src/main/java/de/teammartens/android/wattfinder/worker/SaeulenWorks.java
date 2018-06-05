@@ -5,7 +5,6 @@ import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.SystemClock;
-import android.text.TextUtils;
 import android.view.View;
 import android.view.animation.BounceInterpolator;
 import android.view.animation.Interpolator;
@@ -40,7 +39,6 @@ import java.util.Map;
 
 import de.teammartens.android.wattfinder.KartenActivity;
 import de.teammartens.android.wattfinder.R;
-import de.teammartens.android.wattfinder.fragments.MiniInfoFragment;
 import de.teammartens.android.wattfinder.model.Saeule;
 
 /**
@@ -73,7 +71,7 @@ public class SaeulenWorks {
     private static HashMap<Long,LatLngBounds> CachedRegion = new HashMap<>();
     private static HashMap<Integer,Saeule> SaeulenCache = new HashMap<>();
     private static int letzterAbrufFilter;
-    public static Saeule clickedSaeule;
+    public static Saeule currentSaeule;
     public static Marker clickedMarker;
     private static Boolean RQ_PENDING = false;
     private static String RQ_URL = "";
@@ -171,6 +169,9 @@ public class SaeulenWorks {
                     try {
                         if (jResponse.getString("status").contentEquals("ok")) {
                             AnimationWorker.hideStartup();
+                            //Redundantes Aufrufen wenn startkey gefunden und positiv
+                            if (jResponse.optInt("startkey", 0) > 0)
+                                ladeMarker(swlat, swlng, nwlat, nwlng, "startkey", jResponse.optInt("startkey", 0), PARAMS);
 
                             if (LogWorker.isVERBOSE())
                                 LogWorker.d(LOG_TAG, "Response erhalten, starte AsyncTask");
@@ -185,9 +186,6 @@ public class SaeulenWorks {
                                 Saeulen.clear();
                                 mClusterManager.clearItems();
                             }
-                            //Redundantes Aufrufen wenn startkey gefunden und positiv
-                            if (jResponse.optInt("startkey", 0) > 0)
-                                ladeMarker(swlat, swlng, nwlat, nwlng, "startkey", jResponse.optInt("startkey", 0), PARAMS);
 
 
 
@@ -216,7 +214,7 @@ public class SaeulenWorks {
 
 
 
-                if (!duplicateRQ(hash)) {
+                if (startkey>0||!duplicateRQ(hash)) {
                     if (RQ_PENDING)
                     {// Cancel pending Requests
                         KartenActivity.getInstance().cancelPendingRequests(RQ_TAG);
@@ -262,56 +260,20 @@ public class SaeulenWorks {
             try {
 
                 JSONArray jsonArray = jO.getJSONArray("chargelocations");
-
                 final int length = jsonArray.length();
                 if (LogWorker.isVERBOSE()) LogWorker.d("AsyncMarkerWorks", "Marker gefunden: "+length);
                 Marker_Saeule_Options.clear();
 
-
                 for (int i = 0; i < length; i++) {
-                    JSONObject M = new JSONObject();
-                    M = jsonArray.getJSONObject(i);
+                    Saeule S = new Saeule(jsonArray.getJSONObject(i));
 
-
-                    int id = M.getInt("ge_id");
-
-                    Saeule S = new Saeule(id,M.getString("name"));
-                    //if (LogWorker.isVERBOSE()) LogWorker.d("AsyncMarkerWorks", M.getString("name"));
-                    JSONObject O = M.getJSONObject("coordinates");
-                    S.setPosition(new LatLng(O.getDouble("lat"), O.getDouble("lng")));
-
-                    O = M.getJSONObject("address");
-                    S.setAddress(O.getString("street")+", "+O.getString("postcode")+" "+O.getString("city"));
-
-                    JSONArray A = M.getJSONArray("chargepoints");
-                    String[] chargepoints=new String[A.length()];
-                    Double pMax = 0.0; //um die Farbe des Icons zu bestimmen
-
-                    for (int n=0;n<A.length();n++){
-                        O = A.getJSONObject(n);
-                        chargepoints[n]=O.getInt("count")+"x "+O.getString("type")+" "+O.getDouble("power")+"kW";
-                        if (O.getDouble("power")>pMax) pMax=O.getDouble("power");
-                    }
-                    S.setChargepoints(TextUtils.join(","+KartenActivity.lineSeparator,chargepoints));
-                    //Bestimme Typ des Markers
-                    Integer sTyp = 0;
-                    if(pMax>0) sTyp=1;
-                    if(pMax>=11) sTyp=2;
-                    if(pMax>=20) sTyp=3;
-                    if(pMax>=43) sTyp=4;
-                    if(pMax>=100) sTyp=5;
-                    S.setTyp(sTyp);
-
-                    S.setFaultreport(M.optBoolean("fault_report",false));
-                    S.setEventCount(-1);
+                    //JSON Decoding moved to class Saeule
                     Saeulen.put(S.getID(),S);
-
                     mClusterManager.addItem(S);
                     SaeulenCache.put(S.getID(),S);
+                    //Why do we need this duplicate?
 
                     response++;
-
-
                 }
 
 
@@ -359,21 +321,22 @@ public class SaeulenWorks {
                             LogWorker.d("AsyncMarkerWorks", "JSON Response " + jResponse.toString());
                         try{
                             JSONArray jA = jResponse.getJSONArray("points");
-                            boolean success = jResponse.optBoolean("success", false);
-                            for (int i = 0; i < jA.length(); i++) {
-                                JSONObject jO = jA.getJSONObject(i);
-                                if (LogWorker.isVERBOSE())
-                                    LogWorker.d("AsyncMarkerWorks", "JSON Response ID " + jO.toString());
+                            if(jResponse.optBoolean("success", false))
+                                for (int i = 0; i < jA.length(); i++) {
+                                    JSONObject jO = jA.getJSONObject(i);
+                                    if (LogWorker.isVERBOSE())
+                                     LogWorker.d("AsyncMarkerWorks", "JSON Response ID " + jO.toString());
 
-                                if (success) {
-
-                                    setEvCount_helper(Saeulen.get(jO.getInt("id")), jO.getInt("count"));
-
-                                } else {
-                                    setEvCount_helper(Saeulen.get(jO.getInt("id")), -1);
-
-                                }
-                            }
+                                    Saeule S=Saeulen.get(jO.getInt("id"));
+                                    Integer c = jO.getInt("count");
+                                    if (S != null) {
+                                        mClusterManager.removeItem(S);
+                                        S.setEventCount(c);
+                                        mClusterManager.addItem(S);
+                                        if(LogWorker.isVERBOSE()&&c>0)LogWorker.d("AsyncEventJSON",S.getID()+": EventCount:"+S.getEventCount());
+                                        Saeulen.put(S.getID(),S);
+                                    }
+                                 }
                                 mClusterManager.cluster();
 
                             } catch (JSONException jE) {
@@ -390,8 +353,7 @@ public class SaeulenWorks {
                 });
 
                 KartenActivity.getInstance().addToRequestQueue(pRequest);
-           /* n++;
-            }*/
+
             mClusterManager.cluster();
 
         }
@@ -401,16 +363,7 @@ public class SaeulenWorks {
 
 }
 
-private static void setEvCount_helper(Saeule S,Integer c){
-    if (S != null) {
-        mClusterManager.removeItem(S);
 
-        S.setEventCount(c);
-        mClusterManager.addItem(S);
-        if(LogWorker.isVERBOSE()&&c>0)LogWorker.d("AsyncEventJSON",S.getID()+": EventCount:"+S.getEventCount());
-        Saeulen.put(S.getID(),S);
-    }
-}
 
     public static void setUpClusterer() {
         // Declare a variable for the cluster manager.
@@ -503,13 +456,13 @@ private static void setEvCount_helper(Saeule S,Integer c){
     }
 
     public static void resetClickMarker(){
-        if(clickedMarker !=null && clickedSaeule !=null){
+        if(clickedMarker !=null && currentSaeule !=null){
             BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(Markers[0]);
-            if ( clickedSaeule.getTyp() < (Markers.length+1) && clickedSaeule.getTyp() >= 0 )
-                if (clickedSaeule.isFaultreport())
-                    icon = BitmapDescriptorFactory.fromResource(Markers_Fault[clickedSaeule.getTyp()]);
+            if ( currentSaeule.getTyp() < (Markers.length+1) && currentSaeule.getTyp() >= 0 )
+                if (currentSaeule.isFaultreport())
+                    icon = BitmapDescriptorFactory.fromResource(Markers_Fault[currentSaeule.getTyp()]);
                 else
-                    icon = BitmapDescriptorFactory.fromResource(Markers[clickedSaeule.getTyp()]);
+                    icon = BitmapDescriptorFactory.fromResource(Markers[currentSaeule.getTyp()]);
             try {
                 clickedMarker.setIcon(icon);
             }
@@ -540,18 +493,18 @@ private static void setEvCount_helper(Saeule S,Integer c){
             Marker marker = getMarker(item);
             resetClickMarker();
             if ( LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG,"OnCLusterItemCLickListener  "+item.getID());
-            clickedSaeule = item;
+            currentSaeule = item;
             clickedMarker=marker;
             MarkerBounce(marker);
-            //marker.setIcon(BitmapDescriptorFactory.fromResource(Markers_Clicked[clickedSaeule.getTyp()]));
-            if(clickedMarker !=null && clickedSaeule !=null){
+            //marker.setIcon(BitmapDescriptorFactory.fromResource(Markers_Clicked[currentSaeule.getTyp()]));
+            if(clickedMarker !=null && currentSaeule !=null){
                 BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(Markers[0]);
 
-                if ( clickedSaeule.getTyp() < Markers.length && clickedSaeule.getTyp() >= 0 )
-                    if (clickedSaeule.isFaultreport())
-                        icon = BitmapDescriptorFactory.fromResource(Markers_Fault_Clicked[clickedSaeule.getTyp()]);
+                if ( currentSaeule.getTyp() < Markers.length && currentSaeule.getTyp() >= 0 )
+                    if (currentSaeule.isFaultreport())
+                        icon = BitmapDescriptorFactory.fromResource(Markers_Fault_Clicked[currentSaeule.getTyp()]);
                     else
-                        icon = BitmapDescriptorFactory.fromResource(Markers_Clicked[clickedSaeule.getTyp()]);
+                        icon = BitmapDescriptorFactory.fromResource(Markers_Clicked[currentSaeule.getTyp()]);
                 try {
                     clickedMarker.setIcon(icon);
                 }
@@ -560,11 +513,10 @@ private static void setEvCount_helper(Saeule S,Integer c){
 
                 }
             }
-            MiniInfoFragment.setzeSaeule(item.getID(), item);
             //GeoWorks.animateClick();
             GeoWorks.movemapPosition(item.getPosition(),"MarkerClick");
             if(AnimationWorker.isFilterVisibile()) AnimationWorker.toggleFilter();
-            if(!AnimationWorker.isDetailsVisibile())AnimationWorker.show_info();else AnimationWorker.hide_info();
+            if(!AnimationWorker.isDetailsVisibile())AnimationWorker.show_info();else AnimationWorker.show_details(item);
 
 
 
@@ -707,5 +659,11 @@ public static boolean duplicateRQ(int hash){
         RQ_PENDING=false;
     }
 
+    public static Saeule getCurrentSaeule() {
+        return currentSaeule;
+    }
 
+    public static void setCurrentSaeule(Saeule currentSaeule) {
+        SaeulenWorks.currentSaeule = currentSaeule;
+    }
 }

@@ -19,6 +19,7 @@ import de.teammartens.android.wattfinder.fragments.FilterFragment;
 import de.teammartens.android.wattfinder.fragments.ImageZoomFragment;
 import de.teammartens.android.wattfinder.fragments.MiniInfoFragment;
 import de.teammartens.android.wattfinder.fragments.SmartFilterFragment;
+import de.teammartens.android.wattfinder.model.Saeule;
 
 import static de.teammartens.android.wattfinder.KartenActivity.fragmentManager;
 import static de.teammartens.android.wattfinder.KartenActivity.getInstance;
@@ -46,7 +47,7 @@ public class AnimationWorker {
                         R.anim.fragment_slide_out,
                         R.anim.fragment_slide_in,
                         R.anim.fragment_slide_out);
-        Fragment f = fragmentManager.findFragmentByTag(FLAG_INFO);
+        MiniInfoFragment f = (MiniInfoFragment) fragmentManager.findFragmentByTag(FLAG_INFO);
         Fragment df = fragmentManager.findFragmentByTag(FLAG_DETAILS);
         if(!startupScreen&&!(df!=null&&df.isVisible())){
             //wenn Details zusehen sind dann nix Info
@@ -54,13 +55,14 @@ public class AnimationWorker {
             if (f == null) {
                 if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG, "info wird neu gebildet");
                 fT.add(R.id.infoFragment, Fragment.instantiate(getInstance(), MiniInfoFragment.class.getName()), FLAG_INFO).addToBackStack(FLAG_INFO).commit();
+                f = (MiniInfoFragment) fragmentManager.findFragmentByTag(FLAG_INFO);
             } else if (f.isHidden()) {
                 if (LogWorker.isVERBOSE())
                     LogWorker.d(LOG_TAG, "info schon vorhanden" + f.isHidden() + " --" + f.isVisible() + "--" + f.isAdded());
                 fT.show(f).addToBackStack(FLAG_INFO).commit(); //replace(R.id.infoFragment, Fragment.instantiate(getInstance(), MiniInfoFragment.class.getName()), "iFragment");
 
             }
-
+            if(f!=null)f.setzeSaeule(SaeulenWorks.getCurrentSaeule());
             hide_fabs();
             // slideUp(getInstance().findViewById(R.id.fab_filter), 0);
             // slideUp(getInstance().findViewById(R.id.fab_mylocation), 0);
@@ -217,28 +219,45 @@ public class AnimationWorker {
             GeoWorks.movemapPosition("hideDetails");
 
         } else {
-            FragmentTransaction Ft = fragmentManager.beginTransaction()
-                    .setCustomAnimations(R.anim.fragment_slide_in,
-                            R.anim.fragment_slide_out,
-                            R.anim.fragment_slide_in,
-                            R.anim.fragment_slide_out);
-            Fragment iF = fragmentManager.findFragmentByTag("iFragment");
-            if (iF != null){
-                fragmentManager.popBackStack(FLAG_INFO,0);
-                Ft.hide(iF);}
-            Ft.add(R.id.detailFragment, Fragment
-                            .instantiate(getInstance(), DetailsFragment.class.getName()),
-                    "dFragment"
-            ).addToBackStack(FLAG_DETAILS).commit();
-
-
-            hide_mapSearch();
-            hide_fabs();
-            //GeoWorks.animateClick(true);
-
+          show_details();
         }
 
         KartenActivity.BackstackEXIT=false;
+    }
+
+    public static void show_details(){show_details(SaeulenWorks.getCurrentSaeule());}
+    public static void show_details(Saeule S){
+        FragmentTransaction Ft = fragmentManager.beginTransaction()
+                .setCustomAnimations(R.anim.fragment_slide_in,
+                        R.anim.fragment_slide_out,
+                        R.anim.fragment_slide_in,
+                        R.anim.fragment_slide_out);
+        Fragment iF = fragmentManager.findFragmentByTag(FLAG_INFO);
+        if (iF != null){
+            //fragmentManager.popBackStack(FLAG_INFO,0);
+            Ft.hide(iF);}
+        DetailsFragment dF = getDetailsFragment();
+
+        if(dF==null) {
+            Ft.add(R.id.detailFragment, Fragment
+                            .instantiate(getInstance(), DetailsFragment.class.getName()),
+                    FLAG_DETAILS
+            ).addToBackStack(FLAG_DETAILS).commit();
+            dF = getDetailsFragment();
+        }else{
+            if(!isDetailsVisibile())Ft.show(dF).addToBackStack(FLAG_DETAILS).commit();
+        }
+
+       if(dF!=null)dF.setzeSaeule(S);
+
+        hide_mapSearch();
+        hide_fabs();
+        //GeoWorks.animateClick(true);
+
+    }
+
+    public static DetailsFragment getDetailsFragment(){
+        return (DetailsFragment) fragmentManager.findFragmentByTag(FLAG_DETAILS);
     }
 
 

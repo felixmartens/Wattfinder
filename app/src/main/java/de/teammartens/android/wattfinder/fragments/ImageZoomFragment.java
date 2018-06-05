@@ -61,10 +61,10 @@ public class ImageZoomFragment extends Fragment {
 
     public void onResume() {
         super.onResume();
-        Titel=DetailsFragment.getmTitel();
+        Titel=AnimationWorker.getDetailsFragment().getmTitel();
         final TextView tv = (TextView) this.getView().findViewById(R.id.izBezeichnung);
         tv.setText(Titel);
-        ID=DetailsFragment.getmID();
+        ID=AnimationWorker.getDetailsFragment().getmID();
         initializeWorker();
 
     }

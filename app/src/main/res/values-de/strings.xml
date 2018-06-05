@@ -118,8 +118,8 @@
     <string name="networkerror_404">Netzwerkanfrage fehlgeschlagen. Server nicht erreichbar, Status:</string>
     <string name="devents_title">Ladeberichte / CheckIns</string>
     <string name="next">Weiter</string>
-    <string name="privacy_title">Privacy declaration</string>
-    <string name="privacy_consent">I agree</string>
-    <string name="crashmail_legalnotice">By sending this mail you agree that all contents including your mail adress will be used for debugging and bugfixing including the right to problaby contact you via mail for further information.</string>
+    <string name="privacy_title">Datenschutz bei Wattfinder</string>
+    <string name="privacy_consent">Ich bin einverstanden</string>
+    <string name="crashmail_legalnotice">Mit dem Verschicken dieser Mail erklärst du dich damit einverstanden dass die Inhalte der Mail, sowie deine Mailadresse zum Zwecke der Fehlerbehebung Vererbeitet udn gespeichert werden. Solltest du explizit NICHT wünschen, dass ich mich bei weiteren nachfragen per Mail bei dir melden darf, so schreibe bitte einen kurzen Vermerk in die Mail. Daten von denen du nicht möchtest, dass sie gespeichert oder verarbeitet werden kannst du einfach vor dem Verschicken löschen.</string>
 
 </resources>

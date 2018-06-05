@@ -39,15 +39,15 @@ import de.teammartens.android.wattfinder.KartenActivity;
 import de.teammartens.android.wattfinder.R;
 import de.teammartens.android.wattfinder.model.ChargeEvent;
 import de.teammartens.android.wattfinder.model.ImagePagerAdapter;
+import de.teammartens.android.wattfinder.model.Saeule;
 import de.teammartens.android.wattfinder.worker.AnimationWorker;
 import de.teammartens.android.wattfinder.worker.GeoWorks;
 import de.teammartens.android.wattfinder.worker.ImageWorker;
 import de.teammartens.android.wattfinder.worker.LogWorker;
 import de.teammartens.android.wattfinder.worker.NetWorker;
+import de.teammartens.android.wattfinder.worker.SaeulenWorks;
 import de.teammartens.android.wattfinder.worker.Utils;
 
-import static android.content.Context.LAYOUT_INFLATER_SERVICE;
-import static android.view.View.GONE;
 
 /**
  * Created by felix on 10.05.15.
@@ -56,20 +56,21 @@ public class DetailsFragment extends Fragment {
 
 
 
-    private static final String LOG_TAG = "DetailsFragment";
-    private static final String fAPIUrl = "https://api.goingelectric.de/chargepoints/";
+    private  final String LOG_TAG = "DetailsFragment";
+    private  final String fAPIUrl = "https://api.goingelectric.de/chargepoints/";
 
-    private static View detailsView;
-    private static LatLng mPos= new LatLng(0,0);
-    private static Integer mID = 0;
-    public static String mTitel = "";
-    private static String mUrl = "";
+    private  View detailsView;
+    private  LatLng mPos= new LatLng(0,0);
+    private  Integer mID = 0;
+    public  String mTitel = "";
+    private  String mUrl = "";
+    private Saeule S;
     protected View view;
-    private static ViewPager detailImages;
+    private  ViewPager detailImages;
 
-    private static LinearLayout pager_indicator;
-    private static ImageView[] dots;
-    private static Context mContext;
+    private  LinearLayout pager_indicator;
+    private  ImageView[] dots;
+    private  Context mContext;
 
 
     @Override
@@ -153,7 +154,7 @@ mContext =this.getContext();
                 @Override
                 public void onClick(View v) {
                     initializeWorker();
-                    v.setVisibility(GONE);
+                    v.setVisibility(View.GONE);
                 }
             });
 
@@ -164,13 +165,14 @@ mContext =this.getContext();
         super.onResume();
         AnimationWorker.hide_mapSearch();
         AnimationWorker.hide_fabs();
+        if(S==null)setzeSaeule(SaeulenWorks.getCurrentSaeule());
         load_events();
 
     }
 
 
 
-    private static void holeDetails() {
+    private void holeDetails() {
         View v =detailsView.findViewById(R.id.loadingPanel);
         v.setVisibility(View.VISIBLE);
         TextView t = (TextView) detailsView.findViewById(R.id.dSaeulenid);
@@ -207,11 +209,11 @@ mContext =this.getContext();
                         mTitel+=", "+O.getString("city");
 
                         t2 = (TextView) detailsView.findViewById(R.id.dBetreiber_c);
-                        if(!jO.optBoolean("operator",true))detailsView.findViewById(R.id.dBetreiber).setVisibility(GONE);else{ t2.setText(jO.optString("operator"));detailsView.findViewById(R.id.dBetreiber).setVisibility(View.VISIBLE);}
+                        if(!jO.optBoolean("operator",true))detailsView.findViewById(R.id.dBetreiber).setVisibility(View.GONE);else{ t2.setText(jO.optString("operator"));detailsView.findViewById(R.id.dBetreiber).setVisibility(View.VISIBLE);}
 
 
                         t2 = (TextView) detailsView.findViewById(R.id.dVerbund_c);
-                        if(!jO.optBoolean("network",true))detailsView.findViewById(R.id.dVerbund).setVisibility(GONE);else {t2.setText(jO.optString("network"));detailsView.findViewById(R.id.dVerbund).setVisibility(View.VISIBLE);}
+                        if(!jO.optBoolean("network",true))detailsView.findViewById(R.id.dVerbund).setVisibility(View.GONE);else {t2.setText(jO.optString("network"));detailsView.findViewById(R.id.dVerbund).setVisibility(View.VISIBLE);}
 
 
                         O = jO.getJSONObject("cost");
@@ -221,12 +223,12 @@ mContext =this.getContext();
                         t1.setVisibility(View.VISIBLE);t2.setVisibility(View.VISIBLE);
                         if (!O.optBoolean("description_short",true)&&!O.optBoolean("description_long",true)) {
 
-                            detailsView.findViewById(R.id.dKosten).setVisibility(GONE);
+                            detailsView.findViewById(R.id.dKosten).setVisibility(View.GONE);
 
                         }else {
-                            if (!O.optBoolean("description_short",true)) t1.setVisibility(GONE);
+                            if (!O.optBoolean("description_short",true)) t1.setVisibility(View.GONE);
                             else t1.setText(decodeHTML(O.getString("description_short")));
-                            if (!O.optBoolean("description_long",true)) t2.setVisibility(GONE);
+                            if (!O.optBoolean("description_long",true)) t2.setVisibility(View.GONE);
                             else t2.setText(decodeHTML(O.getString("description_long")));
 
                         }
@@ -254,29 +256,29 @@ mContext =this.getContext();
                             detailsView.findViewById(R.id.dStecker).setVisibility(View.VISIBLE);
                         }else {
 
-                            detailsView.findViewById(R.id.dStecker).setVisibility(GONE);
+                            detailsView.findViewById(R.id.dStecker).setVisibility(View.GONE);
 
                         }
 
 
                         t2 = (TextView) detailsView.findViewById(R.id.dHinweise_b);
                         if(!jO.optBoolean("general_information",true))
-                            detailsView.findViewById(R.id.dHinweise).setVisibility(GONE);else{ t2.setText(decodeHTML(jO.optString("general_information")));detailsView.findViewById(R.id.dHinweise).setVisibility(View.VISIBLE);}
+                            detailsView.findViewById(R.id.dHinweise).setVisibility(View.GONE);else{ t2.setText(decodeHTML(jO.optString("general_information")));detailsView.findViewById(R.id.dHinweise).setVisibility(View.VISIBLE);}
                         t2 = (TextView) detailsView.findViewById(R.id.dPosition_b);
                         if(!jO.optBoolean("location_description",true))
-                            detailsView.findViewById(R.id.dPosition).setVisibility(GONE);else{ t2.setText(decodeHTML(jO.optString("location_description")));detailsView.findViewById(R.id.dPosition).setVisibility(View.VISIBLE);}
+                            detailsView.findViewById(R.id.dPosition).setVisibility(View.GONE);else{ t2.setText(decodeHTML(jO.optString("location_description")));detailsView.findViewById(R.id.dPosition).setVisibility(View.VISIBLE);}
                         t2 = (TextView) detailsView.findViewById(R.id.dLadeweile_b);
                         if(!jO.optBoolean("ladeweile",true))
-                            detailsView.findViewById(R.id.dLadeweile).setVisibility(GONE);else{ t2.setText(decodeHTML(jO.optString("ladeweile")));detailsView.findViewById(R.id.dLadeweile).setVisibility(View.VISIBLE);}
+                            detailsView.findViewById(R.id.dLadeweile).setVisibility(View.GONE);else{ t2.setText(decodeHTML(jO.optString("ladeweile")));detailsView.findViewById(R.id.dLadeweile).setVisibility(View.VISIBLE);}
 
 
                         t2 = (TextView) detailsView.findViewById(R.id.dStoerung_b);
 
                         if (!jO.optBoolean("fault_report",true)){
-                            t2.setVisibility(GONE);
-                            detailsView.findViewById(R.id.dStoerung_c).setVisibility(GONE);
-                            detailsView.findViewById(R.id.dStoerungTitel).setVisibility(GONE);
-                            detailsView.findViewById(R.id.dStoerung).setVisibility(GONE);}
+                            t2.setVisibility(View.GONE);
+                            detailsView.findViewById(R.id.dStoerung_c).setVisibility(View.GONE);
+                            detailsView.findViewById(R.id.dStoerungTitel).setVisibility(View.GONE);
+                            detailsView.findViewById(R.id.dStoerung).setVisibility(View.GONE);}
                         else{
                             O = jO.getJSONObject("fault_report");
                             t2.setText(getDate(O.optString("created","0"))+": "+KartenActivity.lineSeparator+ decodeHTML(O.optString("description")));
@@ -293,7 +295,7 @@ mContext =this.getContext();
                         t1 = (TextView) detailsView.findViewById(R.id.dZeiten_z);
                         t2 = (TextView) detailsView.findViewById(R.id.dZeiten_b);
 
-                            if (O.optString("days").isEmpty()) t1.setVisibility(GONE);
+                            if (O.optString("days").isEmpty()) t1.setVisibility(View.GONE);
                             else {
                                 t1.setVisibility(View.VISIBLE);
                                 JSONObject j2 = O.getJSONObject("days");
@@ -306,7 +308,7 @@ mContext =this.getContext();
                                         mContext.getString(R.string.saturday)+formatOpening(j2.getString("saturday"))+KartenActivity.lineSeparator+
                                         mContext.getString(R.string.sunday)+formatOpening(j2.getString("sunday")));
                             }
-                            if (!O.optBoolean("description",true)) t2.setVisibility(GONE);
+                            if (!O.optBoolean("description",true)) t2.setVisibility(View.GONE);
                             else {t2.setVisibility(View.VISIBLE);
                              t2.setText(decodeHTML(O.getString("description")));}
 
@@ -350,7 +352,7 @@ mContext =this.getContext();
 
                             imgPager.setVisibility(View.VISIBLE);
                         }else{
-                            imgPager.setVisibility(GONE);
+                            imgPager.setVisibility(View.GONE);
                         }
 
                         /*
@@ -398,7 +400,7 @@ http://indragni.com/blog/2013/03/31/android-imageswitcher-example/
 
     }
 
-    public static void resetValues(){
+    public  void resetValues(){
         TextView t = (TextView) detailsView.findViewById(R.id.dSaeulenid);
         t.setText("");
 
@@ -406,7 +408,7 @@ http://indragni.com/blog/2013/03/31/android-imageswitcher-example/
 
 
 
-    public static void setzeSaeule(Integer id, LatLng pos, String titel){
+    public  void setzeSaeule(Integer id, LatLng pos, String titel){
         mID = id;
         mPos = pos;
         mTitel=titel;
@@ -421,12 +423,15 @@ http://indragni.com/blog/2013/03/31/android-imageswitcher-example/
 
     }
 
+    public void setzeSaeule(Saeule S){
+        setzeSaeule(S.getID(),S.getPosition(),S.getTitle());
+        this.S=S;
+    }
 
-
-    public static void initializeWorker() {
+    public void initializeWorker() {
 
         View v = detailsView.findViewById(R.id.d_ImageBack);
-        v.setVisibility(GONE);
+        v.setVisibility(View.GONE);
         detailImages = (ViewPager) detailsView.findViewById(R.id.dImagePager);
         detailImages.setVisibility(View.VISIBLE);
         pager_indicator = (LinearLayout) detailsView.findViewById(R.id.dImgPagerCountDots);
@@ -462,7 +467,7 @@ http://indragni.com/blog/2013/03/31/android-imageswitcher-example/
         setUiPageViewController();
     }
 
-    private static void setUiPageViewController() {
+    private void setUiPageViewController() {
         int dotsCount = ImageWorker.getImgCount();
 
         if(dots==null)dots = new ImageView[5];
@@ -486,7 +491,7 @@ http://indragni.com/blog/2013/03/31/android-imageswitcher-example/
 
             }
             dots[i].setImageDrawable(mContext.getResources().getDrawable(R.drawable.nonselecteditem_dot));
-            if (i>=dotsCount) dots[i].setVisibility(GONE);
+            if (i>=dotsCount) dots[i].setVisibility(View.GONE);
             else dots[i].setVisibility(View.VISIBLE);
         }
 
@@ -495,27 +500,27 @@ http://indragni.com/blog/2013/03/31/android-imageswitcher-example/
 
 
 
-public static String formatOpening(String s){
+public  String formatOpening(String s){
 
     s=s.replace("from ","");
     s=s.replace(" till ","-");
     s=s.replace("closed",KartenActivity.getInstance().getString(R.string.closed));
     return s;
 }
-    public static void bestaetigen() {
+    public  void bestaetigen() {
 
         //Säuelenfunktion bestätigen
     }
 
-    public static String getmTitel() {
+    public  String getmTitel() {
         return mTitel;
     }
 
-    public static Integer getmID() {
+    public  Integer getmID() {
         return mID;
     }
 
-    private static String getDate(String time) {
+    private  String getDate(String time) {
         Long t =0l;
         if (time!=null)
             t = Long.valueOf(time);
@@ -524,14 +529,14 @@ public static String formatOpening(String s){
         return  DateFormat.format("dd-MM-yyyy", cal).toString();
     }
 
-    private static String decodeHTML (String text){
+    private  String decodeHTML (String text){
         if (text != null)
         return Html.fromHtml(text).toString();
 
         return "";
     }
 
-    private static void load_events(){
+    private  void load_events(){
         if(mID>0) {
             final View eventView = detailsView.findViewById(R.id.dEvents);
             AnimationWorker.fadeOut(eventView,0);
@@ -547,7 +552,7 @@ public static String formatOpening(String s){
                     if (jResponse.optBoolean("success", false) && jResponse.optInt("count", 0) > 0) {
                         try {
                             JSONArray jA = jResponse.getJSONArray("events");
-                            LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(LAYOUT_INFLATER_SERVICE);
+                            LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                             ViewGroup parentView = (ViewGroup) detailsView.findViewById(R.id.dEvents_list);
                             parentView.removeAllViews();
                             //Sort Entries

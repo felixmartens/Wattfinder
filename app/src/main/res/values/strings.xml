@@ -118,6 +118,7 @@
     <string name="networkerror_404">Network response failed. Server not found. Status:</string>
     <string name="devents_title">Chargeevents / CheckIns</string>
     <string name="next">Next</string>
+    <string name="privacy_consent">I agree</string>
 
 
 </resources>

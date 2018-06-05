@@ -16,18 +16,19 @@ import de.teammartens.android.wattfinder.R;
 import de.teammartens.android.wattfinder.model.Saeule;
 import de.teammartens.android.wattfinder.worker.AnimationWorker;
 import de.teammartens.android.wattfinder.worker.GeoWorks;
+import de.teammartens.android.wattfinder.worker.SaeulenWorks;
 
 /**
  * Created by felix on 10.11.14.
  */
 public class MiniInfoFragment extends Fragment {
-        private static final String LOG_TAG = "InfoFragment";
-        private static View infoView;
-        public static LatLng mPos= new LatLng(0,0);
-        private static Integer mID = 0;
-        public static String mTitel = "";
-        private static String mUrl = "";
-        private static Saeule mSaeule;
+        private  final String LOG_TAG = "InfoFragment";
+        private  View infoView;
+        public  LatLng mPos= new LatLng(0,0);
+        private  Integer mID = 0;
+        public  String mTitel = "";
+        private  String mUrl = "";
+        private  Saeule mSaeule;
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -39,11 +40,7 @@ public class MiniInfoFragment extends Fragment {
             infoView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
-
-                    DetailsFragment.setzeSaeule(mID,mPos,mTitel);
-                    AnimationWorker.toggleDetails();
-
+                    AnimationWorker.show_details(mSaeule);
                 }
             });
 
@@ -62,7 +59,7 @@ public class MiniInfoFragment extends Fragment {
             v.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("geo:" + MiniInfoFragment.mPos.latitude + "," + MiniInfoFragment.mPos.longitude + "?q=" + MiniInfoFragment.mPos.latitude + "," + MiniInfoFragment.mPos.longitude + "(" + MiniInfoFragment.mTitel + ")"));
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("geo:" + mPos.latitude + "," + mPos.longitude + "?q=" + mPos.latitude + "," + mPos.longitude + "(" + mTitel + ")"));
                     if (intent.resolveActivity(KartenActivity.getInstance().getPackageManager()) != null) {
                         startActivity(intent);
                     }
@@ -77,7 +74,7 @@ public class MiniInfoFragment extends Fragment {
     public void onResume(){
         super.onResume();
         KartenActivity.setMapPaddingY(infoView.getHeight());
-
+        setzeSaeule(SaeulenWorks.getCurrentSaeule());
 
     }
 public void onPause(){
@@ -85,7 +82,7 @@ public void onPause(){
 
 }
 
-    private static void holeInfo() {
+    private  void holeInfo() {
 
         if (infoView != null && mSaeule != null) {
             TextView t2 = (TextView) infoView.findViewById(R.id.iName);
@@ -129,13 +126,12 @@ public void onPause(){
            // if (LogWorker.isVERBOSE())LogWorker.d(LOG_TAG,"hole Info "+ (mSaeule!=null?mSaeule.getName():"") +" H:"+infoView.getHeight() +" f:"+f);
             KartenActivity.setMapPaddingY(infoView.getHeight());
            if (AnimationWorker.isDetailsVisibile())
-                DetailsFragment.setzeSaeule(mID, mPos, mTitel);
-
+                AnimationWorker.show_details(mSaeule);
 
         }
     }
 
-        public static void resetValues(){
+        public  void resetValues(){
             TextView t = (TextView) infoView.findViewById(R.id.iSaeulenid);
             t.setText("");
             t = (TextView) infoView.findViewById(R.id.iAdresse);t.setText("");
@@ -146,8 +142,8 @@ public void onPause(){
 
 
 
-    public static void setzeSaeule(Integer id, Saeule S){
-        mID = id;
+    public  void setzeSaeule(Saeule S){
+        mID = S.getID();
         mPos = S.getPosition();
         mTitel = S.getName();
         mSaeule = S;

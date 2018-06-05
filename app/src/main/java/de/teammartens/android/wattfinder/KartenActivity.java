@@ -13,6 +13,7 @@ import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.SearchRecentSuggestions;
 import android.support.v4.app.ActivityCompat;
@@ -116,6 +117,7 @@ public static ActionBar actionBar;
         super.onCreate(savedInstanceState);
         //getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
         sInstance = this;
+        GoogleApiAvailability.getInstance().makeGooglePlayServicesAvailable(this);
 
         setContentView(R.layout.mainlayout);
         sharedPref = getPreferences(Context.MODE_PRIVATE);
@@ -126,7 +128,6 @@ public static ActionBar actionBar;
 
         mapFragment = (SupportMapFragment) fragmentManager.findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
 
 
         // Get the intent, verify the action and get the query
@@ -451,10 +452,22 @@ public GoogleApiClient setupGoogleAPI(){
         PlayServiceStatus = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(getBaseContext());
 
         // Showing status
+
         if (PlayServiceStatus != ConnectionResult.SUCCESS) { // Google Play Services are not available
+
+
+
+            final String appPackageName = "com.google.android.gms"; // getPackageName() from Context or Activity object
+           /* try {
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
+            } catch (android.content.ActivityNotFoundException anfe) {
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
+            }*/
+
             LogWorker.e(LOG_TAG, "PlayServices not connected:"+GoogleApiAvailability.getInstance().getErrorString(PlayServiceStatus));
 
-            Dialog dialog = GoogleApiAvailability.getInstance().getErrorDialog(this, PlayServiceStatus, CONNECTION_FAILURE_RESOLUTION_REQUEST, new DialogInterface.OnCancelListener() {
+            Dialog dialog = GoogleApiAvailability.getInstance()
+                    .getErrorDialog(this, PlayServiceStatus, CONNECTION_FAILURE_RESOLUTION_REQUEST, new DialogInterface.OnCancelListener() {
                 @Override
                 public void onCancel(DialogInterface dialog) {
                     LogWorker.e(LOG_TAG, "onConnectionFailed: ConnectionResult.getErrorCode() = "
