@@ -540,10 +540,14 @@ public  String formatOpening(String s){
         if(mID>0) {
             final View eventView = detailsView.findViewById(R.id.dEvents);
             AnimationWorker.fadeOut(eventView,0);
-            String evUrl = "https://wattfinder.de/api/get.php?key=" + mContext.getString(R.string.Wattfinder_APIKey) + "&p=0&cp=" + mID;
+            String evUrl = "https://wattfinder.de/api/get.php";
+            Map<String, String> params = new HashMap<String, String>();
+            params.put("key",KartenActivity.getInstance().getString(R.string.Wattfinder_APIKey));
+            params.put("p","0");
+            params.put("cp",String.valueOf(mID));
 
-            JsonObjectRequest pRequest = new JsonObjectRequest(Request.Method.GET,
-                    evUrl, (String) null, new Response.Listener<JSONObject>() {
+            JsonObjectRequest pRequest = new JsonObjectRequest(Request.Method.POST,
+                    evUrl, new JSONObject(params), new Response.Listener<JSONObject>() {
 
 
                 @Override
@@ -606,7 +610,15 @@ public  String formatOpening(String s){
                 public void onErrorResponse(VolleyError error) {
 
                 }
-            });
+            }){
+                @Override
+                public Map<String, String> getHeaders() {
+                    HashMap<String, String> headers = new HashMap<String, String>();
+                    headers.put("Content-Type", "application/json; charset=utf-8");
+                    headers.put("User-agent", "My useragent");
+                    return headers;
+                }
+            };
 
             KartenActivity.getInstance().addToRequestQueue(pRequest);
         }

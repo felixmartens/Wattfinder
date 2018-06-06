@@ -10,6 +10,7 @@ import android.view.animation.BounceInterpolator;
 import android.view.animation.Interpolator;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -37,6 +38,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import de.teammartens.android.wattfinder.KartenActivity;
 import de.teammartens.android.wattfinder.R;
@@ -65,12 +67,11 @@ public class SaeulenWorks {
     private static ArrayList<Integer> Saeulen_ID = new ArrayList<Integer>();
     public static ClusterManager<Saeule> mClusterManager;
     private static meinClusterRenderer mClusterRenderer;
-    public static HashMap<Integer,Saeule> Saeulen = new HashMap<>();
+    public static ConcurrentHashMap<Integer,Saeule> Saeulen = new ConcurrentHashMap<>();
     public static Long letzterAbrufTime = new Long(0);
     private static LatLngBounds letzterAbrufBeiLLB = new LatLngBounds(new LatLng(0,0),new LatLng(0,0));
     private static int letzterAbrufSaeulen = 0;
     private static HashMap<Long,LatLngBounds> CachedRegion = new HashMap<>();
-    private static HashMap<Integer,Saeule> SaeulenCache = new HashMap<>();
     private static int letzterAbrufFilter;
     public static Saeule currentSaeule;
     public static Marker clickedMarker;
@@ -271,7 +272,6 @@ public class SaeulenWorks {
                     //JSON Decoding moved to class Saeule
                     Saeulen.put(S.getID(),S);
                     mClusterManager.addItem(S);
-                    SaeulenCache.put(S.getID(),S);
                     //Why do we need this duplicate?
 
                     response++;
@@ -321,8 +321,13 @@ public static void ladeEvents(){
     String evUrl = "https://wattfinder.de/api/get.php";
     if (LogWorker.isVERBOSE()) LogWorker.d("AsyncMarkerWorks", "JSON Request " + evUrl);
 
+     Map<String, String> params = new HashMap<String, String>();
+        params.put("key",KartenActivity.getInstance().getString(R.string.Wattfinder_APIKey));
+        params.put("p","0");
+        params.put("pointsArray",new JSONArray(Saeulen.keySet()).toString());
+
     JsonObjectRequest pRequest = new JsonObjectRequest(Request.Method.POST,
-            evUrl, (String) null, new Response.Listener<JSONObject>() {
+            evUrl,new JSONObject(params), new Response.Listener<JSONObject>() {
 
 
         @Override
@@ -360,18 +365,29 @@ public static void ladeEvents(){
         public void onErrorResponse(VolleyError error) {
 
         }
-    }){ @Override
-        protected Map<String, String> getParams() {
-
+    }){/*@Override
+        protected Map<String,String> getParams() throws AuthFailureError{
         Map<String, String> params = new HashMap<String, String>();
         params.put("key",KartenActivity.getInstance().getString(R.string.Wattfinder_APIKey));
         params.put("p","0");
         int i =0;
-            for(Integer object: Saeulen.keySet()){
-                params.put("points["+(i++)+"]", String.valueOf(object));
-            }
-        return params;
+        for(Integer object: Saeulen.keySet()){
+            params.put("points["+(i++)+"]", String.valueOf(object));
         }
+        return params;
+        }*/
+
+
+
+
+            @Override
+            public Map<String, String> getHeaders() {
+            HashMap<String, String> headers = new HashMap<String, String>();
+            headers.put("Content-Type", "application/json; charset=utf-8");
+            headers.put("User-agent", "My useragent");
+            return headers;
+        }
+
     };
 
     KartenActivity.getInstance().addToRequestQueue(pRequest);
@@ -655,15 +671,7 @@ public static boolean duplicateRQ(int hash){
     }
 }
 
-    public static void clearCache(){
-        // SaeulenCache aufräumen (alte Säulendaten entfernen)
-        for (Map.Entry<Integer,Saeule> sP : SaeulenCache.entrySet()){
-            Saeule S = sP.getValue();
-            if (S.getUpdated()<(System.currentTimeMillis()-CACHE_EXPIRED_MILLIS))
-                SaeulenCache.remove(sP.getKey());
-        }
 
-    }
 
     public static void reset(){
         letzterAbrufBeiLLB=new LatLngBounds(new LatLng(0,0),new LatLng(0,0));

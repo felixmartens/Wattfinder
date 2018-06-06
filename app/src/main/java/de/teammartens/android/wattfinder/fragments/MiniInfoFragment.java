@@ -86,7 +86,11 @@ public void onPause(){
 
         if (infoView != null && mSaeule != null) {
             TextView t2 = (TextView) infoView.findViewById(R.id.iName);
-           if(t2!=null) t2.setText(mSaeule.getName());
+           if(t2!=null){
+               t2.setText(mSaeule.getName());
+               t2.setVisibility(View.VISIBLE);
+
+           }
             else return;
             mTitel = "Ladepunkt: " + mSaeule.getName();
 
@@ -146,6 +150,7 @@ public void onPause(){
         mID = S.getID();
         mPos = S.getPosition();
         mTitel = S.getName();
+
         mSaeule = S;
         holeInfo();
 

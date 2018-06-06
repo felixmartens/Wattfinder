@@ -48,6 +48,8 @@ public class Saeule implements ClusterItem {
         mID = jO.optInt("ge_id",0);
         try {
              //if (LogWorker.isVERBOSE()) LogWorker.d("AsyncMarkerWorks", M.getString("name"));
+           mName =  jO.getString("name");
+
         JSONObject O = jO.getJSONObject("coordinates");
         setPosition(new LatLng(O.getDouble("lat"), O.getDouble("lng")));
 
