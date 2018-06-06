@@ -24,6 +24,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.maps.android.MarkerManager;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
@@ -281,6 +282,8 @@ public class SaeulenWorks {
                 e.printStackTrace();
             }
 
+            if (jO.optInt("startkey", 0)==0)
+                ladeEvents();
             return response;
         }
 
@@ -290,70 +293,6 @@ public class SaeulenWorks {
                 if (LogWorker.isVERBOSE()) LogWorker.d("AsyncMarkerWorks", "Habe " + result + "/"+Saeulen.size()+" Marker erzeugt");
                 //mClusterManager.addItems((Collection) Saeulen);
                 //mGMap.animateCamera(CameraUpdateFactory.zoomTo(12), 500, null);
-            //Lade ChargeEvents
-
-            String saeulenids="";
-           // Integer[] i = (Integer[]) Saeulen.keySet().toArray();
-            int n=0;
-
-           // while (n*10<Saeulen.keySet().size()) {
-
-             /*   for(int ii=n*10;ii<((n*10+10)<Saeulen.keySet().size()?(n*10+10):Saeulen.keySet().size());ii++)
-                {
-
-                    saeulenids += "&points[]=" + i[ii];
-                }*/
-             Iterator i = Saeulen.keySet().iterator();
-
-             while(i.hasNext()){saeulenids += "&points[]=" + i.next();}
-
-
-                 String evUrl = "https://wattfinder.de/api/get.php?key=" + KartenActivity.getInstance().getString(R.string.Wattfinder_APIKey)+"&p=0" + saeulenids;
-                if (LogWorker.isVERBOSE()) LogWorker.d("AsyncMarkerWorks", "JSON Request " + evUrl);
-
-                JsonObjectRequest pRequest = new JsonObjectRequest(Request.Method.GET,
-                        evUrl, (String) null, new Response.Listener<JSONObject>() {
-
-
-                    @Override
-                    public void onResponse(JSONObject jResponse) {
-                        if (LogWorker.isVERBOSE())
-                            LogWorker.d("AsyncMarkerWorks", "JSON Response " + jResponse.toString());
-                        try{
-                            JSONArray jA = jResponse.getJSONArray("points");
-                            if(jResponse.optBoolean("success", false))
-                                for (int i = 0; i < jA.length(); i++) {
-                                    JSONObject jO = jA.getJSONObject(i);
-                                    if (LogWorker.isVERBOSE())
-                                     LogWorker.d("AsyncMarkerWorks", "JSON Response ID " + jO.toString());
-
-                                    Saeule S=Saeulen.get(jO.getInt("id"));
-                                    Integer c = jO.getInt("count");
-                                    if (S != null) {
-                                        mClusterManager.removeItem(S);
-                                        S.setEventCount(c);
-                                        mClusterManager.addItem(S);
-                                        if(LogWorker.isVERBOSE()&&c>0)LogWorker.d("AsyncEventJSON",S.getID()+": EventCount:"+S.getEventCount());
-                                        Saeulen.put(S.getID(),S);
-                                    }
-                                 }
-                                mClusterManager.cluster();
-
-                            } catch (JSONException jE) {
-                                LogWorker.e("JSON Event Count", jE.getLocalizedMessage());
-                            }
-
-
-                    }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-
-                    }
-                });
-
-                KartenActivity.getInstance().addToRequestQueue(pRequest);
-
             mClusterManager.cluster();
 
         }
@@ -365,6 +304,81 @@ public class SaeulenWorks {
 
 
 
+public static void ladeEvents(){
+    //Lade ChargeEvents
+
+    // Integer[] i = (Integer[]) Saeulen.keySet().toArray();
+
+    // while (n*10<Saeulen.keySet().size()) {
+
+             /*   for(int ii=n*10;ii<((n*10+10)<Saeulen.keySet().size()?(n*10+10):Saeulen.keySet().size());ii++)
+                {
+
+                    saeulenids += "&points[]=" + i[ii];
+                }*/
+
+
+    String evUrl = "https://wattfinder.de/api/get.php";
+    if (LogWorker.isVERBOSE()) LogWorker.d("AsyncMarkerWorks", "JSON Request " + evUrl);
+
+    JsonObjectRequest pRequest = new JsonObjectRequest(Request.Method.POST,
+            evUrl, (String) null, new Response.Listener<JSONObject>() {
+
+
+        @Override
+        public void onResponse(JSONObject jResponse) {
+            if (LogWorker.isVERBOSE())
+                LogWorker.d("AsyncMarkerWorks", "JSON Response " + jResponse.toString());
+            try{
+                JSONArray jA = jResponse.getJSONArray("points");
+                if(jResponse.optBoolean("success", false))
+                    for (int i = 0; i < jA.length(); i++) {
+                        JSONObject jO = jA.getJSONObject(i);
+                        if (LogWorker.isVERBOSE())
+                            LogWorker.d("AsyncMarkerWorks", "JSON Response ID " + jO.toString());
+
+                        Saeule S=Saeulen.get(jO.getInt("id"));
+                        Integer c = jO.getInt("count");
+                        if (S != null) {
+                            mClusterManager.removeItem(S);
+                            S.setEventCount(c);
+                            mClusterManager.addItem(S);
+                            if(LogWorker.isVERBOSE()&&c>0)LogWorker.d("AsyncEventJSON",S.getID()+": EventCount:"+S.getEventCount());
+                            Saeulen.put(S.getID(),S);
+                        }
+                    }
+                mClusterManager.cluster();
+
+            } catch (JSONException jE) {
+                LogWorker.e("JSON Event Count", jE.getLocalizedMessage());
+            }
+
+
+        }
+    }, new Response.ErrorListener() {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+
+        }
+    }){ @Override
+        protected Map<String, String> getParams() {
+
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("key",KartenActivity.getInstance().getString(R.string.Wattfinder_APIKey));
+        params.put("p","0");
+        int i =0;
+            for(Integer object: Saeulen.keySet()){
+                params.put("points["+(i++)+"]", String.valueOf(object));
+            }
+        return params;
+        }
+    };
+
+    KartenActivity.getInstance().addToRequestQueue(pRequest);
+
+
+
+}
     public static void setUpClusterer() {
         // Declare a variable for the cluster manager.
 
