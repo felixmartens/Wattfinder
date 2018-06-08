@@ -423,7 +423,6 @@ public static void ladeEvents(){
             @Override
             public boolean onClusterClick(Cluster<Saeule> cluster) {
 
-                int zoom = 20;
                 LatLngBounds.Builder builder = new LatLngBounds.Builder();
                 Iterator<Saeule> it = cluster.getItems().iterator();
                 while (it.hasNext()) {
