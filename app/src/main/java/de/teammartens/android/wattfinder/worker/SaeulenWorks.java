@@ -423,7 +423,12 @@ public static void ladeEvents(){
             @Override
             public boolean onClusterClick(Cluster<Saeule> cluster) {
 
-                KartenActivity.mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(cluster.getPosition(),13), 1000, null);
+                LatLngBounds.Builder builder = new LatLngBounds.Builder();
+                Iterator<Saeule> it = cluster.getItems().iterator();
+                while (it.hasNext()) {
+                    builder.include(it.next().getPosition());
+                }
+                KartenActivity.mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), 50), 500, null);
                 return true;
             }
         });
