@@ -2,19 +2,22 @@ Wattfinder - the first android app to view chargepoints via goingelectric.de
 
 This is the "new" version using the official API.
 To make the repo compile and run you need androidstudio in the latest version.
-You will need a Google Maps API KEY and a API Key for goingelectric.
+You will need a Google Maps API KEY and an API Key for goingelectric.
 You need to do the following settings:
-The code is at the moment compiled with buildtools 25 for target Android 6.0.1.
+The code is at the moment compiled with buildtools 27 for target API 27.
 Min SDK is 15.
 The project uses the following dependencies:
 
-	1. Google Play Services Maps 11.0.1
-	2. Google Play Services Places 11.0.1
-	2. support appcompat-v7 library 26
-	3. support-v4 library 26
-	4. mcxiaoke.volley library 1.0.19
-	5. android-maps-utils 0.5
-	6. support-design 26.0
+    implementation 'com.google.android.gms:play-services-maps:15.0.1'
+    implementation 'com.google.android.gms:play-services-places:15.0.1'
+    implementation 'com.google.android.gms:play-services-location:15.0.1'
+    implementation 'com.android.support:cardview-v7:27.0.2'
+    implementation 'com.android.support:appcompat-v7:27.0.2'
+    implementation 'com.android.support:support-v4:27.0.2'
+    implementation 'com.mcxiaoke.volley:library:1.0.19'
+    implementation 'com.android.support:design:27.0.2'
+    implementation 'com.google.maps.android:android-maps-utils:0.5'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.0'
 
 Feel free to clone and work with it as long as you follow the given license and share your work!
 

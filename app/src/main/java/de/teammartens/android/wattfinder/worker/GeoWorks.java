@@ -438,7 +438,7 @@ public class GeoWorks {
 
         if (lastCountryPosition==null||distanceToFloat(P,lastCountryPosition)>10000) {
 
-            String Q = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + P.latitude + "," + P.longitude + "&result_type=country&key=" + getInstance().getString(R.string.GooogleMaps_APIKEY);
+            String Q = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + P.latitude + "," + P.longitude + "&result_type=country&key=" + getInstance().getString(R.string.GoogleMaps_APIKEY);
 
             JsonObjectRequest cRequest = new JsonObjectRequest(Request.Method.GET,
                     Q, (String) null, new Response.Listener<JSONObject>() {
