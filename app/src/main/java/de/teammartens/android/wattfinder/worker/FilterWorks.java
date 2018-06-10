@@ -489,6 +489,7 @@ public class FilterWorks {
                 FilterWorks.setze_power(0);
             }
         }
+        if(LogWorker.isVERBOSE())LogWorker.d(LOG_TAG,"setzeFastCharge: "+lese_minpower());
     }
 
 

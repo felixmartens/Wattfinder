@@ -57,23 +57,23 @@ public class Saeule implements ClusterItem {
         setAddress(O.getString("street") + ", " + O.getString("postcode") + " " + O.getString("city"));
 
         JSONArray A = jO.getJSONArray("chargepoints");
-        String[] chargepoints = new String[A.length()];
         Double pMax = 0.0; //um die Farbe des Icons zu bestimmen
-
+        StringBuilder sb = new StringBuilder();
         for (int n = 0; n < A.length(); n++) {
             O = A.getJSONObject(n);
-            chargepoints[n] = O.getInt("count") + "x " + O.getString("type") + " " + O.getDouble("power") + "kW";
+            if(n>0)sb.append("," + KartenActivity.lineSeparator);
+            sb.append(O.getInt("count") + "x " + O.getString("type") + " " + O.getDouble("power") + "kW");
             if (O.getDouble("power") > pMax) pMax = O.getDouble("power");
         }
-        setChargepoints(TextUtils.join("," + KartenActivity.lineSeparator, chargepoints));
+        setChargepoints(sb.toString());
         //Bestimme Typ des Markers
         Integer sTyp = 0;
-        if (pMax > 0) sTyp = 1;
-        if (pMax >= 11) sTyp = 2;
-        if (pMax >= 20) sTyp = 3;
-        if (pMax >= 43) sTyp = 4;
         if (pMax >= 100) sTyp = 5;
-        setTyp(sTyp);
+        else  if (pMax >= 43) sTyp = 4;
+            else     if (pMax >= 20) sTyp = 3;
+                else  if (pMax >= 11) sTyp = 2;
+                    else if (pMax > 0) sTyp = 1;
+            setTyp(sTyp);
 
         setFaultreport(jO.optBoolean("fault_report", false));
         setEventCount(-1);

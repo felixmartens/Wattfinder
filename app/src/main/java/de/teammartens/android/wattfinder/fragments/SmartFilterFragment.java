@@ -174,10 +174,10 @@ if(v!=null)
 
         c  = (CheckBox) filterView.findViewById(R.id.card_plug_ccs);
         c.setOnCheckedChangeListener(null);        c.setChecked(false);
-
         c.setChecked(FilterWorks.lese_liste(FilterWorks.F_STECKER,"CCS"));
         c.setTag(FilterWorks.F_STECKER);
         c.setOnCheckedChangeListener(instance);
+
 
 
         c  = (CheckBox) filterView.findViewById(R.id.card_plug_chademo);
@@ -200,7 +200,7 @@ if(v!=null)
         c.setOnCheckedChangeListener(instance);
 
         Switch s = (Switch)filterView.findViewById(R.id.filter_card_fastcharge);
-        s.setSelected((FilterWorks.lese_minpower()>40));
+        s.setChecked((FilterWorks.lese_minpower()>40));
         s.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -721,8 +721,7 @@ FragmentManager fM = getChildFragmentManager();
 
         Switch sw = (Switch)filterView.findViewById(R.id.filter_card_fastcharge);
 
-        c = (CheckBox) filterView.findViewById(R.id.card_plug_schuko);
-        if (c.isChecked()){
+        if (FilterWorks.lese_liste(FilterWorks.F_STECKER,"Schuko")){
             //Blende FastCharge aus bei Schuko (und deaktiviere)
             sw.setChecked(false);
             AnimationWorker.fadeOut(sw,0);
@@ -731,7 +730,7 @@ FragmentManager fM = getChildFragmentManager();
             if(sw.getAlpha()<1)AnimationWorker.fadeIn(sw,0,1.0f);
         }
 
-       FilterWorks.setze_power_fastcharge(sw.isChecked());
+       //FilterWorks.setze_power_fastcharge(sw.isChecked());
 
         View v =filterView.findViewById(R.id.filter_smart_warning_verbund);
 
