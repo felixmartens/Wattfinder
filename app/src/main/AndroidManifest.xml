@@ -29,11 +29,7 @@
             android:value="@string/GoogleMaps_APIKEY"/>
 
 
-        <service
-            android:name=".LocationService"
-            android:enabled="true"
-            android:exported="true" >
-        </service>
+
 
         <provider
             android:name=".model.mSuggestionsProvider"

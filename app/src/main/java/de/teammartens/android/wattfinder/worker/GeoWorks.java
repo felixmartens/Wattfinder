@@ -1,7 +1,10 @@
 package de.teammartens.android.wattfinder.worker;
 
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -26,8 +29,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
 
 import de.teammartens.android.wattfinder.KartenActivity;
@@ -113,8 +118,7 @@ public class GeoWorks {
         if (myPosition!=null) {
             LatLng myloc = Loc2LatLng(myPosition);
             setmyPosition(myloc,MY_LOCATION_ZOOM,moveMap);
-            if (LogWorker.isVERBOSE())
-                LogWorker.d(LOG_TAG, "Location erhalten:" + (myPosition == null ? "null" : ""));
+            //if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG, "Location erhalten:" + (myPosition == null ? "null" : myPosition.toString()));
 
         }
     }
@@ -147,20 +151,24 @@ public class GeoWorks {
             if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG, "moveMap: MapPosition "+(getMapPosition()!=null?getMapPosition().toString():"null") + " :: mMap"+(mMap!=null?mMap.getCameraPosition().target.toString():"null")+" :: nPostion "+nPosition.toString());
             if (!mMap.getCameraPosition().target.equals(nPosition)||zoom!=currentZoom) {
                 //Hier wird jetzt unterschieden welche Animation gewählt wird
-                if(getMapPosition()==null)setMapPosition(new LatLng(0,0),0f);
-                if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG, "moveMap to "+nPosition.toString());
-                //zuerst prüfen wie groß ist der Abstand zwischen altem und neuen Mittelpunkt
+
+                CameraUpdate CU = CameraUpdateFactory.zoomTo(zoom);
+
+                if(getMapPosition()==null)mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(position,zoom));
+                else {
+                    if (LogWorker.isVERBOSE())
+                        LogWorker.d(LOG_TAG, "moveMap to " + nPosition.toString());
+                    //zuerst prüfen wie groß ist der Abstand zwischen altem und neuen Mittelpunkt
                     Location alt = new Location("MapLocation");
                     Location neu = new Location("NewLocation");
-                    Float D =  0f;
+                    Float D = 0f;
 
-                        alt.setLatitude(GeoWorks.mapPosition.latitude);
-                        alt.setLongitude(GeoWorks.mapPosition.longitude);
-                        neu.setLatitude(nPosition.latitude);
-                        neu.setLongitude(nPosition.longitude);
-                        D=alt.distanceTo(neu);
-                if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG, "moveMap D="+D);
-                        CameraUpdate CU = CameraUpdateFactory.zoomTo(zoom);
+                    alt.setLatitude(GeoWorks.mapPosition.latitude);
+                    alt.setLongitude(GeoWorks.mapPosition.longitude);
+                    neu.setLatitude(nPosition.latitude);
+                    neu.setLongitude(nPosition.longitude);
+                    D = alt.distanceTo(neu);
+                    if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG, "moveMap D=" + D);
                        /* if(D>100000f){
                             //wenn Abstand größer als 100km dann move und zoom in
                             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(nPosition, 5));
@@ -170,42 +178,44 @@ public class GeoWorks {
                             // kleinerer Abstand dann abhängig, wenn zoom identsich nur bewegen, sonst noch zoomen
 
                             */
-                            if(zoom==currentZoom)
-                                    CU = CameraUpdateFactory.newLatLng(nPosition);
-                            else{
-                                //mMap.moveCamera(CameraUpdateFactory.newLatLng(nPosition));
+                    if (zoom == currentZoom)
+                        CU = CameraUpdateFactory.newLatLng(nPosition);
+                    else {
+                        //mMap.moveCamera(CameraUpdateFactory.newLatLng(nPosition));
                               /*  if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG, "moveMap to "+nPosition.toString()+" zoomBy "+(zoom-currentZoom)+"("+currentZoom+"-"+zoom+")");
                                 //CU = CameraUpdateFactory.zoomBy(zoom-currentZoom);
 
                                 CU = CameraUpdateFactory.newLatLngZoom(nPosition, zoom);*/
-                                mMap.moveCamera(CameraUpdateFactory.newLatLng(nPosition));
-                                if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG, "moveMap move&zoom "+nPosition.toString());
-                                CU = CameraUpdateFactory.zoomTo(zoom);
-                            }
-
-                       // }
-
-
-                mMap.animateCamera(CU, 1000, new GoogleMap.CancelableCallback() {
-                    @Override
-                    public void onFinish() {
+                        mMap.moveCamera(CameraUpdateFactory.newLatLng(nPosition));
                         if (LogWorker.isVERBOSE())
-                            LogWorker.d(LOG_TAG, "moveMap animateFinish -"+ mMap.getCameraPosition().target.toString()+" -Zoom:" + zoom +" Verursacher:" + VERURSACHER);
+                            LogWorker.d(LOG_TAG, "moveMap move&zoom " + nPosition.toString());
+                        CU = CameraUpdateFactory.zoomTo(zoom);
+                    }
 
-                        // nach dem Zoomen in den Details den Versatz nochmal korrigieren, deshalb zweite Animation starten
-                        if ((AnimationWorker.isDetailsVisibile()||AnimationWorker.isFilterVisibile()||VERURSACHER=="showMapBackPress")&&VERURSACHER!="moveMap")
+                    // }
+
+
+                    mMap.animateCamera(CU, 1000, new GoogleMap.CancelableCallback() {
+                        @Override
+                        public void onFinish() {
+                            if (LogWorker.isVERBOSE())
+                                LogWorker.d(LOG_TAG, "moveMap animateFinish -" + mMap.getCameraPosition().target.toString() + " -Zoom:" + zoom + " Verursacher:" + VERURSACHER);
+
+                            // nach dem Zoomen in den Details den Versatz nochmal korrigieren, deshalb zweite Animation starten
+                            if (VERURSACHER != "moveMap"&&(AnimationWorker.isDetailsVisibile() || AnimationWorker.isFilterVisibile() || VERURSACHER == "showMapBackPress") )
                                 movemapPosition(position, zoom, "moveMap");
 
-                        SaeulenWorks.checkMarkerCache(VERURSACHER);
-                    }
+                            SaeulenWorks.checkMarkerCache(VERURSACHER);
+                        }
 
-                    @Override
-                    public void onCancel() {
-                        if (LogWorker.isVERBOSE())
-                            LogWorker.d(LOG_TAG, "moveMap animateCancel -Zoom:" + zoom + " Verursacher:" + VERURSACHER);
+                        @Override
+                        public void onCancel() {
+                            if (LogWorker.isVERBOSE())
+                                LogWorker.d(LOG_TAG, "moveMap animateCancel -Zoom:" + zoom + " Verursacher:" + VERURSACHER);
 
-                    }
-                });
+                        }
+                    });
+                }
             }else if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG, "moveMap Position unverändert");
 
             //GeoWorks.mapPosition = position;
@@ -274,16 +284,34 @@ public class GeoWorks {
 
 
     public static void starteSuche(String query){
+        Address A = new Address(Locale.GERMANY);
         if(query==null){LogWorker.e(LOG_TAG, "EMPTY Search Triggered" + query);}else{
+            if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG,"Search Triggered"+query);
+            Geocoder GC = new Geocoder(KartenActivity.getInstance());
+            if (GC.isPresent()){
+                try {
+                    List<Address> list = GC.getFromLocationName(query, 1);
+                    if(list != null&&list.size()>0){
+                         A = list.get(0);
+                        if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG,"Gecode Result latitude "+ A.getLatitude() + "longitude "+ A.getLongitude()+"at "+ A.getAddressLine(0));
+                        Suchmarker(new LatLng(A.getLatitude(),A.getLongitude()), A.getAddressLine(0) );
+                        //movemapPosition(new LatLng(A.getLatitude(),A.getLongitude()),MY_LOCATION_ZOOM,"starteSuche");
+
+                    }
+                }catch(IOException e){
+                    if(LogWorker.isVERBOSE())LogWorker.d(LOG_TAG,"starteSuche IOError "+e.getLocalizedMessage());
+                }
+
+            }else{
+                Toast.makeText(KartenActivity.getInstance(),"Error!! Geocoding not available",Toast.LENGTH_LONG).show();
+            }
 
 
-        if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG,"Search Triggered"+query);
-        mQuery=query;
+/*
         //LatLng result = getLatLongFromAddress(query);
         String uri = "http://maps.google.com/maps/api/geocode/json?address=" +
                 URLEncoder.encode(query) + "&sensor=true&language=de&region=eu";
 
-        CUSTOM_MAPVIEW=true;
         JsonObjectRequest req = new JsonObjectRequest(uri, null,
                 new Response.Listener<JSONObject>() {
 
@@ -305,10 +333,7 @@ public class GeoWorks {
                             String fAddress = ((JSONArray)response.get("results")).getJSONObject(0)
                                     .getString("formatted_address");
 
-                            if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG,"latitude "+ lat + "longitude "+ lng+"at "+ fAddress);
-                            LatLng l = new LatLng(lat,lng);
 
-                            Suchmarker(l, fAddress);
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -327,7 +352,7 @@ public class GeoWorks {
 
 // Access the RequestQueue through your singleton class.
         KartenActivity.getInstance().addToRequestQueue(req);
-
+*/
         }
 
 
@@ -342,7 +367,6 @@ public class GeoWorks {
 
 
             if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG,"Suggested Search Triggered"+query);
-            mQuery=query;
 
 
 
@@ -379,16 +403,16 @@ public class GeoWorks {
 
             if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG, "Create Marker Suche " + Desc);
 
-            if (Coord != null && !Desc.isEmpty()){
+            if (validLatLng(Coord) && !Desc.isEmpty()){
                 suchPosition = Coord;
                 suchString = Desc;
                 if (Marker_Suche !=null) Marker_Suche.remove();
                 Marker_Suche = mMap.addMarker(new MarkerOptions().position(Coord).title(Desc).icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_suche)));
 
                 CUSTOM_MAPVIEW=true;
-                AnimationWorker.hide_info();
-                if(AnimationWorker.isDetailsVisibile())AnimationWorker.toggleDetails();
-                if(AnimationWorker.isFilterVisibile())AnimationWorker.toggleFilter();
+                AnimationWorker.show_map();
+
+                
                 movemapPosition(Coord,MY_LOCATION_ZOOM,"GeoWorks.Suchmarker");
 
             }
@@ -425,7 +449,7 @@ public class GeoWorks {
         LatLngBounds llb = new LatLngBounds(new LatLng(33.724339, -22.93945), new LatLng(66.478208, 34.628906));
 
         if(mLatLng== null ) return false;
-        if (LogWorker.isVERBOSE())LogWorker.d(LOG_TAG,"mLatLng: "+mLatLng);
+        //if (LogWorker.isVERBOSE())LogWorker.d(LOG_TAG,"mLatLng: "+mLatLng);
         return (llb != null
                 && llb.contains(mLatLng));
     }
@@ -434,66 +458,47 @@ public class GeoWorks {
     /* get Counrry Code for choosing list of cards*/
 
     public static void findmyCountry(){
-        final LatLng P = getmyPosition();
+        final LatLng P = getMapPosition();
 
-        if (lastCountryPosition==null||distanceToFloat(P,lastCountryPosition)>10000) {
+        if (P!=null&&lastCountryPosition==null||distanceToFloat(P,lastCountryPosition)>100000) {
+            if(LogWorker.isVERBOSE())LogWorker.d(LOG_TAG,"findmyCountry Geocoder gestartet weil: lastCountry:"+(lastCountryPosition==null?"null":"notnull")+" - Distanz: "+distanceToFloat(P,lastCountryPosition));
 
-            String Q = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + P.latitude + "," + P.longitude + "&result_type=country&key=" + getInstance().getString(R.string.GoogleMaps_APIKEY);
+            Geocoder GC = new Geocoder(KartenActivity.getInstance(),Locale.getDefault());
+            if (GC.isPresent()) {
+                try {
+                    List<Address> list = GC.getFromLocation(P.latitude, P.longitude, 1);
+                    if (list.size()>0) {
+                        String s = list.get(0).getCountryCode().toLowerCase();
 
-            JsonObjectRequest cRequest = new JsonObjectRequest(Request.Method.GET,
-                    Q, (String) null, new Response.Listener<JSONObject>() {
-
-
-                @Override
-                public void onResponse(JSONObject jResponse) {
-                    try {
-                        if(jResponse.getJSONArray("results").length()<1&&jResponse.optString("error_message","xxx")!="xxx")
-                        {                                            GeoWorks.countryCode = "de_nw";
-                            if(LogWorker.isVERBOSE())LogWorker.d(LOG_TAG,"findMyCountry JSON Error"+jResponse.getString("error_message"));}
-                        else {
-
-
-                            JSONObject jO = jResponse.getJSONArray("results").getJSONObject(0).getJSONArray("address_components").getJSONObject(0);
-                            String s = jO.getString("short_name").toLowerCase();
-                            if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG, "findmyCountry: " + s);
-                            lastCountryPosition = P;
-                            if (Arrays.asList(countryCodes).contains(s)) {
-                                if (s == "de") {
-                                    if (P.latitude < NordSuedLat) {
-                                        GeoWorks.countryCode = "de_sued";
-                                    } else {
-                                        if (P.longitude > WestOstLng) {
-                                            GeoWorks.countryCode = "de_ne";
-                                        } else {
-                                            GeoWorks.countryCode = "de_nw";
-                                        }
-
-                                    }
+                        if (Arrays.asList(countryCodes).contains(s)) {
+                            lastCountryPosition=P;
+                            if (s.equalsIgnoreCase("de")) {
+                                if (P.latitude < NordSuedLat) {
+                                    GeoWorks.countryCode = "de_sued";
                                 } else {
-                                    GeoWorks.countryCode = s;
+                                    if (P.longitude > WestOstLng) {
+                                        GeoWorks.countryCode = "de_ne";
+                                    } else {
+                                        GeoWorks.countryCode = "de_nw";
+                                    }
+
                                 }
                             } else {
-                                GeoWorks.countryCode = "de_nw";
+                                GeoWorks.countryCode = s;
                             }
+                        } else {
+                            GeoWorks.countryCode = "de_nw";
                         }
-                    } catch (JSONException e) {
-                        if (LogWorker.isVERBOSE())
-                            LogWorker.e(LOG_TAG, "findmyCountry JSONException:" + (e.getCause()!=null?e.getCause().toString():e.getMessage())
-
-                            );
-                        GeoWorks.countryCode = "de_nw";
+                        if(LogWorker.isVERBOSE())LogWorker.d(LOG_TAG,"findmyCountry Geocoder Result: -"+s+"- -"+getCountryCode());
 
                     }
-                }
-            }, new Response.ErrorListener() {
 
-                @Override
-                public void onErrorResponse(VolleyError error) {
+
+                } catch (IOException e) {
                     GeoWorks.countryCode = "de_nw";
+                    if(LogWorker.isVERBOSE())LogWorker.e(LOG_TAG,"GEoCoding Error: "+e.getLocalizedMessage()+e.getCause());
                 }
-            });
-
-            KartenActivity.getInstance().addToRequestQueue(cRequest);
+            }
         }
     }
 

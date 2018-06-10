@@ -21,7 +21,10 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.SearchView;
 import android.text.TextUtils;
+import android.view.KeyCharacterMap;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
@@ -70,6 +73,7 @@ public class KartenActivity extends FragmentActivity
     private String suchtext;
 
     public static final boolean VERBOSE = true;
+
     public static String lineSeparator ="";
     public static SupportMapFragment mapFragment;
     public static FragmentManager fragmentManager;
@@ -341,104 +345,106 @@ public static ActionBar actionBar;
 
 @Override
     public void onMapReady(GoogleMap googleMap) {
-
+    if (!mapReady) {
         mMap = googleMap;
         setMapReady(true);
 
         setMapCenter();
 
-    View v = getInstance().findViewById(R.id.MapTouchOverlay);
-    v.setOnTouchListener(new View.OnTouchListener() {
-        @Override
-        public boolean onTouch(View v, MotionEvent event) {
-            GeoWorks.CUSTOM_MAPVIEW=true;
-            if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG+" the Map", "Custom Map Move detected");
-            return false;
-        }
-    });
+        View v = getInstance().findViewById(R.id.MapTouchOverlay);
+        v.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                GeoWorks.CUSTOM_MAPVIEW = true;
+                if (LogWorker.isVERBOSE())
+                    LogWorker.d(LOG_TAG + " the Map", "Custom Map Move detected");
+                return false;
+            }
+        });
 
-    mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-        @Override
-        public void onMapClick(LatLng latLng) {
-            if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG, "MapClick");
-            GeoWorks.movemapPosition("showMapClick");
-            fragmentManager.popBackStack();
-            AnimationWorker.show_map();
-            //und noch den geklickten Marker wieder resetten
-            SaeulenWorks.resetClickMarker();
-        }
-
-
-    });
-
-
-
-    v = findViewById(R.id.fab_filter);
-    v.requestFocus();
-    v.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            FilterWorks.refresh_filterlisten_API();
-            AnimationWorker.show_filter();
-        }
-    });
-    //slideDown(v, 0);
-    AnimationWorker.slideUp(v, 0);
-    v = findViewById(R.id.fab_mylocation);
-    v.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-
-            if (checkPermissionLocation(MY_PERMISSIONS_REQUEST_LOCATION))
-            {
-
-            AnimationWorker.show_map();
-
-            if (GeoWorks.validLatLng(GeoWorks.getmyPosition())){
-                GeoWorks.CUSTOM_MAPVIEW = false;
-                //GeoWorks.movemapPosition(GeoWorks.getmyPosition(),GeoWorks.MY_LOCATION_ZOOM,"fab_Mylocation");
-                GeoWorks.setmyPosition();
-            }else{
-                Toast.makeText(getInstance(),getString(R.string.novalidlocation),Toast.LENGTH_SHORT).show();
-                if(LogWorker.isVERBOSE())LogWorker.d(LOG_TAG,"StandortButton: Kein gültiger Standort");
+        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) {
+                if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG, "MapClick");
+                GeoWorks.movemapPosition("showMapClick");
+                fragmentManager.popBackStack();
+                AnimationWorker.show_map();
+                //und noch den geklickten Marker wieder resetten
+                SaeulenWorks.resetClickMarker();
             }
 
+
+        });
+
+
+        v = findViewById(R.id.fab_filter);
+        v.requestFocus();
+        v.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FilterWorks.refresh_filterlisten_API();
+                AnimationWorker.show_filter();
             }
-        }
-    });
+        });
+        //slideDown(v, 0);
+        AnimationWorker.slideUp(v, 0);
+        v = findViewById(R.id.fab_mylocation);
+        v.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
-    v = findViewById(R.id.fab_search);
-    v.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            AnimationWorker.showSearchBar();
-        }
-    });
+                if (checkPermissionLocation(MY_PERMISSIONS_REQUEST_LOCATION)) {
 
-    //slideDown(v, 0);
-    AnimationWorker.slideUp(v, 0);
+                    AnimationWorker.show_map();
+
+                    if (GeoWorks.validLatLng(GeoWorks.getmyPosition())) {
+                        GeoWorks.CUSTOM_MAPVIEW = false;
+                        //GeoWorks.movemapPosition(GeoWorks.getmyPosition(),GeoWorks.MY_LOCATION_ZOOM,"fab_Mylocation");
+                        GeoWorks.setmyPosition();
+                    } else {
+                        Toast.makeText(getInstance(), getString(R.string.novalidlocation), Toast.LENGTH_SHORT).show();
+                        if (LogWorker.isVERBOSE())
+                            LogWorker.d(LOG_TAG, "StandortButton: Kein gültiger Standort");
+                    }
+
+                }
+            }
+        });
+
+        v = findViewById(R.id.fab_search);
+        v.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AnimationWorker.showSearchBar();
+            }
+        });
+
+        //slideDown(v, 0);
+        AnimationWorker.slideUp(v, 0);
 
 
-     v = findViewById(R.id.buttonMapStyle);
-    v.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            int i = KartenActivity.mMap.getMapType();
-            if (i<4)KartenActivity.mMap.setMapType(i+1);
-            else KartenActivity.mMap.setMapType(1);
+        v = findViewById(R.id.buttonMapStyle);
+        v.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int i = KartenActivity.mMap.getMapType();
+                if (i < 4) KartenActivity.mMap.setMapType(i + 1);
+                else KartenActivity.mMap.setMapType(1);
 
-        }
-    });
+            }
+        });
 
-         KartenActivity.mMap.setMapType(1);
-        BackstackEXIT=false;
+        KartenActivity.mMap.setMapType(1);
+        BackstackEXIT = false;
         FilterWorks.lade_filter_db();
-         SaeulenWorks.setUpClusterer();
+        SaeulenWorks.setUpClusterer();
         SaeulenWorks.reset();
         SaeulenWorks.checkMarkerCache("MapReady");
-    AnimationWorker.show_map();AnimationWorker.hide_info();
+        AnimationWorker.show_map();
+        AnimationWorker.hide_info();
         if (FilterWorks.filter_initialized()) AnimationWorker.hideStartup();
     }
+}
 
 
 
@@ -530,13 +536,26 @@ return null;
 
     SearchManager manager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
 
+    searchView.setSearchableInfo(manager.getSearchableInfo(getComponentName()));
 
-        searchView.setSearchableInfo(manager.getSearchableInfo(getComponentName()));
         searchView.setIconified(false);
 
         searchView.setQueryRefinementEnabled(true);
         searchView.clearFocus();
 
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                if(LogWorker.isVERBOSE())LogWorker.d(LOG_TAG,"OnQuerySubmit: "+query);
+                GeoWorks.starteSuche(query);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
 
     findViewById(R.id.main_screen).requestFocus();
 
@@ -546,6 +565,8 @@ return null;
 
 
 }
+
+
 
 
     /**

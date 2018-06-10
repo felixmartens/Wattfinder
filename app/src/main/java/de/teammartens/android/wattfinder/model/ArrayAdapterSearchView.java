@@ -28,6 +28,7 @@ public class ArrayAdapterSearchView extends SearchView {
         initialize();
     }
 
+
     public ArrayAdapterSearchView(Context context, AttributeSet attrs) {
         super(context, attrs);
         initialize();

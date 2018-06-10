@@ -49,7 +49,6 @@ public class mSuggestionsProvider extends ContentProvider {
 
 
 
-    private static final String API_KEY = "AIzaSyBFa-2nRDi4p618T6OfOBFNXyDIQLCVyDY";
     private static GoogleApiClient googleApiClient =null;
     private PlaceAutocompleteAdapter mAdapter;
     private static final LatLngBounds centralEur = new LatLngBounds(new LatLng(43.021,-1.582), new LatLng(58.654,18.457));
@@ -196,7 +195,7 @@ public class mSuggestionsProvider extends ContentProvider {
             final Place place = buffer.get(0);
 
             //Nur wenn innerhalb der Grenzen (Westfrankreich-Tschechien / Norditalien-Schweden)
-            if (centralEur.contains(place.getLatLng()))
+            if (GeoWorks.validLatLng(place.getLatLng()))
                 o = new Object[]{id, // _id
                         place.getName(),
                         place.getAddress(),
