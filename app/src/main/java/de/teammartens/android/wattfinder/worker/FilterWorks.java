@@ -478,6 +478,19 @@ public class FilterWorks {
 
     }
 
+    public static void setze_power_fastcharge(boolean fast){
+        if (fast){
+            setze_power(5);
+        }else{
+
+            if (listenlaenge(F_STECKER)>0&&!lese_liste(F_STECKER,"Schuko")){
+                setze_power(2);
+            }  else{
+                FilterWorks.setze_power(0);
+            }
+        }
+    }
+
 
     public static boolean lese_filter(Integer F) {
         if (LogWorker.isVERBOSE())

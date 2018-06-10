@@ -24,7 +24,7 @@ import de.teammartens.android.wattfinder.KartenActivity;
 public class LogWorker {
     private static boolean VERBOSE = false;
 
-    public static final boolean DEFAULT_DEBUGGING = false;
+    public static final boolean DEFAULT_DEBUGGING = true;
 
     public static String getlogID() {
         return id;

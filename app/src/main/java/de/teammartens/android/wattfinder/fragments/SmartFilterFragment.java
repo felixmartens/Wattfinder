@@ -94,7 +94,10 @@ public void onResume(){
             AnimationWorker.toggleSmartFilter();
         }
     });
+
     FilterWorks.refresh_filterlisten_API();
+ //if Filters not fully loaded just popBack to Map
+    if(!FilterWorks.filter_initialized())AnimationWorker.hide_fragment(AnimationWorker.FLAG_FILTER);
 
     View v = (View) filterView.findViewById(R.id.fab_preset);
 
@@ -198,7 +201,12 @@ if(v!=null)
 
         Switch s = (Switch)filterView.findViewById(R.id.filter_card_fastcharge);
         s.setSelected((FilterWorks.lese_minpower()>40));
-
+        s.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                FilterWorks.setze_power_fastcharge(isChecked);
+            }
+        });
 
         s = (Switch) filterView.findViewById(R.id.filter_card_barrierefrei);
         s.setOnCheckedChangeListener(null);
@@ -723,16 +731,7 @@ FragmentManager fM = getChildFragmentManager();
             if(sw.getAlpha()<1)AnimationWorker.fadeIn(sw,0,1.0f);
         }
 
-        if (sw.isChecked()){
-            FilterWorks.setze_power(5);
-        }else{
-
-            if (FilterWorks.listenlaenge(FilterWorks.F_STECKER)>0&&!c.isChecked()){
-                FilterWorks.setze_power(2);
-            }  else{
-                FilterWorks.setze_power(0);
-            }
-        }
+       FilterWorks.setze_power_fastcharge(sw.isChecked());
 
         View v =filterView.findViewById(R.id.filter_smart_warning_verbund);
 
