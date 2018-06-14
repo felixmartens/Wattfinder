@@ -1,5 +1,6 @@
 package de.teammartens.android.wattfinder.worker;
 
+import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collections;
@@ -35,14 +36,18 @@ public class Utils {
         }
     }
 
-    public static CharSequence createDate(long timestamp) {
+    public static String createDate(long timestamp) {
         Calendar c = Calendar.getInstance();
         c.setTimeInMillis(timestamp*1000);
         Date d = c.getTime();
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.GERMANY);
         return sdf.format(d);
     }
-    public static HashMap sortByValues(HashMap map) {
+
+    public static String createDate() { return createDate(System.currentTimeMillis()/1000);}
+
+
+        public static HashMap sortByValues(HashMap map) {
         List list = new LinkedList(map.entrySet());
         // Defined Custom Comparator here
 
@@ -62,5 +67,32 @@ public class Utils {
         }
         return sortedHashMap;
     }
+
+    public static int getResId(String resName) {
+        Class<String> c = String.class;
+        try {
+            Field idField = c.getDeclaredField(resName);
+            return idField.getInt(idField);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return -1;
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 }

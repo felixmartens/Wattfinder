@@ -44,6 +44,8 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 
+import java.util.Random;
+
 import de.teammartens.android.wattfinder.model.ArrayAdapterSearchView;
 import de.teammartens.android.wattfinder.model.rSuggestionsProvider;
 import de.teammartens.android.wattfinder.worker.AnimationWorker;
@@ -91,6 +93,8 @@ public class KartenActivity extends FragmentActivity
     private static final String zP_Latitude = "TargetLatitude";
     private static final String zP_Longitude = "TargetLongitude";
     private static final String zP_String = "TargetString";
+    private static final String sP_CEuID = "ceuserid";
+    private static Integer CEuID=0;
     private static final Long TimestampValid = 12*3600*1000l;
     private static final Float defaultLat = 52.5170365f;
     private static final Float defaultLng = 13.3888599f;
@@ -167,7 +171,7 @@ public static ActionBar actionBar;
     protected void onStart() {
         super.onStart();
         LogWorker.init_logging();
-
+        load_CEuID();
         lineSeparator =System.getProperty("line.separator");
 
     }
@@ -761,6 +765,30 @@ return null;
         }
         if(LogWorker.isVERBOSE())LogWorker.d(LOG_TAG,"LayoutStyle:default.");
         return "default";
+    }
+
+    public static void load_CEuID(){
+        CEuID=sharedPref.getInt(sP_CEuID,0);
+        if (CEuID==0)CEuID=generate_CEuId();
+
+    }
+    private static Integer generate_CEuId(){
+        final String alphabet = "0123456789";
+        final int N = alphabet.length();
+        StringBuilder id= new StringBuilder();
+
+        Random r = new Random();
+        id.append(787);
+        for (int i = 0; i < 6; i++) {
+            id.append(alphabet.charAt(r.nextInt(N)));
+        }
+        if (LogWorker.isVERBOSE())LogWorker.d(LOG_TAG,"New ChargeEvent-ID generated: "+id);
+        sharedPref.edit().putInt(sP_CEuID, Integer.parseInt(id.toString())).apply();
+        return Integer.parseInt(id.toString());
+    }
+
+    public static Integer getCEuID() {
+        return CEuID;
     }
 }
 

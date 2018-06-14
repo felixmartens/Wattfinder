@@ -121,5 +121,10 @@
     <string name="privacy_title">Datenschutz bei Wattfinder</string>
     <string name="privacy_consent">Ich bin einverstanden</string>
     <string name="crashmail_legalnotice">Mit dem Verschicken dieser Mail erklärst du dich damit einverstanden dass die Inhalte der Mail, sowie deine Mailadresse zum Zwecke der Fehlerbehebung Vererbeitet udn gespeichert werden. Solltest du explizit NICHT wünschen, dass ich mich bei weiteren nachfragen per Mail bei dir melden darf, so schreibe bitte einen kurzen Vermerk in die Mail. Daten von denen du nicht möchtest, dass sie gespeichert oder verarbeitet werden kannst du einfach vor dem Verschicken löschen.</string>
+    <string name="icreate_chargeev">Ladebericht erstellen</string>
+    <string name="ce_result_title">"Status: "</string>
+    <string name="ce_result_success">Ladung erfolgreich</string>
+    <string name="ce_result_error">Ladung fehlgeschlagen</string>
+    <string name="ce_result_others">Sonstiges</string>
 
 </resources>

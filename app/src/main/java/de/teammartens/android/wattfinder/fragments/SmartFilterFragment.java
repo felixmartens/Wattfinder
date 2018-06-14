@@ -35,6 +35,8 @@ import de.teammartens.android.wattfinder.worker.FilterWorks;
 import de.teammartens.android.wattfinder.worker.GeoWorks;
 import de.teammartens.android.wattfinder.worker.LogWorker;
 
+import static de.teammartens.android.wattfinder.worker.Utils.getResId;
+
 
 /**
  * Created by felix on 10.05.15.
@@ -623,7 +625,7 @@ FragmentManager fM = getChildFragmentManager();
         }
 
         Integer id = getResId("cards_"+GeoWorks.countryCode);
-        if (id<0) id=R.array.cards_de_nw;
+        if (id==null||id<0) id=R.array.cards_de_nw;
         L_Karten = new HashSet<String>(Arrays.asList(KartenActivity.getInstance().getResources().getStringArray(id)));
         if (L_Karten.size()<8){
             Set<String> L_Fill= new HashSet<String>(Arrays.asList(KartenActivity.getInstance().getResources().getStringArray(R.array.cards_fill)));
@@ -744,16 +746,7 @@ FragmentManager fM = getChildFragmentManager();
         initialized=true;
     }
 
-    public static int getResId(String resName) {
-        Class<String> c = String.class;
-        try {
-            Field idField = c.getDeclaredField(resName);
-            return idField.getInt(idField);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return -1;
-        }
-    }
+
 
 
 }

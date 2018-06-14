@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:animateLayoutChanges="true">
+
+    <RadioGroup
+        android:id="@+id/ce_result_option"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ce_result">
+
+    </RadioGroup>
+
+    <EditText
+        android:id="@+id/ce_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="date|time"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/ce_result_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ce_date" />
+
+    <TextView
+        android:id="@+id/ce_result_success"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical|center_horizontal"
+        android:paddingBottom="2sp"
+        android:paddingTop="2sp"
+        android:tag="10"
+        android:text="@string/ce_result_success"
+        android:textSize="14sp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toStartOf="@id/ce_result_error"
+        app:layout_constraintHorizontal_weight="1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ce_date" />
+
+    <TextView
+        android:id="@+id/ce_result_error"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:gravity="center_vertical|center_horizontal"
+        android:paddingBottom="2sp"
+        android:paddingTop="2sp"
+        android:tag="100"
+        android:text="@string/ce_result_error"
+        android:textSize="14sp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/ce_result_success"
+        app:layout_constraintEnd_toStartOf="@id/ce_result_others"
+        app:layout_constraintHorizontal_weight="1"
+        app:layout_constraintStart_toEndOf="@id/ce_result_success"
+        app:layout_constraintTop_toTopOf="@+id/ce_result_success" />
+
+    <TextView
+        android:id="@+id/ce_result_others"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical|center_horizontal"
+        android:paddingBottom="2sp"
+        android:paddingTop="2sp"
+        android:tag="200"
+        android:text="@string/ce_result_others"
+        android:textSize="14sp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/ce_result_success"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_weight="1"
+        app:layout_constraintStart_toEndOf="@id/ce_result_error"
+        app:layout_constraintTop_toTopOf="@+id/ce_result_success" />
+
+    <RadioGroup
+        android:id="@+id/ce_result"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ce_result_text">
+
+        <RadioButton
+            android:id="@+id/radioButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:tag="10"
+            android:text="@string/ce_result_success" />
+
+        <RadioButton
+            android:id="@+id/radioButton2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:tag="100"
+            android:text="@string/ce_result_error" />
+
+        <RadioButton
+            android:id="@+id/radioButton3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:tag="200"
+            android:text="@string/ce_result_others" />
+    </RadioGroup>
+
+    <TextView
+        android:id="@+id/ce_plug_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ce_result_option" />
+
+    <RadioGroup
+        android:id="@+id/ce_plug"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ce_plug_text">
+
+    </RadioGroup>
+
+    <AutoCompleteTextView
+        android:id="@+id/ce_nickname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="Nickname(optional)"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ce_plug" />
+
+    <MultiAutoCompleteTextView
+        android:id="@+id/ce_comment"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:hint="Kommentar(optional)"
+        android:visibility="visible"
+        app:layout_constraintBottom_toTopOf="@id/checkBox"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ce_userid" />
+
+    <CheckBox
+        android:id="@+id/checkBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="2dp"
+        android:text="@string/ce_privacy"
+        android:textSize="10sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ce_comment" />
+
+    <TextView
+        android:id="@+id/ce_userid"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="userID:"
+        android:textSize="10sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ce_nickname" />
+
+</android.support.constraint.ConstraintLayout>

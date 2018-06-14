@@ -65,6 +65,15 @@ public class MiniInfoFragment extends Fragment {
                     }
                 }
             });
+            v = infoView.findViewById(R.id.create_chargeevent);
+            v.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ChargeeventDialog Dialog = new ChargeeventDialog();
+                    Dialog.show(KartenActivity.fragmentManager,"ChargeEvent");
+
+                }
+            });
 
 
         }

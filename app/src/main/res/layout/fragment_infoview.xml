@@ -59,6 +59,12 @@
             android:text=""
             android:textAppearance="?android:attr/textAppearanceSmall" />
 
+        <Button
+            android:id="@+id/create_chargeevent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/icreate_chargeev" />
+
         <android.support.v7.widget.CardView
             android:id="@+id/icard_fault"
             android:layout_width="match_parent"

@@ -115,5 +115,11 @@
     <string name="privacy_title">Privacy declaration</string>
     <string name="privacy_consent">I agree</string>
     <string name="crashmail_legalnotice">By sending this mail you agree that all contents including your mail adress will be used for debugging and bugfixing including the right to problaby contact you via mail for further information.</string>
+    <string name="icreate_chargeev">write chargerecord</string>
+    <string name="ce_privacy">By sending you declare your consent with transmission, storing and using of the above data.These will event. be safed in third-party-countries and distributed via ChargeEvDb to users of all connected apps. You can revoke this consent by deleting the entry via app or sedning us an email (incl. UserID).</string>
+    <string name="ce_result_title">"Type: "</string>
+    <string name="ce_result_error">Charging failed</string>
+    <string name="ce_result_success">Success</string>
+    <string name="ce_result_others">Others</string>
 
 </resources>

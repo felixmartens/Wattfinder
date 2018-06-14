@@ -119,6 +119,11 @@
     <string name="devents_title">Chargeevents / CheckIns</string>
     <string name="next">Next</string>
     <string name="privacy_consent">I agree</string>
+    <string name="icreate_chargeev">write chargerecord</string>
+    <string name="ce_result_title">Type:</string>
+    <string name="ce_result_success">Success</string>
+    <string name="ce_result_error">Charging failed</string>
+    <string name="ce_result_others">Others</string>
 
 
 </resources>

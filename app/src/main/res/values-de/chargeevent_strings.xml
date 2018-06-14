@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="ce_plugs">
+        <item>Typ 1</item>
+        <item>Typ 2</item>
+        <item>CHAdeMO</item>
+        <item>CCS</item>
+        <item>CEE Blau</item>
+        <item>CEE Rot</item>
+        <item>Schuko</item>
+        <item>Tesla Supercharger</item>
+    </string-array>
+
+    <string-array name="ce_result_error">
+        <item>Ladestation defekt</item>
+        <item>Ladestation nicht kompatibel</item>
+        <item>Keine Ladestation vorhanden</item>
+    </string-array>
+
+    <string-array name="ce_result_others">
+        <item>Nicht gefunden</item>
+        <item>Duplikat</item>
+        <item>Positiv</item>
+        <item>Negativ</item>
+
+
+    </string-array>
+
+    <string name="ce_privacy">Mit dem Abschicken erklären Sie sich mit der Übertragung, Speicherung und Verarbeitung der oben genannten Daten einverstanden. Diese werden bei ggf. Dienstleistern in Drittstaaten gespeichert und über ChargeEVDB an verbundene Apps und deren Nutzer weiterverbreitet. Sie können dieses Einverständnis widerrufen, indem Sie diesen Eintrag über die App löschen oder uns eine kurze Email(mit UserID) schicken.</string>
+
+</resources>

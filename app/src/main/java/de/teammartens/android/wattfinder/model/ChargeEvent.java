@@ -1,8 +1,13 @@
 package de.teammartens.android.wattfinder.model;
 
+import android.content.res.Resources;
+
 import org.json.JSONObject;
 
+import de.teammartens.android.wattfinder.KartenActivity;
+import de.teammartens.android.wattfinder.R;
 import de.teammartens.android.wattfinder.worker.Utils;
+
 
 public class ChargeEvent {
     private Integer chargepoint,provider;
@@ -32,6 +37,16 @@ public class ChargeEvent {
         this.provider = 0;
         this.reason = 100;
         this.source = 0;
+        this.userid = "0";
+        this.timestamp = System.currentTimeMillis()/1000;
+        this.nickname="";
+        this.comment="";
+        this.deleted=false;
+        this.isfault=false;
+        this.updatedAt = System.currentTimeMillis()/1000;
+        this.upstreamUpdatedAt = System.currentTimeMillis()/1000;
+
+
     }
 
     public boolean extractFromJSON(JSONObject jsonObject){
@@ -80,6 +95,25 @@ public class ChargeEvent {
         return reason;
     }
 
+    public String getReasonString() {
+        Resources Res = KartenActivity.getInstance().getResources();
+
+        String s = " Illeagal reason code.";
+        if (reason>9&&reason<12) s=Res.getString(R.string.ce_result_success);
+            else if (reason>99&&reason<103){
+                String[] a = Res.getStringArray(R.array.ce_result_error);
+                s=Res.getString(R.string.ce_result_error)+", "+a[reason-100];
+            }
+            else if (reason>199&&reason<204){
+            String[] a = Res.getStringArray(R.array.ce_result_others);
+            s=Res.getString(R.string.ce_result_others)+", "+a[reason-200];
+        }
+
+
+        return s;
+    }
+
+
     public void setReason(Integer reason) {
         this.reason = reason;
     }
@@ -93,7 +127,7 @@ public class ChargeEvent {
     }
 
     public String getNickname() {
-        return nickname;
+        return (nickname!=null?nickname:"");
     }
 
     public void setNickname(String nickname) {
@@ -101,7 +135,7 @@ public class ChargeEvent {
     }
 
     public String getComment() {
-        return comment;
+        return (comment!=null?comment:"");
     }
 
     public void setComment(String comment) {
@@ -109,7 +143,7 @@ public class ChargeEvent {
     }
 
     public String getUserid() {
-        return userid;
+        return (userid!=null?userid:"0");
     }
 
     public void setUserid(String userid) {
@@ -117,7 +151,7 @@ public class ChargeEvent {
     }
 
     public String getPlug() {
-        return plug;
+        return (plug!=null?plug:"");
     }
 
     public void setPlug(String plug) {
@@ -145,7 +179,7 @@ public class ChargeEvent {
     }
 
     public String getTimestampString() {
-        return Utils.createDate(timestamp).toString();
+        return Utils.createDate(timestamp);
     }
     public void setTimestamp(Long timestamp) {
         this.timestamp = timestamp;

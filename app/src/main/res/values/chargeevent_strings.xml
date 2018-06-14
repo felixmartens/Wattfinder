@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="ce_plug_values" translatable="false">
+        <item>Type1</item>
+        <item>Type2</item>
+        <item>CHAdeMO</item>
+        <item>CCS</item>
+        <item>CEEBlau</item>
+        <item>CEERot</item>
+        <item>Schuko</item>
+        <item>TeslaSupercharger</item>
+    </string-array>
+
+    <string-array name="ce_plugs">
+        <item>Type 1</item>
+        <item>Type 2</item>
+        <item>CHAdeMO</item>
+        <item>CCS</item>
+        <item>CEE Blue</item>
+        <item>CEE Red</item>
+        <item>Wall plug</item>
+        <item>Tesla Supercharger</item>
+    </string-array>
+
+
+    <string-array name="ce_result_error">
+        <item>Not working</item>
+        <item>Not compatible</item>
+        <item>Not existent</item>
+    </string-array>
+
+    <string-array name="ce_result_error_values" translatable="false">
+        <item>100</item>
+        <item>101</item>
+        <item>102</item>
+    </string-array>
+
+    <string-array name="ce_result_others">
+        <item>Not found</item>
+        <item>Duplicate</item>
+        <item>Positive</item>
+        <item>Negative</item>
+
+
+    </string-array>
+
+    <string-array name="ce_result_others_values" translatable="false">
+        <item>200</item>
+        <item>201</item>
+        <item>202</item>
+        <item>203</item>
+
+
+    </string-array>
+
+    <string name="ce_privacy">By sending you declare your consent with transmission, storing and using of the above data.These will event. be safed in third-party-countries and distributed via ChargeEvDb to users of all connected apps. You can revoke this consent by deleting the entry via app or sedning us an email (incl. UserID).</string>
+
+
+</resources>
