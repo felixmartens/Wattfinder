@@ -83,7 +83,11 @@ public class MiniInfoFragment extends Fragment {
     public void onResume(){
         super.onResume();
         KartenActivity.setMapPaddingY(infoView.getHeight());
-        setzeSaeule(SaeulenWorks.getCurrentSaeule());
+        if(SaeulenWorks.getCurrentSaeule()!=null) {
+            setzeSaeule(SaeulenWorks.getCurrentSaeule());
+        }else{
+            AnimationWorker.hide_info();
+        }
 
     }
 public void onPause(){
@@ -156,12 +160,14 @@ public void onPause(){
 
 
     public  void setzeSaeule(Saeule S){
-        mID = S.getID();
-        mPos = S.getPosition();
-        mTitel = S.getName();
+            if(S!=null) {
+                mID = S.getID();
+                mPos = S.getPosition();
+                mTitel = S.getName();
 
-        mSaeule = S;
-        holeInfo();
+                mSaeule = S;
+                holeInfo();
+            }
 
 
 

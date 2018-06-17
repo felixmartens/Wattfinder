@@ -205,10 +205,11 @@ public static ActionBar actionBar;
 
                 e.putInt(sP_APIRQCount, API_RQ_Count);
                 e.apply();
-                LogWorker.d("WattfinderInternal", "Pause");
+                /*LogWorker.d("WattfinderInternal", "Pause");
                 LogWorker.d("WattfinderInternal", "GeoWorks Lat: " + GeoWorks.getMapPosition().latitude + " Lng: " + GeoWorks.getMapPosition().longitude + " Z: " + GeoWorks.getMapZoom() + "");
                 LogWorker.d("WattfinderInternal", "Lat: " + new Float(cp.target.latitude) + " Lng: " + new Float(cp.target.longitude) + " Z: " + cp.zoom + " saved");
-            }
+
+*/            }
 
         }
         LogWorker.sendLog();
