@@ -3,17 +3,25 @@ package de.teammartens.android.wattfinder.worker;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.places.AutocompleteFilter;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
+import com.google.android.gms.location.places.ui.PlaceSelectionListener;
+import com.google.android.gms.location.places.ui.SupportPlaceAutocompleteFragment;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -460,7 +468,7 @@ public class GeoWorks {
     public static void findmyCountry(){
         final LatLng P = getMapPosition();
 
-        if (P!=null&&lastCountryPosition==null||distanceToFloat(P,lastCountryPosition)>100000) {
+        if (P!=null&&(lastCountryPosition==null||distanceToFloat(P,lastCountryPosition)>100000)) {
             if(LogWorker.isVERBOSE())LogWorker.d(LOG_TAG,"findmyCountry Geocoder gestartet weil: lastCountry:"+(lastCountryPosition==null?"null":"notnull")+" - Distanz: "+distanceToFloat(P,lastCountryPosition));
 
             Geocoder GC = new Geocoder(KartenActivity.getInstance(),Locale.getDefault());
@@ -495,7 +503,7 @@ public class GeoWorks {
 
 
                 } catch (IOException e) {
-                    GeoWorks.countryCode = "de_nw";
+                    if(countryCode==null) GeoWorks.countryCode = "de_nw"; // alles so lassen außer es ist null
                     if(LogWorker.isVERBOSE())LogWorker.e(LOG_TAG,"GEoCoding Error: "+e.getLocalizedMessage()+e.getCause());
                 }
             }
@@ -612,6 +620,39 @@ public class GeoWorks {
 
     public static void setLocation_permission(boolean location_permission) {
         GeoWorks.location_permission = location_permission;
+    }
+
+    public static void init_searchfragment(){
+        Fragment f = KartenActivity.getInstance().getSupportFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
+        SupportPlaceAutocompleteFragment autocompleteFragment = (SupportPlaceAutocompleteFragment) f;
+
+
+        /*
+         * The following code example shows setting an AutocompleteFilter on a PlaceAutocompleteFragment to
+         * set a filter returning only results with a precise address.
+         */
+        AutocompleteFilter typeFilter = new AutocompleteFilter.Builder()
+                .setTypeFilter(AutocompleteFilter.TYPE_FILTER_CITIES)
+                .build();
+        //autocompleteFragment.setFilter(typeFilter);
+
+        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+            @Override
+            public void onPlaceSelected(Place place) {
+                // TODO: Get info about the selected place.
+                LogWorker.d(LOG_TAG, "Place: " + place.getName());//get place details here
+                Suchmarker(place.getLatLng(),place.getName().toString());
+                AnimationWorker.hide_mapSearch();
+            }
+
+            @Override
+            public void onError(Status status) {
+                // TODO: Handle the error.
+                LogWorker.e(LOG_TAG, "An error occurred: " + status);
+            }
+        });
+        //autocompleteFragment.getView().findViewById(R.id.place_autocomplete_search_input).requestFocus();
+        autocompleteFragment.getView().setVisibility(View.GONE);
     }
 
 }

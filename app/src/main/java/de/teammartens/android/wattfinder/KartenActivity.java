@@ -127,7 +127,7 @@ public static ActionBar actionBar;
         sInstance = this;
         GoogleApiAvailability.getInstance().makeGooglePlayServicesAvailable(this);
 
-        setContentView(R.layout.mainlayout);
+        setContentView(R.layout.mainlayout3);
         sharedPref = getPreferences(Context.MODE_PRIVATE);
         fragmentManager = getSupportFragmentManager();
 
@@ -228,7 +228,7 @@ public static ActionBar actionBar;
             actionBar.setDisplayShowHomeEnabled(false);
             actionBar.hide();
         }
-        prepareSearch();
+//        prepareSearch();
 
 
         API_RQ_Count = sharedPref.getInt(sP_APIRQCount,0);
@@ -259,7 +259,7 @@ public static ActionBar actionBar;
             alert.show();
         }
 
-
+    GeoWorks.init_searchfragment();
     }
 
 

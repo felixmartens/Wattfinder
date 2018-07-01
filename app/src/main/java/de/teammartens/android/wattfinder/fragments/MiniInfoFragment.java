@@ -92,12 +92,15 @@ public class MiniInfoFragment extends Fragment {
     }
 public void onPause(){
     super.onPause();
+    infoView.setVisibility(View.GONE);
 
 }
 
     private  void holeInfo() {
 
         if (infoView != null && mSaeule != null) {
+            View v = infoView.findViewById(R.id.loadingPanel);
+            v.setVisibility(View.VISIBLE);
             TextView t2 = (TextView) infoView.findViewById(R.id.iName);
            if(t2!=null){
                t2.setText(mSaeule.getName());
@@ -133,7 +136,7 @@ public void onPause(){
 
             t2 = (TextView) infoView.findViewById(R.id.iUpdated);
             t2.setText(KartenActivity.getInstance().getString(R.string.infoUpdated)+mSaeule.getUpdatedString());
-            View v = (View) infoView.findViewById(R.id.icard_fault);
+            v = (View) infoView.findViewById(R.id.icard_fault);
             if(mSaeule.isFaultreport()) v.setVisibility(View.VISIBLE); else v.setVisibility(View.GONE);
 
             v = infoView.findViewById(R.id.loadingPanel);

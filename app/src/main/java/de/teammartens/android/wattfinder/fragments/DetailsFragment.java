@@ -170,11 +170,21 @@ mContext =this.getContext();
 
     }
 
+    public void onPause(){
+        super.onPause();
+        View v =detailsView.findViewById(R.id.loadingPanel);
+        v.setVisibility(View.VISIBLE);
+        v =detailsView.findViewById(R.id.scrollView);
+        v.setVisibility(View.GONE);
+    }
+
 
 
     private void holeDetails() {
         View v =detailsView.findViewById(R.id.loadingPanel);
         v.setVisibility(View.VISIBLE);
+        v =detailsView.findViewById(R.id.scrollView);
+        v.setVisibility(View.GONE);
         TextView t = (TextView) detailsView.findViewById(R.id.dSaeulenid);
         t.setText("ID"+String.valueOf(mID));
         String url=fAPIUrl + "?key=" + mContext.getString(R.string.GoingElectric_APIKEY) + "&ge_id="+mID;
@@ -371,8 +381,9 @@ http://indragni.com/blog/2013/03/31/android-imageswitcher-example/
 
                         View v =detailsView.findViewById(R.id.loadingPanel);
                         v.setVisibility(View.INVISIBLE);
-
-                        KartenActivity.setMapPadding(detailsView);
+                        v =detailsView.findViewById(R.id.scrollView);
+                        v.setVisibility(View.VISIBLE);
+                        //KartenActivity.setMapPadding(detailsView);
                     } else {
                         Toast.makeText(KartenActivity.getInstance(), "Fehler beim Abrufen der Detailinformation. Bitte nochmal versuchen.", Toast.LENGTH_LONG).show();
                         if (LogWorker.isVERBOSE())
@@ -424,8 +435,12 @@ http://indragni.com/blog/2013/03/31/android-imageswitcher-example/
     }
 
     public void setzeSaeule(Saeule S){
-        setzeSaeule(S.getID(),S.getPosition(),S.getTitle());
-        this.S=S;
+        if(S!= null) {
+            setzeSaeule(S.getID(), S.getPosition(), S.getTitle());
+            this.S = S;
+        }else{
+            AnimationWorker.hide_fragment(AnimationWorker.FLAG_DETAILS);
+        }
     }
 
     public void initializeWorker() {
