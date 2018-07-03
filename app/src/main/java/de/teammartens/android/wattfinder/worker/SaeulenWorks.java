@@ -1,13 +1,16 @@
 package de.teammartens.android.wattfinder.worker;
 
 import android.content.Context;
+import android.content.Intent;
 import android.location.Location;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.view.View;
 import android.view.animation.BounceInterpolator;
 import android.view.animation.Interpolator;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -42,6 +45,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import de.teammartens.android.wattfinder.KartenActivity;
 import de.teammartens.android.wattfinder.R;
+import de.teammartens.android.wattfinder.fragments.ChargeeventDialog;
 import de.teammartens.android.wattfinder.model.Saeule;
 
 /**
@@ -267,16 +271,17 @@ public class SaeulenWorks {
                 Marker_Saeule_Options.clear();
 
                 for (int i = 0; i < length; i++) {
-                    Saeule S = new Saeule(jsonArray.getJSONObject(i));
+                    if (Saeulen.get(jsonArray.getJSONObject(i).getInt("ge_id")) == null) {
+                        Saeule S = new Saeule(jsonArray.getJSONObject(i));
 
-                    //JSON Decoding moved to class Saeule
-                    Saeulen.put(S.getID(),S);
-                    mClusterManager.addItem(S);
-                    //Why do we need this duplicate?
+                        //JSON Decoding moved to class Saeule
+                        Saeulen.put(S.getID(), S);
+                        mClusterManager.addItem(S);
+                        //Why do we need this duplicate?
 
-                    response++;
+                        response++;
+                    }
                 }
-
 
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -551,7 +556,8 @@ public static void ladeEvents(){
             //GeoWorks.animateClick();
             GeoWorks.movemapPosition(item.getPosition(),"MarkerClick");
             if(AnimationWorker.isFilterVisibile()) AnimationWorker.toggleFilter();
-            if(!AnimationWorker.isDetailsVisibile())AnimationWorker.show_info();else AnimationWorker.show_details(item);
+            SaeulenWorks.populateInfoContainer(item);
+           // if(!AnimationWorker.isDetailsVisibile()) AnimationWorker.show_details(item);
 
 
 
@@ -588,7 +594,7 @@ public static void ladeEvents(){
             CameraPosition cameraPosition = mMap.getCameraPosition();
             LatLng mLatLng = cameraPosition.target;
             if (LogWorker.isVERBOSE())
-                LogWorker.d(LOG_TAG, "onCameraChange: Versetzt:" + GeoWorks.isPositionversetzt() + " Detailsvisible:" + AnimationWorker.isDetailsVisibile() + " MapZoom" + GeoWorks.getMapZoom() + " cpZoom" + cameraPosition.zoom);
+                LogWorker.d(LOG_TAG, "onCameraChange:"+ " Detailsvisible:" + AnimationWorker.isDetailsVisibile() + " MapZoom" + GeoWorks.getMapZoom() + " cpZoom" + cameraPosition.zoom);
 
             //Wenn Versatz dann vorher rausrechnen
             if (GeoWorks.validLatLng(mLatLng)) {
@@ -622,13 +628,110 @@ public static void ladeEvents(){
         }
 
     }
+    private static  void populateInfoContainer(){populateInfoContainer(getCurrentSaeule());}
+    private static  void populateInfoContainer(Saeule mSaeule) {
+        View infoView = KartenActivity.getInstance().findViewById(R.id.InfoContainer);
 
-    public void holeInfo(){
+        if (infoView != null && mSaeule != null) {
+            setCurrentSaeule(mSaeule);
+            View v = infoView.findViewById(R.id.loadingPanel);
+            v.setVisibility(View.VISIBLE);
+            TextView t2 = (TextView) infoView.findViewById(R.id.iName);
+            if(t2!=null){
+                t2.setText(mSaeule.getName());
+                t2.setVisibility(View.VISIBLE);
 
+            }
+            else return;
+            String mTitel = "Ladepunkt: " + mSaeule.getName();
+
+            t2 = (TextView) infoView.findViewById(R.id.iEvCount);
+            int evc = mSaeule.getEventCount();
+            t2.setText((evc>0?evc:"Keine")+ " Bewertung"+(evc>1?"en":""));
+            if (evc<0)t2.setVisibility(View.INVISIBLE);
+
+            t2 = (TextView) infoView.findViewById(R.id.iAdresse);
+            t2.setText(mSaeule.getAddress());
+            mTitel = mTitel + ", " + mSaeule.getAddress();
+            t2 = (TextView) infoView.findViewById(R.id.iAnschluesse);
+            t2.setText(mSaeule.getChargepoints());
+            t2 = (TextView) infoView.findViewById(R.id.iEntfernung);
+            t2.setVisibility(View.GONE);
+            if (GeoWorks.getSuchPosition()!= null && GeoWorks.isAround(GeoWorks.getSuchPosition()))
+            {
+                t2.setText(KartenActivity.getInstance().getResources().getString(R.string.infoEntfernungZiel)+" "+GeoWorks.distanceToString(mSaeule.getPosition(),GeoWorks.getSuchPosition()));
+                t2.setVisibility(View.VISIBLE);
+            }else
+            {
+                if (GeoWorks.isAround(GeoWorks.getmyPosition())){
+                    t2.setText(KartenActivity.getInstance().getResources().getString(R.string.infoEntfernungPos)+" "+GeoWorks.distanceToString(mSaeule.getPosition(),GeoWorks.getmyPosition()));
+                    t2.setVisibility(View.VISIBLE);
+                }
+            }
+
+            t2 = (TextView) infoView.findViewById(R.id.iUpdated);
+            t2.setText(KartenActivity.getInstance().getString(R.string.infoUpdated)+mSaeule.getUpdatedString());
+            v = (View) infoView.findViewById(R.id.icard_fault);
+            if(mSaeule.isFaultreport()) v.setVisibility(View.VISIBLE); else v.setVisibility(View.GONE);
+
+            v = infoView.findViewById(R.id.loadingPanel);
+            v.setVisibility(View.GONE);
+
+            // float f = (infoView.getHeight()/KartenActivity.getDisplayH())*1.0f;
+            // if (LogWorker.isVERBOSE())LogWorker.d(LOG_TAG,"hole Info "+ (mSaeule!=null?mSaeule.getName():"") +" H:"+infoView.getHeight() +" f:"+f);
+            KartenActivity.setMapPaddingY(infoView.getHeight());
+            if (AnimationWorker.getSTATE()==AnimationWorker.STATE_DETAIL)
+                AnimationWorker.show_details(mSaeule);
+            else
+                AnimationWorker.show_info();
+        }
     }
 
-    public void holeDetails(Integer id){
+    public static void resetInfoView(){
+        View infoView = KartenActivity.getInstance().findViewById(R.id.InfoContainer);
+        if(infoView!=null) {
+            TextView t = (TextView) infoView.findViewById(R.id.iSaeulenid);
+            t.setText("");
+            t = (TextView) infoView.findViewById(R.id.iAdresse);
+            t.setText("");
+            t = (TextView) infoView.findViewById(R.id.iEntfernung);
+            t.setText("");
+            t = (TextView) infoView.findViewById(R.id.iAnschluesse);
+            t.setText("");
+            t = (TextView) infoView.findViewById(R.id.iUpdated);
+            t.setText("");
+            View v = infoView.findViewById(R.id.icard_fault);
+            v.setVisibility(View.GONE);
+            v = KartenActivity.getInstance().findViewById(R.id.fab_directions);
+            v.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("geo:" + currentSaeule.getPosition().latitude + "," + currentSaeule.getPosition().longitude + "?q=" + currentSaeule.getPosition().latitude + "," + currentSaeule.getPosition().longitude + "(" + currentSaeule.getName() + ")"));
+                    if (intent.resolveActivity(KartenActivity.getInstance().getPackageManager()) != null) {
+                        KartenActivity.getInstance().startActivity(intent);
+                    }
+                }
+            });
+            v = infoView.findViewById(R.id.create_chargeevent);
+            v.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ChargeeventDialog Dialog = new ChargeeventDialog();
+                    Dialog.show(KartenActivity.fragmentManager,"ChargeEvent");
 
+                }
+            });
+            v = infoView.findViewById(R.id.loadingPanel);
+            v.setVisibility(View.VISIBLE);
+
+            infoView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    AnimationWorker.show_details();
+                }
+            });
+
+        }
     }
 
     public static void checkMarkerCache(String VERURSACHER){

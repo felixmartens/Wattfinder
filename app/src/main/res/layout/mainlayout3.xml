@@ -13,86 +13,286 @@
     tools:context=".KartenActivity">
 
 
-    <LinearLayout
+    <fragment
+        android:id="@+id/place_autocomplete_fragment"
+        android:name="com.google.android.gms.location.places.ui.SupportPlaceAutocompleteFragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_height="50dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/mapContainer"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:tag="@android:string/defaultMsisdnAlphaTag"
+        app:layout_constraintBottom_toTopOf="@+id/barrierMapBottom"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/place_autocomplete_fragment"
+        app:layout_constraintVertical_weight="2">
 
         <fragment
-            android:id="@+id/place_autocomplete_fragment"
-            android:name="com.google.android.gms.location.places.ui.SupportPlaceAutocompleteFragment"
-            android:layout_width="match_parent"
-            android:layout_height="39dp" />
+            android:id="@+id/map"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_margin="0dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:context=".KartenActivity" />
 
-        <android.support.constraint.ConstraintLayout
-            android:id="@+id/mapContainer"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:tag="@android:string/defaultMsisdnAlphaTag">
+        <ProgressBar
+            android:id="@+id/mapProgress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            android:maxHeight="@android:dimen/notification_large_icon_height"
+            android:maxWidth="@android:dimen/notification_large_icon_height"
+            android:minHeight="@android:dimen/notification_large_icon_width"
 
-            <fragment
-                android:id="@+id/map"
-                android:name="com.google.android.gms.maps.SupportMapFragment"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_margin="0dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginStart="8dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:context=".KartenActivity" />
+            android:minWidth="@android:dimen/notification_large_icon_width"
+            app:layout_constraintBottom_toBottomOf="@+id/map"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/map"
+            tools:alpha="0.3" />
 
-            <ProgressBar
-                android:id="@+id/mapProgress"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:indeterminate="true"
-                android:maxHeight="@android:dimen/notification_large_icon_height"
-                android:maxWidth="@android:dimen/notification_large_icon_height"
-                android:minHeight="@android:dimen/notification_large_icon_width"
+        <View
+            android:id="@+id/MapTouchOverlay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
 
-                android:minWidth="@android:dimen/notification_large_icon_width"
-                tools:alpha="0.3"
-                tools:layout_editor_absoluteX="173dp"
-                tools:layout_editor_absoluteY="278dp" />
+        </View>
 
-            <View
-                android:id="@+id/MapTouchOverlay"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/buttonMapStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginRight="8dp"
+            android:alpha="0.4"
+            android:background="@color/colorPrimary"
+            android:src="@drawable/ic_layers"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
-            </View>
+    </android.support.constraint.ConstraintLayout>
 
-            <ImageView
-                android:id="@+id/buttonMapStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginRight="8dp"
-                android:alpha="0.4"
-                android:background="@color/colorPrimary"
-                android:src="@drawable/ic_layers"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/InfoContainer"
 
-        </android.support.constraint.ConstraintLayout>
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/transparent"
+        android:elevation="20dp"
+        android:visibility="visible"
 
-        <fragment
-            android:id="@+id/bottomFragment"
-            android:name="de.teammartens.android.wattfinder.fragments.MiniInfoFragment"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+
+        <TextView
+            android:id="@+id/iName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom|fill_horizontal"
-            android:layout_weight="1" />
+            android:layout_marginTop="@dimen/mapinfooverlap"
+            android:text=""
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    </LinearLayout>
+        <TextView
+            android:id="@+id/iAdresse"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text=""
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/iEvCount"
+            tools:layout_editor_absoluteX="15dp" />
+
+        <TextView
+            android:id="@+id/iAnschluesse"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text=""
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/iAdresse"
+            tools:layout_editor_absoluteX="15dp" />
+
+        <TextView
+            android:id="@+id/iEntfernung"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/iAnschluesse"
+            tools:layout_editor_absoluteX="15dp" />
+
+        <TextView
+            android:id="@+id/iEvCount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:gravity="right"
+            android:textColor="@color/place_autocomplete_search_hint"
+            android:textIsSelectable="false"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/iName"
+            tools:layout_editor_absoluteX="15dp" />
+
+        <Button
+            android:id="@+id/create_chargeevent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:text="@string/icreate_chargeev"
+            android:visibility="visible"
+            app:layout_constraintBottom_toTopOf="@+id/icard_fault"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="@string/icreate_chargeev" />
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/icard_fault"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:padding="5dp"
+            app:cardBackgroundColor="@color/colorDebug"
+            app:layout_constraintBottom_toTopOf="@+id/iUpdated"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/iEntfernung">
+
+            <TextView
+                android:id="@+id/ifault_report"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:drawableLeft="@drawable/ic_report_problem"
+                android:gravity="center"
+                android:padding="2dp"
+                android:text="@string/ifault_report"
+                android:textColor="@color/textColorPrimaryInverse"
+                android:visibility="visible" />
+        </android.support.v7.widget.CardView>
+
+        <TextView
+            android:id="@+id/iUpdated"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:layout_marginBottom="8dp"
+            android:gravity="bottom|right"
+            android:text=""
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/iSaeulenid"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:visibility="gone" />
+
+
+        <ProgressBar
+            android:id="@+id/loadingPanel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:indeterminate="true"
+            app:layout_constraintBottom_toBottomOf="@+id/iEntfernung"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.44"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.493" />
+
+    </android.support.constraint.ConstraintLayout>
+
+    <fragment
+        android:id="@+id/bottomFragment"
+        android:name="de.teammartens.android.wattfinder.fragments.DetailsFragment"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_gravity="bottom|fill_horizontal"
+        android:layout_weight="1"
+        android:minHeight="200dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/guideline_50"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_directions"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_marginRight="8dp"
+        android:elevation="16dp"
+        android:src="@drawable/ic_action_directions"
+        android:visibility="visible"
+        app:backgroundTint="@color/colorAccent"
+        app:borderWidth="0dp"
+        app:fabSize="normal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/infoSpacer"
+        app:rippleColor="@color/white" />
+
+    <Space
+        android:id="@+id/infoSpacer"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/mapinfooverlap"
+        app:layout_constraintBottom_toTopOf="@+id/InfoContainer"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <android.support.constraint.Barrier
+        android:id="@+id/barrierMapBottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierAllowsGoneWidgets="false"
+        app:barrierDirection="top"
+        app:constraint_referenced_ids="bottomFragment,InfoContainer"
+        />
+
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline_50"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.4" />
+
 
     <TextView
         android:id="@+id/debugHeader"
@@ -101,7 +301,10 @@
         android:background="@color/colorDebug"
         android:text="DEBUG"
 
-        android:visibility="gone" />
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
     <include
@@ -119,11 +322,10 @@
         android:visibility="gone" />
 
     <include
-        android:id="@+id/include"
+        android:id="@+id/include_startup"
         layout="@layout/startupscreen"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="gone" />
+        android:layout_height="wrap_content" />
 
     <include
         android:id="@+id/include3"

@@ -123,40 +123,35 @@ public static ActionBar actionBar;
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        //getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
-        sInstance = this;
-        GoogleApiAvailability.getInstance().makeGooglePlayServicesAvailable(this);
-
         setContentView(R.layout.mainlayout3);
         sharedPref = getPreferences(Context.MODE_PRIVATE);
+        if(savedInstanceState == null){
+            //really make new Instance
+            sInstance = this;
+            GoogleApiAvailability.getInstance().makeGooglePlayServicesAvailable(this);
+           if(!FilterWorks.filter_initialized()) AnimationWorker.showStartup();
+
+            lineSeparator =System.getProperty("line.separator");
+
+
+            API_RQ_Count = sharedPref.getInt(sP_APIRQCount,0);
+            if(LogWorker.isVERBOSE())LogWorker.d(LOG_TAG,"APIRQCOUNT:"+getAPI_RQ_Count());
+            if(LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG,"privacyConsent "+privacyConsent);
+
+            privacyConsent = sharedPref.getBoolean("privacyConsent",false);
+            if(LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG,"privacyConsent "+privacyConsent);
+        }
+        //getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
+
+
         fragmentManager = getSupportFragmentManager();
 
         //Aktiviere Handling für UncaughtException
         if (LogWorker.DEFAULT_DEBUGGING) new ExceptionWorker(KartenActivity.this);
 
-        mapFragment = (SupportMapFragment) fragmentManager.findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
 
 
-        // Get the intent, verify the action and get the query
-        Intent intent = getIntent();
-        if (intent != null && Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            String data = intent.getDataString();
-            if ( LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG,"Intent Data: -"+data+"-");
-            String query = intent.getStringExtra(SearchManager.QUERY);
-            if ( LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG,"Intent Query: -"+query+"-");
-            if (data == null || !data.equals("Suggestion")){
-                //erstmal in Recents speichern
-                SearchRecentSuggestions suggestions = new SearchRecentSuggestions(this,
-                        rSuggestionsProvider.AUTHORITY, rSuggestionsProvider.MODE);
-                suggestions.saveRecentQuery(query, null);
 
-
-                GeoWorks.starteSuche(query);}
-            else{
-                GeoWorks.starteSucheSuggested(query);
-            }
-        }else if (!FilterWorks.filter_initialized())AnimationWorker.showStartup();
         //Preload Saäulen wenn gute Internetverbindung
         //SaeulenWorks.ladeMarker(46.727812939969645,6.26220703125,54.89177403135015,14.65576171875); //Ganz Deutschland
 
@@ -170,9 +165,7 @@ public static ActionBar actionBar;
     @Override
     protected void onStart() {
         super.onStart();
-        LogWorker.init_logging();
-        load_CEuID();
-        lineSeparator =System.getProperty("line.separator");
+
 
     }
     @Override
@@ -217,10 +210,15 @@ public static ActionBar actionBar;
     }
     @Override
     protected void onResume() {
+
+        if(LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG,"onResume");
+        if(FilterWorks.filter_initialized())AnimationWorker.hideStartup();
         super.onResume();
         sInstance = this;
-
-        AnimationWorker.startupScreen=true;
+        mapFragment = (SupportMapFragment) fragmentManager.findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
+        LogWorker.init_logging();
+        load_CEuID();
 
         actionBar = getActionBar();
         if (actionBar != null) {
@@ -231,12 +229,7 @@ public static ActionBar actionBar;
 //        prepareSearch();
 
 
-        API_RQ_Count = sharedPref.getInt(sP_APIRQCount,0);
-        if(LogWorker.isVERBOSE())LogWorker.d(LOG_TAG,"APIRQCOUNT:"+getAPI_RQ_Count());
-        if(LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG,"privacyConsent "+privacyConsent);
 
-        privacyConsent = sharedPref.getBoolean("privacyConsent",false);
-        if(LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG,"privacyConsent "+privacyConsent);
 
         //NetWorker.resetRETRY();
 
@@ -260,6 +253,9 @@ public static ActionBar actionBar;
         }
 
     GeoWorks.init_searchfragment();
+    SaeulenWorks.resetInfoView();
+    AnimationWorker.hide_info();
+   AnimationWorker.show_fabs();
     }
 
 
@@ -278,6 +274,35 @@ public static ActionBar actionBar;
         super.onStop();
         //setMapReady(false);
     }
+
+    /*
+    @Override
+    protected void onSaveInstanceState(Bundle outState)
+    {
+        super.onSaveInstanceState(outState);
+        if(LogWorker.isVERBOSE())LogWorker.d(LOG_TAG, "onSaveInstanceState");
+
+
+        outState.putCharSequence("savedText", text);// saved that text in bundle object i.e. outState
+
+    }
+
+//Restoring the State
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState)
+    {
+        super.onRestoreInstanceState(savedInstanceState);
+        if(LogWorker.isVERBOSE())LogWorker.d(LOG_TAG, "onRestoreInstanceState");
+        final TextView textView =
+                (TextView) findViewById(R.id.textView);// getting the reference of textview from xml
+
+        CharSequence savedText=
+                savedInstanceState.getCharSequence("savedText");// getting the text of editext
+
+        textView.setText(savedText);// set the text that is retrieved from bundle object
+    }
+*/
 
     @Override
     public void onBackPressed() {
@@ -336,6 +361,7 @@ public static ActionBar actionBar;
     @Override
     protected void onActivityResult(
             int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         // Decide what to do based on the original request code
         if (requestCode == CONNECTION_FAILURE_RESOLUTION_REQUEST
                 && resultCode == Activity.RESULT_OK){
@@ -363,7 +389,7 @@ public static ActionBar actionBar;
                 GeoWorks.CUSTOM_MAPVIEW = true;
                 if (LogWorker.isVERBOSE())
                     LogWorker.d(LOG_TAG + " the Map", "Custom Map Move detected");
-                return false;
+                return false;//Das ist wichtig damit sich die Map trotzdem bewegt
             }
         });
 
@@ -371,8 +397,8 @@ public static ActionBar actionBar;
             @Override
             public void onMapClick(LatLng latLng) {
                 if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG, "MapClick");
-                GeoWorks.movemapPosition("showMapClick");
-                fragmentManager.popBackStack();
+                //GeoWorks.movemapPosition("showMapClick");
+                //fragmentManager.popBackStack();
                 AnimationWorker.show_map();
                 //und noch den geklickten Marker wieder resetten
                 SaeulenWorks.resetClickMarker();
@@ -409,7 +435,7 @@ public static ActionBar actionBar;
                     } else {
                         Toast.makeText(getInstance(), getString(R.string.novalidlocation), Toast.LENGTH_SHORT).show();
                         if (LogWorker.isVERBOSE())
-                            LogWorker.d(LOG_TAG, "StandortButton: Kein gültiger Standort");
+                            LogWorker.d(LOG_TAG, "StandortButton: Kein gültiger Standort:"+GeoWorks.getmyPosition());
                     }
 
                 }
@@ -663,7 +689,7 @@ return null;
 
     }
     public static void setMapPaddingY(Integer h) {
-        if(mMap!=null) {
+       /* if(mMap!=null) {
             mMap.setPadding(0, 0, 0, h);
             if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG, "PaddingY:" + h);
             if (h == 0) {
@@ -671,14 +697,14 @@ return null;
                 //CameraUpdate CU = CameraUpdateFactory.newLatLngZoom(VersatzBerechnen(Geo), zoom);
             }
             MapPaddingY = h;
-        }
+        }*/
     }
     public static void setMapPaddingX(Integer w) {
-        if(mMap!=null) {
+       /* if(mMap!=null) {
             mMap.setPadding(0, 0, w, 0);
             MapPaddingX = w;
             if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG, "PaddingX:" + w);
-        }
+        }*/
     }
 
 

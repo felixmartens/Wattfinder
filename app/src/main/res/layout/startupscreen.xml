@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@color/colorCard"
     android:elevation="9dp"
-    android:visibility="visible">
+    android:visibility="gone">
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_debug"

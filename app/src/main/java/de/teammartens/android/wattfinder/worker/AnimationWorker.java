@@ -3,6 +3,7 @@ package de.teammartens.android.wattfinder.worker;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.os.Build;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutCompat;
@@ -13,6 +14,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.AutocompleteFilter;
@@ -59,37 +61,12 @@ public class AnimationWorker {
 
     public static void show_info() {
         if(!startupScreen) {
-            FragmentTransaction fT = fragmentManager.beginTransaction()
-                    /*.setCustomAnimations(R.anim.fragment_slide_in,
-                            R.anim.fragment_slide_out,
-                            R.anim.fragment_slide_in,
-                            R.anim.fragment_slide_out)*/;
-            MiniInfoFragment f = (MiniInfoFragment) fragmentManager.findFragmentByTag(FLAG_INFO);
-            DetailsFragment df = (DetailsFragment) fragmentManager.findFragmentByTag(FLAG_DETAILS);
-            if (LogWorker.isVERBOSE())
-                LogWorker.d(LOG_TAG, "info vorhanden ?? "+(f==null?" NULL":"Hidden?" + f.isHidden() + " --Visible?" + f.isVisible() + "--Added?" + f.isAdded()+ "--Detached?" + f.isDetached()));
-            if (LogWorker.isVERBOSE())
-                LogWorker.d(LOG_TAG, "details vorhanden?? "+(df==null?" NULL":"Hidden?" + df.isHidden() + " --Visible?" + df.isVisible() + "--Added?" + df.isAdded()+ "--Detached?" + df.isDetached()));
-            setLayout(2.0f);
+
             if ( getSTATE()!=STATE_DETAIL) {
-                //wenn Details zusehen sind dann nix Info
-
-               /* if (f == null) {
-                    if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG, "info wird neu gebildet");
-                    fT.add(R.id.bottomFragment, Fragment.instantiate(getInstance(), MiniInfoFragment.class.getName()), FLAG_INFO).addToBackStack(FLAG_INFO).commit();
-                    f = (MiniInfoFragment) fragmentManager.findFragmentByTag(FLAG_INFO);
-                } else if (f.isHidden()) {
-                    if (LogWorker.isVERBOSE())
-                        LogWorker.d(LOG_TAG, "info schon vorhanden" + f.isHidden() + " --" + f.isVisible() + "--" + f.isAdded());
-                    fT.show(f).addToBackStack(FLAG_INFO).commit(); //replace(R.id.infoFragment, Fragment.instantiate(getInstance(), MiniInfoFragment.class.getName()), "iFragment");
-
-                }*/
-               if(f==null)f=new MiniInfoFragment();
-                fT.replace(R.id.bottomFragment,f,FLAG_INFO).addToBackStack(FLAG_INFO).commit(); //replace(R.id.infoFragment, Fragment.instantiate(getInstance(), MiniInfoFragment.class.getName()), "iFragment");
-
-                if (f != null) f.setzeSaeule(SaeulenWorks.getCurrentSaeule());
-
-
+                View v = getInstance().findViewById(R.id.InfoContainer);
+                slideUp(v,0);
+                v = getInstance().findViewById(R.id.fab_directions);
+                fadeIn(v,1000,1.0f);
                 setSTATE(STATE_INFO);
 
                 hide_fabs();
@@ -97,25 +74,53 @@ public class AnimationWorker {
                 // slideUp(getInstance().findViewById(R.id.fab_mylocation), 0);
 
                 KartenActivity.BackstackEXIT = false;
-            }else if(getSTATE()==STATE_DETAIL&&df!=null){
-                df.setzeSaeule(SaeulenWorks.getCurrentSaeule());
+            }else{DetailsFragment df = (DetailsFragment) fragmentManager.findFragmentByTag(FLAG_DETAILS);
+                if(getSTATE()==STATE_DETAIL&&df!=null){
+                    df.setzeSaeule(SaeulenWorks.getCurrentSaeule());
+                }
             }
+
         }else{
             if (LogWorker.isVERBOSE())
                 LogWorker.d(LOG_TAG,"nix info wegen startup");
         }
     }
 
-    public static void hide_info(){hide_fragment(FLAG_INFO);}
+    public static void hide_info(){//hide_fragment(FLAG_INFO);
+        slideDown(getInstance().findViewById(R.id.InfoContainer), 0, new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animator) {
+                getInstance().findViewById(R.id.InfoContainer).setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animator) {
+
+            }
+        });
+        View v = getInstance().findViewById(R.id.fab_directions);
+        fadeOut(v,0);
+         }
+
     public static void hide_fragment(String FLAG){
-        fragmentManager.popBackStack(FLAG,0);
+      /*  fragmentManager.popBackStack(FLAG,0);
         Fragment f = fragmentManager.findFragmentByTag(FLAG);
         if (f !=null && f.isVisible()){
             try {
                 fragmentManager.beginTransaction()/*.setCustomAnimations(R.anim.fragment_slide_in,
                         R.anim.fragment_slide_out,
                         R.anim.fragment_slide_in,
-                        R.anim.fragment_slide_out)*/.hide(f).commit();
+                        R.anim.fragment_slide_out)*//*.hide(f).commit();
             }catch(IllegalStateException e){
                 if(LogWorker.isVERBOSE())LogWorker.e(LOG_TAG,"IllegalSTatException on hide "+FLAG+" "+e.getCause().getMessage());
             }
@@ -127,8 +132,11 @@ public class AnimationWorker {
             show_fabs();
             getInstance().findViewById(R.id.bottomFragment).setVisibility(View.GONE);
             setSTATE(STATE_MAP);
-        }
+            slideDown(getInstance().findViewById(R.id.InfoContainer),0);
 
+        }
+*/
+        show_map();
         //getInstance().findViewById(R.id.fab_filter).setVisibility(View.VISIBLE);
         //getInstance().findViewById(R.id.fab_mylocation).setVisibility(View.VISIBLE);
         //getInstance().findViewById(R.id.fab_directions).setVisibility(View.GONE);
@@ -228,10 +236,7 @@ public class AnimationWorker {
         v = getInstance().findViewById(R.id.filterFragment);
         v.setVisibility(View.VISIBLE);*/
         setSTATE(STATE_FILTER);
-        if(layoutStyle()!="large-port"){
-            getInstance().findViewById(R.id.mapContainer).setVisibility(View.GONE);
 
-        }
         setLayout(1.0f);
             hide_fabs();
             hide_mapSearch();
@@ -273,7 +278,7 @@ public class AnimationWorker {
 
         if(dF==null) dF = new DetailsFragment();
        Ft.replace(R.id.bottomFragment,dF,FLAG_DETAILS).addToBackStack(FLAG_DETAILS).commit();
-
+        hide_info();
 
        if(dF!=null)dF.setzeSaeule(S);
        setSTATE(STATE_DETAIL);
@@ -286,12 +291,12 @@ public class AnimationWorker {
 
     private static void setLayout(Float weight){
         View V = getInstance().findViewById(R.id.bottomFragment);
-        LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(
+        /*ConstraintLayout.LayoutParams param = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 weight
         );
-        V.setLayoutParams(param);
+        V.setLayoutParams(param);*/
         V.setVisibility(View.VISIBLE);
     }
     public static DetailsFragment getDetailsFragment(){
@@ -305,6 +310,7 @@ public class AnimationWorker {
 
     public static void show_fabs(){
         //hide_mapSearch();
+        if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG, "Show Fabs");
         View fabs = getInstance().findViewById(R.id.fabContainer);
         slideTopDown(fabs,0);
         fabs = getInstance().findViewById(R.id.buttonMapStyle);
@@ -338,24 +344,21 @@ public class AnimationWorker {
 
         if (isVisible(FLAG_FILTER))
             fragmentManager.popBackStack(FLAG_FILTER, 0);
-        }
+        }*/
+            fragmentManager.popBackStack();
         if(!fragmentManager.isStateSaved()&&fragmentManager.getBackStackEntryCount()>0&&!BackstackEXIT)
             fragmentManager.popBackStack();
 
-            */
+
             getInstance().findViewById(R.id.bottomFragment).setVisibility(View.GONE);
             getInstance().findViewById(R.id.mapContainer).setVisibility(View.VISIBLE);
-            slideUp(getInstance().findViewById(R.id.fab_filter), 200);
-            slideUp(getInstance().findViewById(R.id.fab_mylocation), 200);
-
 
             setSTATE(STATE_MAP);
 
             show_debug();
             show_fabs();
             hide_mapSearch();
-            //hide_info();
-            if(LogWorker.isVERBOSE())LogWorker.d(LOG_TAG,"showMap trying to hide info: "+(getFragment(FLAG_INFO)==null?"null":"notnull "+getFragment(FLAG_INFO).isVisible()));
+            hide_info();
             if (KartenActivity.mapFragment != null&&KartenActivity.mapFragment.getView()!=null)
                 KartenActivity.mapFragment.getView().requestFocus();
             //slideDown(getInstance().findViewById(R.id.fab_directions), 500);
@@ -363,8 +366,8 @@ public class AnimationWorker {
             //slideUp(getInstance().findViewById(R.id.fab_mylocation), 200);
             //findViewById(R.id.fab_filter).requestFocus();
             //GeoWorks.animateClick(false);
-            KartenActivity.setMapPaddingY(0);
-            GeoWorks.movemapPosition("showMap");
+            //KartenActivity.setMapPaddingY(0);
+           // GeoWorks.movemapPosition("showMap");
             KartenActivity.BackstackEXIT = false;
         }
     }
@@ -395,6 +398,7 @@ public class AnimationWorker {
         if(LogWorker.isVERBOSE())LogWorker.d(LOG_TAG,"hideStartup "+startupScreen);
 
         View startup = getInstance().findViewById(R.id.startupScreen);
+        if(startup==null) startup = getInstance().findViewById(R.id.include_startup);
         if (startupScreen&&startup!=null) {
             if(LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG,"privacyConsent "+privacyConsent);
             //if(!KartenActivity.privacyConsent && (System.currentTimeMillis() - KartenActivity.sharedPref.getLong(KartenActivity.sP_Timestamp,0))>3600*1000) {//Zeige Eula wenn privacyConsent nicht aktiviert und letztes Programmende ist mindestens eine Stunde eher
@@ -404,7 +408,7 @@ public class AnimationWorker {
                   final View v = getInstance().findViewById(R.id.eulaScreen);
                 if (v != null) {
                     fadeIn(v, 0, 1.0f);
-                    hide_mapSearch();
+                    //hide_mapSearch();
 
                     TextView tv = getInstance().findViewById(R.id.welcomeText);
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
@@ -430,7 +434,7 @@ public class AnimationWorker {
                             else
                                 tv.setText(Html.fromHtml(getInstance().getString(R.string.privacy_license)));
 
-                            show_fabs();
+
                             View vv = getInstance().findViewById(R.id.welcome_scroll);
                             fadeOut(vv,0);
                             vv = getInstance().findViewById(R.id.privacy_long);
@@ -470,14 +474,18 @@ public class AnimationWorker {
                     });
 
                 }
-            }
+            }else{
+                  View v = getInstance().findViewById(R.id.eulaScreen);
+                  if (v!=null) ((ConstraintLayout) v.getParent()).removeView(v);
+              }
             KartenActivity.setMapCenter();
 
             slideDown(startup, 500);
             startup.setVisibility(View.GONE);
+            startupScreen=false;
 
         }
-        startupScreen=false;
+
         //slideSearchBarDown(mapSearch,0);
     }
 
@@ -504,6 +512,9 @@ public class AnimationWorker {
     }
 
     public static void slideDown (final View V,Integer offset) {
+        slideDown(V,offset,null);
+    }
+    public static void slideDown (final View V, Integer offset, Animator.AnimatorListener aL) {
         if (V== null) return;
 
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
@@ -512,6 +523,7 @@ public class AnimationWorker {
                     .translationY(V.getHeight())
                     .alpha(0.0f)
                     .setDuration(500)
+                    .setListener(aL)
             ;
         } else {
 
@@ -519,6 +531,7 @@ public class AnimationWorker {
                     .translationY(V.getHeight())
                     .alpha(0.0f)
                     .setDuration(500)
+                    .setListener(aL)
             ;
         }
     }
@@ -706,10 +719,7 @@ public class AnimationWorker {
 
     public static void fadeIn (final View V,Integer offset, Float Alpha) {
         if (V== null) return;
-        if(V.getVisibility()==View.GONE){
-            V.setAlpha(0f);
-            V.setVisibility(View.VISIBLE);
-        }
+
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
             V.animate()
                     .setStartDelay(offset)
@@ -717,6 +727,14 @@ public class AnimationWorker {
                     .alpha(Alpha)
                     .setDuration(500)
                     .setListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationStart(Animator animation) {
+                            super.onAnimationEnd(animation);
+                            if (V.getVisibility() == View.GONE) {
+                                V.setAlpha(0f);
+                                V.setVisibility(View.VISIBLE);
+                            }
+                        }
                         @Override
                         public void onAnimationEnd(Animator animation) {
                             super.onAnimationEnd(animation);
@@ -730,6 +748,14 @@ public class AnimationWorker {
                     .alpha(Alpha)
                     .setDuration(500)
                     .setListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationStart(Animator animation) {
+                            super.onAnimationEnd(animation);
+                            if (V.getVisibility() == View.GONE) {
+                                V.setAlpha(0f);
+                                V.setVisibility(View.VISIBLE);
+                            }
+                        }
                         @Override
                         public void onAnimationEnd(Animator animation) {
                             super.onAnimationEnd(animation);
@@ -822,15 +848,16 @@ public class AnimationWorker {
 
     public static void showSearchBar(){
 
-        SupportPlaceAutocompleteFragment f = (SupportPlaceAutocompleteFragment)fragmentManager.findFragmentById(R.id.place_autocomplete_fragment);
-       FragmentTransaction fT = fragmentManager.beginTransaction()
-                .setCustomAnimations(R.anim.fragment_slide_in,
-                        R.anim.fragment_slide_out,
-                        R.anim.fragment_slide_in,
-                        R.anim.fragment_slide_out);
+
 
         if (!startupScreen) {
-            hide_fragment(FLAG_INFO);
+            SupportPlaceAutocompleteFragment f = (SupportPlaceAutocompleteFragment)fragmentManager.findFragmentById(R.id.place_autocomplete_fragment);
+            FragmentTransaction fT = fragmentManager.beginTransaction()
+                    .setCustomAnimations(R.anim.fragment_slide_in,
+                            R.anim.fragment_slide_out,
+                            R.anim.fragment_slide_in,
+                            R.anim.fragment_slide_out);
+            hide_info();
             hide_fragment(FLAG_DETAILS);
             hide_fabs();
             if (f == null) {
@@ -842,24 +869,28 @@ public class AnimationWorker {
                  //replace(R.id.infoFragment, Fragment.instantiate(getInstance(), MiniInfoFragment.class.getName()), "iFragment");
                 fT.show(f).commit();
             }
-        }
+
 
         f = (SupportPlaceAutocompleteFragment)fragmentManager.findFragmentById(R.id.place_autocomplete_fragment);
-        if(f!=null){
-            if (LogWorker.isVERBOSE())LogWorker.d(LOG_TAG, "Suche jetzt vorhanden" + f.isHidden() + " --" + f.isVisible() + "--" + f.isAdded());
+        if(f!=null) {
+            if (LogWorker.isVERBOSE())
+                LogWorker.d(LOG_TAG, "Suche jetzt vorhanden" + f.isHidden() + " --" + f.isVisible() + "--" + f.isAdded());
 
             AutocompleteFilter typeFilter = new AutocompleteFilter.Builder()
                     .setTypeFilter(AutocompleteFilter.TYPE_FILTER_CITIES)
                     .build();
             //f.setFilter(typeFilter);
-
+            f.setBoundsBias(KartenActivity.mMap.getProjection().getVisibleRegion().latLngBounds);
             f.setOnPlaceSelectedListener(new PlaceSelectionListener() {
                 @Override
                 public void onPlaceSelected(Place place) {
-                    // TODO: Get info about the selected place.
-                    if (LogWorker.isVERBOSE())LogWorker.d(LOG_TAG, "Place: " + place.getName());//get place details here
-                    GeoWorks.Suchmarker(place.getLatLng(),place.getName().toString());
-                    AnimationWorker.hide_mapSearch();
+
+                    if (LogWorker.isVERBOSE())
+                        LogWorker.d(LOG_TAG, "Place: " + place.getName() + "  TYPE:" + place.getPlaceTypes().contains(Place.TYPE_STREET_ADDRESS));//get place details here
+                    GeoWorks.Suchmarker(place.getLatLng(), place.getName().toString(), place.getPlaceTypes().contains(Place.TYPE_STREET_ADDRESS));
+                    //AnimationWorker.hide_mapSearch();
+
+                    // Toast.makeText(getInstance(),"Place: " + place.getName() + "  TYPE:"+place.getPlaceTypes().contains(Place.TYPE_STREET_ADDRESS),Toast.LENGTH_LONG).show();
                 }
 
                 @Override
@@ -869,10 +900,19 @@ public class AnimationWorker {
                 }
             });
 
-            f.setBoundsBias(KartenActivity.mMap.getProjection().getVisibleRegion().latLngBounds);
-            f.getView().setVisibility(View.VISIBLE);
-            f.getView().findViewById(R.id.place_autocomplete_search_input).requestFocus();
 
+            final View root = f.getView();
+            root.setVisibility(View.VISIBLE);
+            root.findViewById(R.id.place_autocomplete_search_input)
+                    .performClick();
+            root.post(new Runnable() {
+                @Override
+                public void run() {
+                    root.findViewById(R.id.place_autocomplete_search_input)
+                            .performClick();
+                }
+            });
+         }
         }
 
 
@@ -909,7 +949,7 @@ public class AnimationWorker {
                         R.anim.fragment_slide_out);
         if(f!=null&&f.isVisible()){
             fT.hide(f).commit();
-            show_fabs();
+            //show_fabs();
         }
         f.getView().setVisibility(View.GONE);
 

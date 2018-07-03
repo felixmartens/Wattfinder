@@ -1,5 +1,6 @@
 package de.teammartens.android.wattfinder.worker;
 
+import android.animation.Animator;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -102,6 +103,7 @@ public class GeoWorks {
     public static void setmyPosition(LatLng mPosition,Float zoom, boolean moveMap) {
 
         if (mPosition != null &&validLatLng(mPosition) ){
+            if(LogWorker.isVERBOSE())LogWorker.d(LOG_TAG,"setMyPosition mPosition="+mPosition);
             if (KartenActivity.mMap != null) {
              if (Marker_Ich != null) Marker_Ich.remove();
              Marker_Ich = KartenActivity.mMap.addMarker(new MarkerOptions().position(mPosition)
@@ -209,9 +211,6 @@ public class GeoWorks {
                             if (LogWorker.isVERBOSE())
                                 LogWorker.d(LOG_TAG, "moveMap animateFinish -" + mMap.getCameraPosition().target.toString() + " -Zoom:" + zoom + " Verursacher:" + VERURSACHER);
 
-                            // nach dem Zoomen in den Details den Versatz nochmal korrigieren, deshalb zweite Animation starten
-                            if (VERURSACHER != "moveMap"&&(AnimationWorker.isDetailsVisibile() || AnimationWorker.isFilterVisibile() || VERURSACHER == "showMapBackPress") )
-                                movemapPosition(position, zoom, "moveMap");
 
                             SaeulenWorks.checkMarkerCache(VERURSACHER);
                         }
@@ -406,6 +405,9 @@ public class GeoWorks {
     }
 
     public static void Suchmarker(LatLng Coord, String Desc){
+        Suchmarker(Coord,Desc,false);
+    }
+    public static void Suchmarker(LatLng Coord, String Desc, boolean detail_zoom){
 
         if (mMap != null) {
 
@@ -421,7 +423,7 @@ public class GeoWorks {
                 AnimationWorker.show_map();
 
                 
-                movemapPosition(Coord,MY_LOCATION_ZOOM,"GeoWorks.Suchmarker");
+                movemapPosition(Coord,(detail_zoom?DETAIL_ZOOM:MY_LOCATION_ZOOM),"GeoWorks.Suchmarker");
 
             }
 
@@ -457,7 +459,7 @@ public class GeoWorks {
         LatLngBounds llb = new LatLngBounds(new LatLng(33.724339, -22.93945), new LatLng(66.478208, 34.628906));
 
         if(mLatLng== null ) return false;
-        //if (LogWorker.isVERBOSE())LogWorker.d(LOG_TAG,"mLatLng: "+mLatLng);
+        //if (LogWorker.isVERBOSE())LogWorker.d(LOG_TAG,"mLatLng: "+mLatLng+" "+llb.contains(mLatLng));
         return (llb != null
                 && llb.contains(mLatLng));
     }
@@ -538,7 +540,7 @@ public class GeoWorks {
                 @Override
                 public void onLocationResult(LocationResult locationResult) {
                     for (Location location : locationResult.getLocations()) {
-                        setMyPosition(location);
+                        GeoWorks.setMyPosition(location);
                     }
                 }
 
@@ -562,10 +564,12 @@ public class GeoWorks {
                        // Got last known location. In some rare situations this can be null.
                        if (location != null) {
                            setMyPosition(location);
-                            if(LogWorker.isVERBOSE())Log.d(LOG_TAG,"got LastLocation"+location.toString()+"/"+location.getProvider());
+                           if(LogWorker.isVERBOSE())Log.d(LOG_TAG,"got LastLocation"+location.toString()+"/"+location.getProvider());
                        }
+                          else  if(LogWorker.isVERBOSE())Log.d(LOG_TAG,"got LastLocation null");
                       }
                     });
+
             }catch(SecurityException e) {
                 Log.e(LOG_TAG, e.getStackTrace().toString());
             }

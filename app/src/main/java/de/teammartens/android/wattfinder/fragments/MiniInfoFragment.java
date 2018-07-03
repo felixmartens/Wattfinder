@@ -34,7 +34,7 @@ public class MiniInfoFragment extends Fragment {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
 
-             infoView = inflater.inflate(R.layout.fragment_infoview, container, false);
+             infoView = inflater.inflate(R.layout.fragment_infoview, container, true);
 
             // Initialize the Click Listener for opening Details
             infoView.setOnClickListener(new View.OnClickListener() {
