@@ -256,6 +256,9 @@ public static ActionBar actionBar;
     SaeulenWorks.resetInfoView();
     AnimationWorker.hide_info();
    AnimationWorker.show_fabs();
+   AnimationWorker.startupScreen=true;
+   mapReady=false;
+   FilterWorks.filter_initialized();
     }
 
 

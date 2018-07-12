@@ -83,38 +83,33 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
-
     </android.support.constraint.ConstraintLayout>
 
     <android.support.v7.widget.CardView
+
 
         android:id="@+id/InfoContainer"
 
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="@color/info"
+        android:background="@color/transparent"
         android:elevation="20dp"
         android:paddingLeft="10dp"
+
         android:paddingRight="10dp"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintWidth_min="250dp">
-
+        app:layout_constraintWidth_min="300dp"
+        app:layout_constraintWidth_percent="0.6">
 
         <android.support.constraint.ConstraintLayout
-
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/info"
-            android:visibility="visible"
             android:paddingLeft="10dp"
 
-            android:paddingRight="10dp"
-            >
-
-
+            android:paddingRight="10dp">
             <TextView
                 android:id="@+id/iName"
                 android:layout_width="match_parent"
@@ -259,8 +254,8 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.493" />
 
-        </android.support.constraint.ConstraintLayout>
 
+        </android.support.constraint.ConstraintLayout>
     </android.support.v7.widget.CardView>
 
     <fragment
@@ -284,14 +279,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 
-        android:layout_marginRight="8dp"
+        android:layout_marginRight="12dp"
         android:elevation="16dp"
         android:src="@drawable/ic_action_directions"
-        android:visibility="gone"
+        android:visibility="visible"
         app:backgroundTint="@color/colorAccent"
         app:borderWidth="0dp"
         app:fabSize="normal"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/InfoContainer"
         app:layout_constraintTop_toTopOf="@+id/infoSpacer"
         app:rippleColor="@color/white" />
 
@@ -310,7 +305,7 @@
         app:barrierAllowsGoneWidgets="false"
         app:barrierDirection="top"
         app:constraint_referenced_ids="bottomFragment"
-        tools:layout_editor_absoluteY="481dp" />
+        tools:layout_editor_absoluteY="973dp" />
 
 
     <android.support.constraint.Guideline

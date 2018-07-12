@@ -33,6 +33,7 @@ import de.teammartens.android.wattfinder.fragments.SmartFilterFragment;
 import de.teammartens.android.wattfinder.model.PlaceAutocomplete;
 import de.teammartens.android.wattfinder.model.Saeule;
 
+import static android.view.View.VISIBLE;
 import static de.teammartens.android.wattfinder.KartenActivity.BackstackEXIT;
 import static de.teammartens.android.wattfinder.KartenActivity.fragmentManager;
 import static de.teammartens.android.wattfinder.KartenActivity.getInstance;
@@ -66,7 +67,7 @@ public class AnimationWorker {
                 View v = getInstance().findViewById(R.id.InfoContainer);
                 slideUp(v,0);
                 v = getInstance().findViewById(R.id.fab_directions);
-                fadeIn(v,1000,1.0f);
+                v.setVisibility(VISIBLE);
                 setSTATE(STATE_INFO);
 
                 hide_fabs();
@@ -109,7 +110,7 @@ public class AnimationWorker {
             }
         });
         View v = getInstance().findViewById(R.id.fab_directions);
-        fadeOut(v,0);
+        v.setVisibility(View.GONE);
          }
 
     public static void hide_fragment(String FLAG){
@@ -297,7 +298,7 @@ public class AnimationWorker {
                 weight
         );
         V.setLayoutParams(param);*/
-        V.setVisibility(View.VISIBLE);
+        V.setVisibility(VISIBLE);
     }
     public static DetailsFragment getDetailsFragment(){
         return (DetailsFragment) fragmentManager.findFragmentByTag(FLAG_DETAILS);
@@ -351,7 +352,7 @@ public class AnimationWorker {
 
 
             getInstance().findViewById(R.id.bottomFragment).setVisibility(View.GONE);
-            getInstance().findViewById(R.id.mapContainer).setVisibility(View.VISIBLE);
+            getInstance().findViewById(R.id.mapContainer).setVisibility(VISIBLE);
 
             setSTATE(STATE_MAP);
 
@@ -378,7 +379,7 @@ public class AnimationWorker {
         t.setText("DEBUG VERSION! LogID:"+LogWorker.getlogID());
         //mapSearch.setVisibility(View.VISIBLE);
         //mapSearch.bringToFront();
-        if(LogWorker.isVERBOSE())t.setVisibility(View.VISIBLE);else t.setVisibility(View.GONE);
+        if(LogWorker.isVERBOSE())t.setVisibility(VISIBLE);else t.setVisibility(View.GONE);
     }
 
 
@@ -501,7 +502,7 @@ public class AnimationWorker {
             }
         });
     if(startup!=null) {
-    startup.setVisibility(View.VISIBLE);}
+    startup.setVisibility(VISIBLE);}
     FilterWorks.refresh_filterlisten_API();
 
     if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG, "showStartup");
@@ -566,7 +567,7 @@ public class AnimationWorker {
                         @Override
                         public void onAnimationEnd(Animator animation) {
                             super.onAnimationEnd(animation);
-                            V.setVisibility(View.VISIBLE);
+                            V.setVisibility(VISIBLE);
                             V.bringToFront();
                         }
                     });
@@ -579,7 +580,7 @@ public class AnimationWorker {
                         @Override
                         public void onAnimationEnd(Animator animation) {
                             super.onAnimationEnd(animation);
-                            V.setVisibility(View.VISIBLE);
+                            V.setVisibility(VISIBLE);
                             V.bringToFront();
                         }
                     });
@@ -598,7 +599,7 @@ public class AnimationWorker {
                         @Override
                         public void onAnimationEnd(Animator animation) {
                             super.onAnimationEnd(animation);
-                            V.setVisibility(View.VISIBLE);
+                            V.setVisibility(VISIBLE);
                             V.bringToFront();
                         }
                     });
@@ -611,7 +612,7 @@ public class AnimationWorker {
                         @Override
                         public void onAnimationEnd(Animator animation) {
                             super.onAnimationEnd(animation);
-                            V.setVisibility(View.VISIBLE);
+                            V.setVisibility(VISIBLE);
                             V.bringToFront();
                         }
                     });
@@ -732,13 +733,13 @@ public class AnimationWorker {
                             super.onAnimationEnd(animation);
                             if (V.getVisibility() == View.GONE) {
                                 V.setAlpha(0f);
-                                V.setVisibility(View.VISIBLE);
+                                V.setVisibility(VISIBLE);
                             }
                         }
                         @Override
                         public void onAnimationEnd(Animator animation) {
                             super.onAnimationEnd(animation);
-                            V.setVisibility(View.VISIBLE);
+                            V.setVisibility(VISIBLE);
                             V.bringToFront();
                         }
                     });
@@ -753,13 +754,13 @@ public class AnimationWorker {
                             super.onAnimationEnd(animation);
                             if (V.getVisibility() == View.GONE) {
                                 V.setAlpha(0f);
-                                V.setVisibility(View.VISIBLE);
+                                V.setVisibility(VISIBLE);
                             }
                         }
                         @Override
                         public void onAnimationEnd(Animator animation) {
                             super.onAnimationEnd(animation);
-                            V.setVisibility(View.VISIBLE);
+                            V.setVisibility(VISIBLE);
                             V.bringToFront();
                         }
                     });
@@ -782,7 +783,7 @@ public class AnimationWorker {
                         @Override
                         public void onAnimationEnd(Animator animation) {
                             super.onAnimationEnd(animation);
-                            V.setVisibility(View.VISIBLE);
+                            V.setVisibility(VISIBLE);
                             V.bringToFront();
                             V.clearFocus();
                         }
@@ -797,7 +798,7 @@ public class AnimationWorker {
                         @Override
                         public void onAnimationEnd(Animator animation) {
                             super.onAnimationEnd(animation);
-                            V.setVisibility(View.VISIBLE);
+                            V.setVisibility(VISIBLE);
                             V.bringToFront();
                             V.clearFocus();
                         }
@@ -820,7 +821,7 @@ public class AnimationWorker {
                         @Override
                         public void onAnimationEnd(Animator animation) {
                             super.onAnimationEnd(animation);
-                            V.setVisibility(View.VISIBLE);
+                            V.setVisibility(VISIBLE);
 
                             V.clearFocus();
                         }
@@ -835,7 +836,7 @@ public class AnimationWorker {
                         @Override
                         public void onAnimationEnd(Animator animation) {
                             super.onAnimationEnd(animation);
-                            V.setVisibility(View.VISIBLE);
+                            V.setVisibility(VISIBLE);
 
                             V.clearFocus();
                         }
@@ -902,7 +903,7 @@ public class AnimationWorker {
 
 
             final View root = f.getView();
-            root.setVisibility(View.VISIBLE);
+            root.setVisibility(VISIBLE);
             root.findViewById(R.id.place_autocomplete_search_input)
                     .performClick();
             root.post(new Runnable() {
