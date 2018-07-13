@@ -1,5 +1,7 @@
 package de.teammartens.android.wattfinder.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.util.Log;
@@ -23,7 +25,7 @@ import de.teammartens.android.wattfinder.worker.LogWorker;
  * Created by felix on 29.12.16.
  */
 
-public class Saeule implements ClusterItem {
+public class Saeule implements ClusterItem,Parcelable {
     private  LatLng mPosition;
     private final Integer mID;
     private  Integer mTyp=0;
@@ -33,9 +35,11 @@ public class Saeule implements ClusterItem {
     private boolean faultreport=false;
     private Integer ev_count=0;
 
-
-
     private Long updated;
+
+
+
+
 
     public Saeule(Integer ID,String name) {
         mID = ID;
@@ -84,6 +88,9 @@ public class Saeule implements ClusterItem {
 
         setUpdated();
     }
+
+
+
 
     @Override
     public LatLng getPosition() {
@@ -171,5 +178,53 @@ public class Saeule implements ClusterItem {
 
     public void setEventCount(Integer ev_count) {
         this.ev_count = ev_count;
+    }
+
+
+    //----------------------------------------------
+    // Parcelable Interface
+
+    public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
+        public Saeule createFromParcel(Parcel in) {
+            return new Saeule(in);
+        }
+
+        public Saeule[] newArray(int size) {
+            return new Saeule[size];
+        }
+    };
+
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+
+        dest.writeInt(mID);
+        dest.writeInt(mTyp);
+        dest.writeString(mName);
+        dest.writeString(mAddress);
+        dest.writeDouble(mPosition.latitude);
+        dest.writeDouble(mPosition.longitude);
+        dest.writeString(mChargepoints);
+        dest.writeInt((faultreport?1:0));
+        dest.writeInt(ev_count);
+        dest.writeLong(updated);
+
+    }
+
+    public Saeule(Parcel pIn) {
+        this.mID = pIn.readInt();
+        this.mTyp = pIn.readInt();
+        this.mName = pIn.readString();
+        this.mAddress = pIn.readString();
+        this.mPosition = new LatLng(pIn.readDouble(),pIn.readDouble());
+        this.mChargepoints = pIn.readString();
+        this.faultreport = (pIn.readInt()>0?true:false);
+        this.ev_count = pIn.readInt();
+        this.updated = pIn.readLong();
     }
 }

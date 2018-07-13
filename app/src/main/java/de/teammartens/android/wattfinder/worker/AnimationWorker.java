@@ -346,7 +346,6 @@ public class AnimationWorker {
         if (isVisible(FLAG_FILTER))
             fragmentManager.popBackStack(FLAG_FILTER, 0);
         }*/
-            fragmentManager.popBackStack();
         if(!fragmentManager.isStateSaved()&&fragmentManager.getBackStackEntryCount()>0&&!BackstackEXIT)
             fragmentManager.popBackStack();
 
@@ -373,6 +372,17 @@ public class AnimationWorker {
         }
     }
 
+
+    public static void restoreState(int state){
+        switch (state){
+            case 1: show_info(); break;
+            case 2: show_details(); break;
+            case 3: show_filter(); break;
+            case 0:
+            default:show_map();
+
+        }
+    }
 
     public static void show_debug(){
         TextView t = (TextView) getInstance().findViewById(R.id.debugHeader);

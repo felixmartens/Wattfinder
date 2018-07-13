@@ -47,6 +47,7 @@ import com.google.android.gms.maps.model.LatLng;
 import java.util.Random;
 
 import de.teammartens.android.wattfinder.model.ArrayAdapterSearchView;
+import de.teammartens.android.wattfinder.model.Saeule;
 import de.teammartens.android.wattfinder.model.rSuggestionsProvider;
 import de.teammartens.android.wattfinder.worker.AnimationWorker;
 import de.teammartens.android.wattfinder.worker.ExceptionWorker;
@@ -93,6 +94,7 @@ public class KartenActivity extends FragmentActivity
     private static final String zP_Latitude = "TargetLatitude";
     private static final String zP_Longitude = "TargetLongitude";
     private static final String zP_String = "TargetString";
+    private static final String sP_Saeule = "currentSaeule";
     private static final String sP_CEuID = "ceuserid";
     private static Integer CEuID=0;
     private static final Long TimestampValid = 12*3600*1000l;
@@ -278,7 +280,7 @@ public static ActionBar actionBar;
         //setMapReady(false);
     }
 
-    /*
+
     @Override
     protected void onSaveInstanceState(Bundle outState)
     {
@@ -286,7 +288,16 @@ public static ActionBar actionBar;
         if(LogWorker.isVERBOSE())LogWorker.d(LOG_TAG, "onSaveInstanceState");
 
 
-        outState.putCharSequence("savedText", text);// saved that text in bundle object i.e. outState
+       // saved that text in bundle object i.e. outState
+
+        outState.putDouble(sP_Latitude,GeoWorks.getMapPosition().latitude);
+        outState.putDouble(sP_Latitude,GeoWorks.getMapPosition().longitude);
+        outState.putFloat(sP_ZoomLevel,GeoWorks.getMapZoom());
+        outState.putParcelable(sP_Saeule,SaeulenWorks.getCurrentSaeule());
+        SaeulenWorks.populateInfoContainer();
+        outState.putInt("STATE",AnimationWorker.getSTATE());
+        outState.putBoolean("DEBUG",LogWorker.isVERBOSE());
+
 
     }
 
@@ -297,15 +308,14 @@ public static ActionBar actionBar;
     {
         super.onRestoreInstanceState(savedInstanceState);
         if(LogWorker.isVERBOSE())LogWorker.d(LOG_TAG, "onRestoreInstanceState");
-        final TextView textView =
-                (TextView) findViewById(R.id.textView);// getting the reference of textview from xml
 
-        CharSequence savedText=
-                savedInstanceState.getCharSequence("savedText");// getting the text of editext
-
-        textView.setText(savedText);// set the text that is retrieved from bundle object
+        GeoWorks.setMapPosition(new LatLng(savedInstanceState.getDouble(sP_Latitude),savedInstanceState.getDouble(sP_Longitude)),
+                    savedInstanceState.getFloat(sP_ZoomLevel));
+        SaeulenWorks.setCurrentSaeule((Saeule) savedInstanceState.getParcelable(sP_Saeule));
+        AnimationWorker.restoreState(savedInstanceState.getInt("STATE"));
+        LogWorker.setVERBOSE(savedInstanceState.getBoolean("DEBUG"));
     }
-*/
+
 
     @Override
     public void onBackPressed() {

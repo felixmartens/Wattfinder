@@ -556,7 +556,7 @@ public static void ladeEvents(){
             //GeoWorks.animateClick();
             GeoWorks.movemapPosition(item.getPosition(),"MarkerClick");
             if(AnimationWorker.isFilterVisibile()) AnimationWorker.toggleFilter();
-            SaeulenWorks.populateInfoContainer(item);
+            SaeulenWorks.populateInfoContainer(item,true);
            // if(!AnimationWorker.isDetailsVisibile()) AnimationWorker.show_details(item);
 
 
@@ -628,8 +628,11 @@ public static void ladeEvents(){
         }
 
     }
-    private static  void populateInfoContainer(){populateInfoContainer(getCurrentSaeule());}
-    private static  void populateInfoContainer(Saeule mSaeule) {
+    public static  void populateInfoContainer(){populateInfoContainer(getCurrentSaeule(),false);}
+    private static  void populateInfoContainer(boolean show){populateInfoContainer(getCurrentSaeule(),show);}
+    private static  void populateInfoContainer(Saeule mSaeule){populateInfoContainer(mSaeule,false);}
+
+    private static  void populateInfoContainer(Saeule mSaeule,boolean show) {
         View infoView = KartenActivity.getInstance().findViewById(R.id.InfoContainer);
 
         if (infoView != null && mSaeule != null) {
