@@ -316,7 +316,8 @@ public class AnimationWorker {
         slideTopDown(fabs,0);
         fabs = getInstance().findViewById(R.id.buttonMapStyle);
         slideUp(fabs,0);
-
+        View V = fabs.findViewById(R.id.fab_debug);
+        if(V!=null)V.setVisibility(View.VISIBLE);
 
     }
 

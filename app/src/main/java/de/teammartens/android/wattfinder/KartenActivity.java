@@ -127,8 +127,7 @@ public static ActionBar actionBar;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mainlayout3);
         sharedPref = getPreferences(Context.MODE_PRIVATE);
-        if(savedInstanceState == null){
-            //really make new Instance
+
             sInstance = this;
             GoogleApiAvailability.getInstance().makeGooglePlayServicesAvailable(this);
            if(!FilterWorks.filter_initialized()) AnimationWorker.showStartup();
@@ -142,7 +141,7 @@ public static ActionBar actionBar;
 
             privacyConsent = sharedPref.getBoolean("privacyConsent",false);
             if(LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG,"privacyConsent "+privacyConsent);
-        }
+
         //getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
 
 
@@ -294,7 +293,6 @@ public static ActionBar actionBar;
         outState.putDouble(sP_Latitude,GeoWorks.getMapPosition().longitude);
         outState.putFloat(sP_ZoomLevel,GeoWorks.getMapZoom());
         outState.putParcelable(sP_Saeule,SaeulenWorks.getCurrentSaeule());
-        SaeulenWorks.populateInfoContainer();
         outState.putInt("STATE",AnimationWorker.getSTATE());
         outState.putBoolean("DEBUG",LogWorker.isVERBOSE());
 
@@ -312,6 +310,7 @@ public static ActionBar actionBar;
         GeoWorks.setMapPosition(new LatLng(savedInstanceState.getDouble(sP_Latitude),savedInstanceState.getDouble(sP_Longitude)),
                     savedInstanceState.getFloat(sP_ZoomLevel));
         SaeulenWorks.setCurrentSaeule((Saeule) savedInstanceState.getParcelable(sP_Saeule));
+        SaeulenWorks.populateInfoContainer();
         AnimationWorker.restoreState(savedInstanceState.getInt("STATE"));
         LogWorker.setVERBOSE(savedInstanceState.getBoolean("DEBUG"));
     }
@@ -430,6 +429,16 @@ public static ActionBar actionBar;
                 AnimationWorker.show_filter();
             }
         });
+        v.setLongClickable(true);
+        v.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                View V = findViewById(R.id.fab_debug);
+                if(V!=null)V.setVisibility(View.VISIBLE);
+                return true;
+            }
+        });
+
         //slideDown(v, 0);
         AnimationWorker.slideUp(v, 0);
         v = findViewById(R.id.fab_mylocation);
@@ -462,6 +471,7 @@ public static ActionBar actionBar;
                 AnimationWorker.showSearchBar();
             }
         });
+
 
         //slideDown(v, 0);
         AnimationWorker.slideUp(v, 0);

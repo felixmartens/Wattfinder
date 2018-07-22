@@ -473,6 +473,7 @@ public class FilterWorks {
             filter_minpower = F_POWER_VALUE[progress];
         if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG, "Filter POWER gesetzt: " + filter_minpower);
         filter_speichern();}
+        SaeulenWorks.checkMarkerCache("Filter Power:" + filter_minpower);
         return filter_minpower;
 
 

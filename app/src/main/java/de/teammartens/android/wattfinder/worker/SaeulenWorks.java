@@ -763,6 +763,7 @@ public static void ladeEvents(){
 
 public static boolean duplicateRQ(int hash){
     LatLngBounds llB = KartenActivity.mMap.getProjection().getVisibleRegion().latLngBounds;
+    LogWorker.d(LOG_TAG,"DUPLICATE CHECK: hash"+hash+" vs"+letzterAbrufFilter);
     if (    (hash==letzterAbrufFilter) &&
             letzterAbrufBeiLLB.contains(llB.northeast) &&
             letzterAbrufBeiLLB.contains(llB.southwest)&&
