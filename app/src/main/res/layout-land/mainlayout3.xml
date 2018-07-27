@@ -28,8 +28,8 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:tag="@android:string/defaultMsisdnAlphaTag"
-        app:layout_constraintBottom_toTopOf="@+id/barrierInfo"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/barrierInfo"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/place_autocomplete_fragment"
         app:layout_constraintVertical_weight="2">
@@ -102,7 +102,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintWidth_min="300dp"
-        app:layout_constraintWidth_percent="0.6">
+        app:layout_constraintWidth_percent="0.7">
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
@@ -110,11 +110,39 @@
             android:paddingLeft="10dp"
 
             android:paddingRight="10dp">
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/fab_chargeevent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:layout_marginRight="7dp"
+                android:layout_marginTop="32dp"
+                android:elevation="16dp"
+                android:src="@drawable/ic_assignment"
+                android:visibility="visible"
+                app:backgroundTint="@color/colorAccent"
+                app:borderWidth="0dp"
+                app:fabSize="mini"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:rippleColor="@color/white" />
+
+            <android.support.constraint.Barrier
+                android:id="@+id/barrierFault"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:barrierAllowsGoneWidgets="true"
+                app:barrierDirection="left"
+                app:constraint_referenced_ids="iEntfernung,iEvCount"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:layout_editor_absoluteY="973dp" />
+
             <TextView
                 android:id="@+id/iName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/mapinfooverlap"
                 android:text=""
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -123,61 +151,49 @@
 
             <TextView
                 android:id="@+id/iAdresse"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:text=""
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/iEvCount"
-                tools:layout_editor_absoluteX="15dp" />
+                app:layout_constraintTop_toBottomOf="@+id/iName"
+                app:layout_constraintWidth_percent="0.5" />
 
             <TextView
                 android:id="@+id/iAnschluesse"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text=""
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 app:layout_constraintBottom_toTopOf="@id/iEntfernung"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/iAdresse" />
+                app:layout_constraintTop_toBottomOf="@+id/iAdresse"
+                app:layout_constraintWidth_percent="0.5" />
 
             <TextView
                 android:id="@+id/iEntfernung"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text=""
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                app:layout_constraintBottom_toTopOf="@+id/barrierInfo"
-                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/iAnschluesse" />
+                app:layout_constraintTop_toBottomOf="@+id/iAdresse"
+                app:layout_constraintWidth_percent="0.5" />
 
             <TextView
                 android:id="@+id/iEvCount"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right"
                 android:gravity="right"
                 android:textColor="@color/place_autocomplete_search_hint"
                 android:textIsSelectable="false"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/iName"
-                tools:layout_editor_absoluteX="15dp" />
+                app:layout_constraintStart_toEndOf="@id/iAdresse"
+                app:layout_constraintTop_toBottomOf="@+id/iAnschluesse" />
 
-
-            <android.support.constraint.Barrier
-                android:id="@+id/barrierInfo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:barrierAllowsGoneWidgets="false"
-                app:barrierDirection="top"
-                app:constraint_referenced_ids="create_chargeevent"
-                tools:layout_editor_absoluteY="973dp" />
 
             <Button
                 android:id="@+id/create_chargeevent"
@@ -185,9 +201,11 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
                 android:text="@string/icreate_chargeev"
-                android:visibility="visible"
+                android:visibility="gone"
                 app:layout_constraintBottom_toTopOf="@+id/icard_fault"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/iEntfernung"
+                app:layout_constraintTop_toBottomOf="@+id/iEvCount"
                 tools:text="@string/icreate_chargeev" />
 
             <android.support.v7.widget.CardView
@@ -195,11 +213,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
+                android:layout_marginTop="10dp"
                 android:padding="5dp"
                 app:cardBackgroundColor="@color/colorDebug"
-                app:layout_constraintBottom_toTopOf="@+id/iUpdated"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent">
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/barrierFault">
 
                 <TextView
                     android:id="@+id/ifault_report"
@@ -225,7 +244,8 @@
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/icard_fault" />
 
             <TextView
                 android:id="@+id/iSaeulenid"
@@ -258,21 +278,19 @@
         </android.support.constraint.ConstraintLayout>
     </android.support.v7.widget.CardView>
 
-    <fragment
+    <FrameLayout
         android:id="@+id/bottomFragment"
         android:name="de.teammartens.android.wattfinder.fragments.DetailsFragment"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_gravity="bottom|fill_horizontal"
-        android:layout_weight="1"
-        android:minHeight="200dp"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/guideline_50"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_min="400dp"
+        app:layout_constraintWidth_percent="0.3"
+        tools:layout_constraintWidth_min="300dp" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_directions"
@@ -302,9 +320,10 @@
         android:id="@+id/barrierInfo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:barrierAllowsGoneWidgets="false"
-        app:barrierDirection="top"
+        app:barrierAllowsGoneWidgets="true"
+        app:barrierDirection="left"
         app:constraint_referenced_ids="bottomFragment"
+        tools:layout_editor_absoluteX="683dp"
         tools:layout_editor_absoluteY="973dp" />
 
 
@@ -343,19 +362,21 @@
         android:layout_height="wrap_content"
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/place_autocomplete_fragment" />
 
     <include
         android:id="@+id/include_startup"
         layout="@layout/startupscreen"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:visibility="visible" />
 
     <include
-        android:id="@+id/include3"
+        android:id="@+id/include_eula"
         layout="@layout/euladialog"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
 
     <RelativeLayout
         android:id="@+id/imageZoomFragment"

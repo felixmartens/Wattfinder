@@ -57,6 +57,7 @@ import de.teammartens.android.wattfinder.worker.LogWorker;
 import de.teammartens.android.wattfinder.worker.NetWorker;
 import de.teammartens.android.wattfinder.worker.SaeulenWorks;
 
+import static android.view.View.VISIBLE;
 
 
 public class KartenActivity extends FragmentActivity
@@ -76,7 +77,7 @@ public class KartenActivity extends FragmentActivity
     private String suchtext;
 
     public static final boolean VERBOSE = true;
-
+    private static  boolean restoredState = false;
     public static String lineSeparator ="";
     public static SupportMapFragment mapFragment;
     public static FragmentManager fragmentManager;
@@ -85,7 +86,7 @@ public class KartenActivity extends FragmentActivity
 
     private static Integer API_RQ_Count = 0;
 
-    private static int MapPaddingY,MapPaddingX = 0;
+    private static int MapType = 1;
     private static final String sP_APIRQCount = "APIRQCount";
     private static final String sP_ZoomLevel = "LastZoomLevel";
     private static final String sP_Latitude = "LastLatitude";
@@ -98,9 +99,8 @@ public class KartenActivity extends FragmentActivity
     private static final String sP_CEuID = "ceuserid";
     private static Integer CEuID=0;
     private static final Long TimestampValid = 12*3600*1000l;
-    private static final Float defaultLat = 52.5170365f;
-    private static final Float defaultLng = 13.3888599f;
-    private static final LatLng defaultLatLng = new LatLng(defaultLat,defaultLng);
+
+
     private static boolean permissiondenied = false;
     public static boolean mapReady = false;
     public static boolean privacyConsent = false;
@@ -165,18 +165,23 @@ public static ActionBar actionBar;
 
     @Override
     protected void onStart() {
+        restoredState=false;
         super.onStart();
-
+        mapReady=false;
+        GeoWorks.init_searchfragment();
+        SaeulenWorks.resetInfoView();
+        //AnimationWorker.hide_info();
 
     }
     @Override
     protected void onPause() {
         super.onPause();
-
+        restoredState=false;
 
         FilterWorks.filter_speichern();
 
         if (mMap!=null) {
+
             if (sharedPref == null)
                 sharedPref = getPreferences(Context.MODE_PRIVATE);
             SharedPreferences.Editor e = sharedPref.edit();
@@ -186,16 +191,7 @@ public static ActionBar actionBar;
                 e.putFloat(sP_Longitude, new Float(cp.target.longitude));
                 e.putFloat(sP_ZoomLevel, cp.zoom);
                 e.putLong(sP_Timestamp, System.currentTimeMillis());
-                LatLng c = GeoWorks.getSuchPosition();
-                if (c!= null){
-                    e.putFloat(zP_Latitude, new Float(c.latitude));
-                    e.putFloat(zP_Longitude, new Float(c.longitude));
-                    e.putString(zP_String,GeoWorks.getSuchString());
-                }else
-                {
-                    e.putFloat(zP_Latitude, 0f);
-                    e.putFloat(zP_Longitude, 0f);
-                }
+
 
                 e.putInt(sP_APIRQCount, API_RQ_Count);
                 e.apply();
@@ -206,18 +202,20 @@ public static ActionBar actionBar;
 */            }
 
         }
-        LogWorker.sendLog();
+        if(LogWorker.isVERBOSE())LogWorker.sendLog();
 
     }
     @Override
     protected void onResume() {
 
-        if(LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG,"onResume");
+        if(LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG,"onResume "+mapReady+" "+AnimationWorker.getSTATE());
+        AnimationWorker.startupScreen=true;
         if(FilterWorks.filter_initialized())AnimationWorker.hideStartup();
+
         super.onResume();
         sInstance = this;
         mapFragment = (SupportMapFragment) fragmentManager.findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
+        if(!mapReady)mapFragment.getMapAsync(this);
         LogWorker.init_logging();
         load_CEuID();
 
@@ -253,13 +251,6 @@ public static ActionBar actionBar;
             alert.show();
         }
 
-    GeoWorks.init_searchfragment();
-    SaeulenWorks.resetInfoView();
-    AnimationWorker.hide_info();
-   AnimationWorker.show_fabs();
-   AnimationWorker.startupScreen=true;
-   mapReady=false;
-   FilterWorks.filter_initialized();
     }
 
 
@@ -284,41 +275,77 @@ public static ActionBar actionBar;
     protected void onSaveInstanceState(Bundle outState)
     {
         super.onSaveInstanceState(outState);
-        if(LogWorker.isVERBOSE())LogWorker.d(LOG_TAG, "onSaveInstanceState");
+        if(LogWorker.isVERBOSE())LogWorker.d(LOG_TAG, "onSaveInstanceState "+AnimationWorker.getSTATE());
 
 
        // saved that text in bundle object i.e. outState
+        if(mapReady&&mMap!=null) {
+            outState.putDouble(sP_Latitude, GeoWorks.getMapPosition().latitude);
+            outState.putDouble(sP_Latitude, GeoWorks.getMapPosition().longitude);
+            outState.putFloat(sP_ZoomLevel, GeoWorks.getMapZoom());
+            outState.putParcelable(sP_Saeule, SaeulenWorks.getCurrentSaeule());
+            outState.putInt("STATE", AnimationWorker.getSTATE());
+            outState.putInt("MapType", mMap.getMapType());
+            outState.putBoolean("DEBUG", LogWorker.isVERBOSE());
+            LatLng c = GeoWorks.getSuchPosition();
+            if (c != null) {
+                outState.putFloat(zP_Latitude, new Float(c.latitude));
+                outState.putFloat(zP_Longitude, new Float(c.longitude));
+                outState.putString(zP_String, GeoWorks.getSuchString());
+            } else {
+                outState.putFloat(zP_Latitude, 0f);
+                outState.putFloat(zP_Longitude, 0f);
+            }
 
-        outState.putDouble(sP_Latitude,GeoWorks.getMapPosition().latitude);
-        outState.putDouble(sP_Latitude,GeoWorks.getMapPosition().longitude);
-        outState.putFloat(sP_ZoomLevel,GeoWorks.getMapZoom());
-        outState.putParcelable(sP_Saeule,SaeulenWorks.getCurrentSaeule());
-        outState.putInt("STATE",AnimationWorker.getSTATE());
-        outState.putBoolean("DEBUG",LogWorker.isVERBOSE());
+            if(!fragmentManager.isStateSaved()&&fragmentManager.getBackStackEntryCount()>0&&!BackstackEXIT)
+                fragmentManager.popBackStack();
 
 
+            getInstance().findViewById(R.id.bottomFragment).setVisibility(View.GONE);
+            getInstance().findViewById(R.id.mapContainer).setVisibility(VISIBLE);
+        }
     }
 
 //Restoring the State
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState)
-    {
+    {  restoredState=true;
         super.onRestoreInstanceState(savedInstanceState);
-        if(LogWorker.isVERBOSE())LogWorker.d(LOG_TAG, "onRestoreInstanceState");
+        if(LogWorker.isVERBOSE())LogWorker.d(LOG_TAG, "onRestoreInstanceState"+savedInstanceState.getFloat(zP_Latitude,0));
 
-        GeoWorks.setMapPosition(new LatLng(savedInstanceState.getDouble(sP_Latitude),savedInstanceState.getDouble(sP_Longitude)),
-                    savedInstanceState.getFloat(sP_ZoomLevel));
+
         SaeulenWorks.setCurrentSaeule((Saeule) savedInstanceState.getParcelable(sP_Saeule));
         SaeulenWorks.populateInfoContainer();
-        AnimationWorker.restoreState(savedInstanceState.getInt("STATE"));
+        int State = savedInstanceState.getInt("STATE");
+
+            if(LogWorker.isVERBOSE())LogWorker.d(LOG_TAG, "STATE Search");
+            GeoWorks.setMapPosition(GeoWorks.getSuchPosition(),savedInstanceState.getFloat(sP_ZoomLevel));
+            GeoWorks.Suchmarker(GeoWorks.getSuchPosition(),savedInstanceState.getString(zP_String,""));
+
+        /*}else{
+            Float Lat = savedInstanceState.getFloat(zP_Latitude,0);
+            Float Lng = savedInstanceState.getFloat(zP_Longitude,0);
+            if(Lat>0&&Lng>0 &&GeoWorks.validLatLng(new LatLng(Lat,Lng))){
+                GeoWorks.Suchmarker(new LatLng(Lat,Lng),savedInstanceState.getString(zP_String,""));
+            }*/
+        if (State==AnimationWorker.STATE_SEARCH){State=AnimationWorker.STATE_MAP;
+        }else{
+            GeoWorks.setMapPosition(new LatLng(savedInstanceState.getDouble(sP_Latitude),savedInstanceState.getDouble(sP_Longitude)),
+                    savedInstanceState.getFloat(sP_ZoomLevel));
+        }
+        AnimationWorker.restoreState(State);
+        MapType = savedInstanceState.getInt("MapType");
         LogWorker.setVERBOSE(savedInstanceState.getBoolean("DEBUG"));
+        //Lade Suchmarker
+
+
     }
 
 
     @Override
     public void onBackPressed() {
-        if(fragmentManager.getBackStackEntryCount() != 0) {
+        if(fragmentManager.getBackStackEntryCount() != 0|| AnimationWorker.getSTATE()>0) {
 
 // TODO: Hier muss unbedingt nachgearbeitet werden. Momentan funktioniert die Erkennung ob Map visible ist nur ab Android15
 
@@ -392,7 +419,9 @@ public static ActionBar actionBar;
         mMap = googleMap;
         setMapReady(true);
 
-        setMapCenter();
+        if(!restoredState&&AnimationWorker.getSTATE()==0){
+            setMapCenter();
+        }
 
         View v = getInstance().findViewById(R.id.MapTouchOverlay);
         v.setOnTouchListener(new View.OnTouchListener() {
@@ -419,7 +448,13 @@ public static ActionBar actionBar;
 
         });
 
-
+        v = getInstance().findViewById(R.id.fab_debug);
+        if(v!=null) v.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LogWorker.setVERBOSE(!LogWorker.isVERBOSE());
+            }
+        });
         v = findViewById(R.id.fab_filter);
         v.requestFocus();
         v.setOnClickListener(new View.OnClickListener() {
@@ -433,8 +468,10 @@ public static ActionBar actionBar;
         v.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                View V = findViewById(R.id.fab_debug);
+                View V = v.getRootView().findViewById(R.id.fab_debug);
                 if(V!=null)V.setVisibility(View.VISIBLE);
+                V = v.getRootView().findViewById(R.id.fab_search);
+                if(V!=null)V.setVisibility(View.INVISIBLE);
                 return true;
             }
         });
@@ -463,6 +500,17 @@ public static ActionBar actionBar;
                 }
             }
         });
+        v.setLongClickable(true);
+        v.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                View V = v.getRootView().findViewById(R.id.fab_debug);
+                if(V!=null)V.setVisibility(View.VISIBLE);
+                V = v.getRootView().findViewById(R.id.fab_search);
+                if(V!=null)V.setVisibility(View.INVISIBLE);
+                return true;
+            }
+        });
 
         v = findViewById(R.id.fab_search);
         v.setOnClickListener(new View.OnClickListener() {
@@ -485,18 +533,24 @@ public static ActionBar actionBar;
                 if (i < 4) KartenActivity.mMap.setMapType(i + 1);
                 else KartenActivity.mMap.setMapType(1);
 
+
             }
         });
 
-        KartenActivity.mMap.setMapType(1);
+        if(!restoredState||
+                AnimationWorker.getSTATE()==AnimationWorker.STATE_MAP||
+                AnimationWorker.getSTATE()==AnimationWorker.STATE_SEARCH)
+                    AnimationWorker.show_map();
+
+        KartenActivity.mMap.setMapType(MapType);
         BackstackEXIT = false;
         FilterWorks.lade_filter_db();
         SaeulenWorks.setUpClusterer();
         SaeulenWorks.reset();
         SaeulenWorks.checkMarkerCache("MapReady");
-        AnimationWorker.show_map();
-        AnimationWorker.hide_info();
-        if (FilterWorks.filter_initialized()) AnimationWorker.hideStartup();
+        GeoWorks.Suchmarker();
+
+
     }
 }
 
@@ -747,14 +801,11 @@ return null;
     public static void setMapCenter(){
 
 
-        Float Lat = sharedPref.getFloat(sP_Latitude,defaultLat);
-        if (Lat==0f)Lat=defaultLat;
-        Float Lng = sharedPref.getFloat(sP_Longitude,defaultLng);
-        if (Lng==0f)Lng=defaultLng;
+        LatLng mapPos = new LatLng(sharedPref.getFloat(sP_Latitude,GeoWorks.defaultLat),sharedPref.getFloat(sP_Longitude,GeoWorks.defaultLng));
+
         Float zoom = sharedPref.getFloat(sP_ZoomLevel,GeoWorks.DEFAULT_ZOOM);
-        if (!GeoWorks.validLatLng(new LatLng(Lat,Lng))){
-            Lat=defaultLat;
-            Lng=defaultLng;
+        if (mapPos==null||!GeoWorks.validLatLng(mapPos)){
+            mapPos=GeoWorks.defaultLatLng;
             zoom=GeoWorks.DEFAULT_ZOOM;
         }
         //erstmal setzen um zumindest eine POsition zu haben
@@ -764,11 +815,11 @@ return null;
 
 
             if ( ((System.currentTimeMillis()-TS)<TimestampValid) &&
-                    !(Lat.equals(defaultLat) && Lng.equals(defaultLng)) && zoom > GeoWorks.MAX_ZOOM) {
+                    !mapPos.equals(GeoWorks.defaultLatLng) && zoom > GeoWorks.MAX_ZOOM) {
                 GeoWorks.CUSTOM_MAPVIEW = true;
 
-                LogWorker.d("SetMapCenter", "Lat: " + Lat + "Lng: " + Lng + "Z: " + zoom + " geladen");
-                GeoWorks.movemapPosition(new LatLng(Lat, Lng), zoom, "mapReady");
+                LogWorker.d("SetMapCenter", "Lat: " + mapPos.latitude + "Lng: " + mapPos.longitude + "Z: " + zoom + " geladen");
+                GeoWorks.movemapPosition(mapPos, zoom, "mapReady");
             } else {
                 GeoWorks.CUSTOM_MAPVIEW = false;
                 if (GeoWorks.validLatLng(GeoWorks.getmyPosition())) {
@@ -778,15 +829,10 @@ return null;
                 } else {
 
                     LogWorker.d("SetMapCenter", "zum Standard Standort bewegen");
-                    GeoWorks.movemapPosition(new LatLng(defaultLat, defaultLng), GeoWorks.DEFAULT_ZOOM, "mapReadyDefault");
+                    GeoWorks.movemapPosition(GeoWorks.defaultLatLng, GeoWorks.DEFAULT_ZOOM, "mapReadyDefault");
                 }
             }
-            //Lade Suchmarker
-            Lat = sharedPref.getFloat(zP_Latitude,0);
-            Lng = sharedPref.getFloat(zP_Longitude,0);
-            if(Lat>0&&Lng>0){
-                GeoWorks.Suchmarker(new LatLng(Lat,Lng),sharedPref.getString(zP_String,""));
-            }
+
 
 
 

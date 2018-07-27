@@ -107,16 +107,34 @@
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingLeft="10dp"
 
-            android:paddingRight="10dp">
+            >
 
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/fab_chargeevent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="32dp"
+                android:elevation="16dp"
+                android:src="@drawable/ic_assignment"
+                android:visibility="visible"
+                app:backgroundTint="@color/colorAccent"
+                app:borderWidth="0dp"
+                app:fabSize="mini"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:rippleColor="@color/white" />
 
             <TextView
                 android:id="@+id/iName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/mapinfooverlap"
+                android:background="@color/colorPrimary"
+                android:paddingLeft="10dp"
+                android:paddingRight="50dp"
                 android:text=""
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -127,23 +145,27 @@
                 android:id="@+id/iAdresse"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:background="@color/colorPrimary"
+                android:paddingBottom="5dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="50dp"
                 android:text=""
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/iEvCount"
-                tools:layout_editor_absoluteX="15dp" />
+                app:layout_constraintTop_toBottomOf="@+id/iName" />
 
             <TextView
                 android:id="@+id/iAnschluesse"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:layout_weight="1"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
                 android:text=""
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 app:layout_constraintBottom_toTopOf="@id/iEntfernung"
-                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/iAdresse" />
 
@@ -151,9 +173,10 @@
                 android:id="@+id/iEntfernung"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
                 android:text=""
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                app:layout_constraintBottom_toTopOf="@+id/barrierInfo"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/iAnschluesse" />
@@ -164,22 +187,14 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="right"
                 android:gravity="right"
+                android:paddingRight="10dp"
                 android:textColor="@color/place_autocomplete_search_hint"
                 android:textIsSelectable="false"
+                app:layout_constraintBottom_toTopOf="@+id/icard_fault"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/iName"
-                tools:layout_editor_absoluteX="15dp" />
+                app:layout_constraintStart_toEndOf="@id/iAnschluesse"
+                app:layout_constraintTop_toBottomOf="@+id/fab_chargeevent" />
 
-
-            <android.support.constraint.Barrier
-                android:id="@+id/barrierInfo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:barrierAllowsGoneWidgets="false"
-                app:barrierDirection="top"
-                app:constraint_referenced_ids="create_chargeevent"
-                tools:layout_editor_absoluteY="973dp" />
 
             <Button
                 android:id="@+id/create_chargeevent"
@@ -187,9 +202,9 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
                 android:text="@string/icreate_chargeev"
-                android:visibility="visible"
-                app:layout_constraintBottom_toTopOf="@+id/icard_fault"
+                android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/iEvCount"
                 tools:text="@string/icreate_chargeev" />
 
             <android.support.v7.widget.CardView
@@ -201,7 +216,7 @@
                 app:cardBackgroundColor="@color/colorDebug"
                 app:layout_constraintBottom_toTopOf="@+id/iUpdated"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent">
+                app:layout_constraintTop_toBottomOf="@+id/iEntfernung">
 
                 <TextView
                     android:id="@+id/ifault_report"
@@ -223,6 +238,7 @@
 
                 android:layout_marginBottom="8dp"
                 android:gravity="bottom|right"
+                android:paddingRight="10dp"
                 android:text=""
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -259,7 +275,7 @@
         </android.support.constraint.ConstraintLayout>
     </android.support.v7.widget.CardView>
 
-    <fragment
+    <FrameLayout
         android:id="@+id/bottomFragment"
         android:name="de.teammartens.android.wattfinder.fragments.DetailsFragment"
         android:layout_width="match_parent"
@@ -344,16 +360,17 @@
         android:layout_height="wrap_content"
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/place_autocomplete_fragment" />
 
     <include
         android:id="@+id/include_startup"
         layout="@layout/startupscreen"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:visibility="visible" />
 
     <include
-        android:id="@+id/include3"
+        android:id="@+id/include_eula"
         layout="@layout/euladialog"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />

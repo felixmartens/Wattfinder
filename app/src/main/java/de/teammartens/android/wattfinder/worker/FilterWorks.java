@@ -64,10 +64,10 @@ public class FilterWorks {
     private static Set<String> stecker = new HashSet<String>();
     private static Set<String> verbund = new HashSet<String>();
     private static Set<String> karten = new HashSet<String>();
-    private static Set<String> stecker_convertTemp = new HashSet<String>();//wird benötigt um der Concurrentmdificationexecption aus dem Weg zu gehen
-    private static Set<String> verbund_convertTemp = new HashSet<String>();
-    private static Set<String> karten_convertTemp = new HashSet<String>();
-
+    //private static Set<String> stecker_convertTemp = new HashSet<String>();//wird benötigt um der Concurrentmdificationexecption aus dem Weg zu gehen
+    //private static Set<String> verbund_convertTemp = new HashSet<String>();
+    //private static Set<String> karten_convertTemp = new HashSet<String>();
+    private static boolean filter_initialized = false;
 
     public static Set<String> stecker_verfuegbar_API = new HashSet<String>();
     public static Set<String> verbund_verfuegbar_API = new HashSet<String>();
@@ -419,14 +419,14 @@ public class FilterWorks {
      */
     public static boolean setze_filter(Integer F, Boolean Value) {
 
-        if(filter.get(F)!=Value) {
+
             filter.set(F, Value);
 
             if (LogWorker.isVERBOSE())
                 LogWorker.d(LOG_TAG, "Filter" + F + "(" + FilterInt2StrHelper(F) + ") gesetzt: " + filter.get(F));
             filter_speichern();
             SaeulenWorks.checkMarkerCache("setze Filter " + FilterInt2StrHelper(F));
-        }
+
         return filter.get(F);
 
 
@@ -1133,29 +1133,37 @@ public class FilterWorks {
     }
 
     public static boolean filter_initialized() {
-        if (LogWorker.isVERBOSE())
+        /*if (LogWorker.isVERBOSE())
             LogWorker.d(LOG_TAG, "FilterInitialized: Stecker:" + (stecker_verfuegbar_API != null ? stecker_verfuegbar_API.size() : "0") +
                     " Verbund:" + (verbund_verfuegbar_API != null ? verbund_verfuegbar_API.size() : "0") +
                     " Karten:" + (karten_verfuegbar_API != null ? karten_verfuegbar_API.size() : "0") +
                     " Filter:" + filter.toString() +
                     "MapReady: " + KartenActivity.isMapReady());
 
-
+*/
         if (filter!=null && filter.size()<5) lade_filter_db();
 
-        boolean ret = stecker_verfuegbar_API != null && stecker_verfuegbar_API.size() > 0
+        boolean ret = (filter_initialized?true:stecker_verfuegbar_API != null && stecker_verfuegbar_API.size() > 0
                 && verbund_verfuegbar_API != null && verbund_verfuegbar_API.size() > 0
                 && karten_verfuegbar_API != null && karten_verfuegbar_API.size() > 0
                 && filter != null && filter.size() > 5
-                && KartenActivity.isMapReady();
+                && KartenActivity.isMapReady());
+        filter_initialized=ret;
         if (LogWorker.isVERBOSE())
             LogWorker.d(LOG_TAG, "filter initialized" + ret);
 
         if (ret) AnimationWorker.hideStartup();
         return (ret);
     }
+    public static int listenlaenge(String Liste) {
 
+        if (Liste == F_KARTEN) return karten.size();
+        if (Liste == F_STECKER) return stecker.size();
+        if (Liste == F_VERBUND) return verbund.size();
 
+        return 0;
+    }
+/*
     private static void convert2API() {
         try {
             if (!stecker_verfuegbar_API.isEmpty()) {
@@ -1189,14 +1197,7 @@ public class FilterWorks {
 
     }
 
-    public static int listenlaenge(String Liste) {
 
-        if (Liste == F_KARTEN) return karten.size();
-        if (Liste == F_STECKER) return stecker.size();
-        if (Liste == F_VERBUND) return verbund.size();
-
-        return 0;
-    }
 
     private static void APIconverter(String Liste, String Value) {
         Boolean CONVERTED = false;
@@ -1492,4 +1493,5 @@ public class FilterWorks {
         }
 
     }
+    */
 }

@@ -166,7 +166,10 @@
     <include layout="@layout/startupscreen" />
     <include layout="@layout/errormessage" />
 
-    <include layout="@layout/euladialog" />
+    <include
+        android:id="@+id/include_eula"
+        layout="@layout/euladialog"
+        android:visibility="gone" />
 
 
 </FrameLayout>

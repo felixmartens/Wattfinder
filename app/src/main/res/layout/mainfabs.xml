@@ -76,7 +76,8 @@
         android:id="@+id/fab_debug"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="7dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="10dp"
         android:elevation="6dp"
         android:src="@drawable/ic_adb"
         android:visibility="gone"
@@ -85,7 +86,7 @@
         app:elevation="6dp"
         app:fabSize="normal"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/fab_search"
+        app:layout_constraintTop_toTopOf="parent"
         app:pressedTranslationZ="12dp"
         app:rippleColor="@color/rand" />
 

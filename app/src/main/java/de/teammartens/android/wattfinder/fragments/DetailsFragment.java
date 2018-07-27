@@ -55,7 +55,6 @@ import de.teammartens.android.wattfinder.worker.Utils;
 public class DetailsFragment extends Fragment {
 
 
-
     private  final String LOG_TAG = "DetailsFragment";
     private  final String fAPIUrl = "https://api.goingelectric.de/chargepoints/";
 
@@ -76,8 +75,11 @@ public class DetailsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
+        super.onCreateView(inflater, container, savedInstanceState);
         detailsView = inflater.inflate(R.layout.fragment_details_cards, container, false);
+        setRetainInstance(true);
+
+        if(LogWorker.isVERBOSE()&&detailsView==null)LogWorker.d(LOG_TAG,"View is null");
 mContext =this.getContext();
         View v = detailsView.findViewById(R.id.fab_routing);
         v.setOnClickListener(new View.OnClickListener() {
@@ -435,11 +437,11 @@ http://indragni.com/blog/2013/03/31/android-imageswitcher-example/
     }
 
     public void setzeSaeule(Saeule S){
-        if(S!= null) {
+        if(S!= null&&S.getID()>0) {
             setzeSaeule(S.getID(), S.getPosition(), S.getTitle());
             this.S = S;
         }else{
-            AnimationWorker.hide_fragment(AnimationWorker.FLAG_DETAILS);
+            AnimationWorker.show_map();
         }
     }
 

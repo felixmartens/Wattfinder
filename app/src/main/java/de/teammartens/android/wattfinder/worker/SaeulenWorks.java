@@ -119,7 +119,7 @@ public class SaeulenWorks {
 
 
         // if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG,"Suche Säulen: URI"+uri);
-        if (!FilterWorks.filter_initialized()){
+        if (!FilterWorks.filter_initialized()||!KartenActivity.privacyConsent){
             if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG, "Suche Säulen abgebrochen. Filter nicht initialisiert");
             return;
         }
@@ -171,6 +171,7 @@ public class SaeulenWorks {
                     }
                     RQ_PENDING = false;
                     //NetWorker.resetRETRY();
+                    if (AnimationWorker.startupScreen&&FilterWorks.filter_initialized()) AnimationWorker.hideStartup();
                     AnimationWorker.hide_mapLoading();
                     try {
                         if (jResponse.getString("status").contentEquals("ok")) {
@@ -213,6 +214,7 @@ public class SaeulenWorks {
 
                 @Override
                 public void onErrorResponse(VolleyError error) {
+                    if (AnimationWorker.startupScreen&&FilterWorks.filter_initialized()) AnimationWorker.hideStartup();
                     NetWorker.handleError(error,NetWorker.TASK_SAEULEN);
                     RQ_PENDING = false;
                 }
@@ -651,7 +653,11 @@ public static void ladeEvents(){
             t2 = (TextView) infoView.findViewById(R.id.iEvCount);
             int evc = mSaeule.getEventCount();
             t2.setText((evc>0?evc:"Keine")+ " Bewertung"+(evc>1?"en":""));
-            if (evc<0)t2.setVisibility(View.INVISIBLE);
+            if (evc<0){
+                t2.setVisibility(View.INVISIBLE);
+                v = infoView.findViewById(R.id.fab_chargeevent);
+                if(v!=null)v.setVisibility(View.GONE);
+            }
 
             t2 = (TextView) infoView.findViewById(R.id.iAdresse);
             t2.setText(mSaeule.getAddress());
@@ -715,7 +721,7 @@ public static void ladeEvents(){
                     }
                 }
             });
-            v = infoView.findViewById(R.id.create_chargeevent);
+            v = infoView.findViewById(R.id.fab_chargeevent);
             v.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -763,7 +769,7 @@ public static void ladeEvents(){
 
 public static boolean duplicateRQ(int hash){
     LatLngBounds llB = KartenActivity.mMap.getProjection().getVisibleRegion().latLngBounds;
-    LogWorker.d(LOG_TAG,"DUPLICATE CHECK: hash"+hash+" vs"+letzterAbrufFilter);
+   if(LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG,"DUPLICATE CHECK: hash"+hash+" vs"+letzterAbrufFilter);
     if (    (hash==letzterAbrufFilter) &&
             letzterAbrufBeiLLB.contains(llB.northeast) &&
             letzterAbrufBeiLLB.contains(llB.southwest)&&

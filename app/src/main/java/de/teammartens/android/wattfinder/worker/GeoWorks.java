@@ -5,6 +5,7 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -48,6 +49,7 @@ import de.teammartens.android.wattfinder.KartenActivity;
 import de.teammartens.android.wattfinder.R;
 
 import static de.teammartens.android.wattfinder.KartenActivity.Loc2LatLng;
+import static de.teammartens.android.wattfinder.KartenActivity.fragmentManager;
 import static de.teammartens.android.wattfinder.KartenActivity.getInstance;
 import static de.teammartens.android.wattfinder.KartenActivity.layoutStyle;
 import static de.teammartens.android.wattfinder.KartenActivity.mMap;
@@ -75,7 +77,9 @@ public class GeoWorks {
     private static final int LOCATION_INTERVAL = 10000;
     private static final int LOCATION_MIN_INTERVAL = 5000;
     private static final int aroundDistance = 3000;
-
+    public static final Float defaultLat = 52.5170365f;
+    public static final Float defaultLng = 13.3888599f;
+    public static final LatLng defaultLatLng = new LatLng(defaultLat,defaultLng);
 
 
     private static boolean location_permission = false;
@@ -164,7 +168,7 @@ public class GeoWorks {
 
                 CameraUpdate CU = CameraUpdateFactory.zoomTo(zoom);
 
-                if(getMapPosition()==null)mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(position,zoom));
+                if(GeoWorks.mapPosition==null)mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(position,zoom));
                 else {
                     if (LogWorker.isVERBOSE())
                         LogWorker.d(LOG_TAG, "moveMap to " + nPosition.toString());
@@ -236,7 +240,7 @@ public class GeoWorks {
     }
 
     public static LatLng getMapPosition() {
-        return mapPosition;
+        return (mapPosition==null?defaultLatLng:mapPosition);
     }
 
     public static void setMapPosition(LatLng mapPosition) {
@@ -404,6 +408,9 @@ public class GeoWorks {
         return suchString;
     }
 
+    public static void Suchmarker(){
+        Suchmarker(getSuchPosition(),getSuchString(),false);
+    }
     public static void Suchmarker(LatLng Coord, String Desc){
         Suchmarker(Coord,Desc,false);
     }
@@ -411,16 +418,17 @@ public class GeoWorks {
 
         if (mMap != null) {
 
-            if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG, "Create Marker Suche " + Desc);
+
 
             if (validLatLng(Coord) && !Desc.isEmpty()){
                 suchPosition = Coord;
                 suchString = Desc;
+                if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG, "Create Marker Suche " + Desc);
                 if (Marker_Suche !=null) Marker_Suche.remove();
                 Marker_Suche = mMap.addMarker(new MarkerOptions().position(Coord).title(Desc).icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_suche)));
 
                 CUSTOM_MAPVIEW=true;
-                AnimationWorker.show_map();
+                //AnimationWorker.show_map();
 
                 
                 movemapPosition(Coord,(detail_zoom?DETAIL_ZOOM:MY_LOCATION_ZOOM),"GeoWorks.Suchmarker");
@@ -630,23 +638,22 @@ public class GeoWorks {
         Fragment f = KartenActivity.getInstance().getSupportFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
         SupportPlaceAutocompleteFragment autocompleteFragment = (SupportPlaceAutocompleteFragment) f;
 
+       if(autocompleteFragment==null){
+           FragmentTransaction fT = fragmentManager.beginTransaction();
+           fT.add(R.id.place_autocomplete_fragment, Fragment.instantiate(getInstance(), SupportPlaceAutocompleteFragment.class.getName()), AnimationWorker.FLAG_SEARCH).commit();
+           autocompleteFragment = (SupportPlaceAutocompleteFragment)fragmentManager.findFragmentById(R.id.place_autocomplete_fragment);
 
-        /*
-         * The following code example shows setting an AutocompleteFilter on a PlaceAutocompleteFragment to
-         * set a filter returning only results with a precise address.
-         */
-        AutocompleteFilter typeFilter = new AutocompleteFilter.Builder()
-                .setTypeFilter(AutocompleteFilter.TYPE_FILTER_CITIES)
-                .build();
-        //autocompleteFragment.setFilter(typeFilter);
+       }
 
-        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+       autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
             public void onPlaceSelected(Place place) {
                 // TODO: Get info about the selected place.
-                LogWorker.d(LOG_TAG, "Place: " + place.getName());//get place details here
-                Suchmarker(place.getLatLng(),place.getName().toString());
-                AnimationWorker.hide_mapSearch();
+                if (LogWorker.isVERBOSE())
+                    LogWorker.d(LOG_TAG, "Place: " + place.getName() + "  TYPE:" + place.getPlaceTypes().contains(Place.TYPE_STREET_ADDRESS));//get place details here
+                Suchmarker(place.getLatLng(), place.getName().toString(), place.getPlaceTypes().contains(Place.TYPE_STREET_ADDRESS));
+                //AnimationWorker.hide_mapSearch();
+                AnimationWorker.setSTATE(AnimationWorker.STATE_SEARCH);
             }
 
             @Override

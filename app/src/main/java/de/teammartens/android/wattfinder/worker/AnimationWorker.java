@@ -57,6 +57,7 @@ public class AnimationWorker {
     public final static Integer STATE_INFO = 1;
     public final static Integer STATE_DETAIL = 2;
     public final static Integer STATE_FILTER = 3;
+    public final static Integer STATE_SEARCH = 4;
     private static Integer STATE = STATE_MAP;
 
 
@@ -68,9 +69,12 @@ public class AnimationWorker {
                 slideUp(v,0);
                 v = getInstance().findViewById(R.id.fab_directions);
                 v.setVisibility(VISIBLE);
+                v = getInstance().findViewById(R.id.bottomFragment);
+                v.setVisibility(View.GONE);
                 setSTATE(STATE_INFO);
-
+                hide_mapSearch();
                 hide_fabs();
+
                 // slideUp(getInstance().findViewById(R.id.fab_filter), 0);
                 // slideUp(getInstance().findViewById(R.id.fab_mylocation), 0);
 
@@ -187,11 +191,7 @@ public class AnimationWorker {
                         R.anim.fragment_slide_out);
         View v = getInstance().findViewById(R.id.imageZoomFragment);
         fadeOut(v,0);
-        Fragment dF = fragmentManager.findFragmentByTag(FLAG_DETAILS);
-        if (dF != null) fT.show(dF);
-        dF = fragmentManager.findFragmentByTag(FLAG_INFO);
-        if (dF != null) fT.hide(dF);
-        fT.addToBackStack(FLAG_DETAILS).commit();
+        show_details();
     }
 
 
@@ -309,15 +309,19 @@ public class AnimationWorker {
     }
 
 
-    public static void show_fabs(){
+    public static void show_fabs(){         
         //hide_mapSearch();
         if (LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG, "Show Fabs");
         View fabs = getInstance().findViewById(R.id.fabContainer);
         slideTopDown(fabs,0);
-        fabs = getInstance().findViewById(R.id.buttonMapStyle);
-        slideUp(fabs,0);
-        View V = fabs.findViewById(R.id.fab_debug);
-        if(V!=null)V.setVisibility(View.VISIBLE);
+        View V = getInstance().findViewById(R.id.buttonMapStyle);
+        slideUp(V,0);
+        V = fabs.findViewById(R.id.fab_debug);
+        if(V!=null)V.setVisibility(View.GONE);
+        V = fabs.findViewById(R.id.fab_search);
+        if(V!=null)
+            if(getSTATE()!=STATE_SEARCH)V.setVisibility(View.VISIBLE);
+                else V.setVisibility(View.GONE);
 
     }
 
@@ -354,12 +358,13 @@ public class AnimationWorker {
             getInstance().findViewById(R.id.bottomFragment).setVisibility(View.GONE);
             getInstance().findViewById(R.id.mapContainer).setVisibility(VISIBLE);
 
-            setSTATE(STATE_MAP);
+
 
             show_debug();
             show_fabs();
-            hide_mapSearch();
+            if (getSTATE()!=STATE_SEARCH)hide_mapSearch();
             hide_info();
+            setSTATE(STATE_MAP);
             if (KartenActivity.mapFragment != null&&KartenActivity.mapFragment.getView()!=null)
                 KartenActivity.mapFragment.getView().requestFocus();
             //slideDown(getInstance().findViewById(R.id.fab_directions), 500);
@@ -375,11 +380,12 @@ public class AnimationWorker {
 
 
     public static void restoreState(int state){
+        setSTATE(state);
         switch (state){
             case 1: show_info(); break;
             case 2: show_details(); break;
             case 3: show_filter(); break;
-            case 0:
+            case 0:show_map();break;
             default:show_map();
 
         }
@@ -411,50 +417,53 @@ public class AnimationWorker {
 
         View startup = getInstance().findViewById(R.id.startupScreen);
         if(startup==null) startup = getInstance().findViewById(R.id.include_startup);
+
         if (startupScreen&&startup!=null) {
             if(LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG,"privacyConsent "+privacyConsent);
             //if(!KartenActivity.privacyConsent && (System.currentTimeMillis() - KartenActivity.sharedPref.getLong(KartenActivity.sP_Timestamp,0))>3600*1000) {//Zeige Eula wenn privacyConsent nicht aktiviert und letztes Programmende ist mindestens eine Stunde eher
               if(!KartenActivity.privacyConsent){
                   if(LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG,"privacyConsent treffer ");
 
-                  final View v = getInstance().findViewById(R.id.eulaScreen);
+                  final View v = getInstance().findViewById(R.id.include_eula);
                 if (v != null) {
                     fadeIn(v, 0, 1.0f);
+                    fadeIn(v.findViewById(R.id.eulaScreen), 0, 1.0f);
                     //hide_mapSearch();
+                    if(LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG,"prepare EUla ");
 
-                    TextView tv = getInstance().findViewById(R.id.welcomeText);
+                    TextView tv = v.findViewById(R.id.welcomeText);
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
                         tv.setText(Html.fromHtml(getInstance().getString(R.string.privacy_text_short), Html.FROM_HTML_MODE_COMPACT));
                     else
                         tv.setText(Html.fromHtml(getInstance().getString(R.string.privacy_text_short)));
 
 
-                    Button b = (Button) getInstance().findViewById(R.id.eulaButton);
+                    Button b = (Button) v.findViewById(R.id.eulaButton);
                     b.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-
-                            final CheckBox cb = (CheckBox) getInstance().findViewById(R.id.privacy_consent);
-                            TextView tv = getInstance().findViewById(R.id.privacyText);
+                            if(LogWorker.isVERBOSE()) LogWorker.d(LOG_TAG,"prepare EUla 2 ");
+                            final CheckBox cb = (CheckBox) v.findViewById(R.id.privacy_consent);
+                            TextView tv = v.findViewById(R.id.privacyText);
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
                                 tv.setText(Html.fromHtml(getInstance().getString(R.string.privacy_desc_long), Html.FROM_HTML_MODE_COMPACT));
                             else
                                 tv.setText(Html.fromHtml(getInstance().getString(R.string.privacy_desc_long)));
-                             tv = getInstance().findViewById(R.id.privacyLicense);
+                             tv = v.findViewById(R.id.privacyLicense);
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
                                 tv.setText(Html.fromHtml(getInstance().getString(R.string.privacy_license), Html.FROM_HTML_MODE_COMPACT));
                             else
                                 tv.setText(Html.fromHtml(getInstance().getString(R.string.privacy_license)));
 
 
-                            View vv = getInstance().findViewById(R.id.welcome_scroll);
+                            View vv = v.findViewById(R.id.welcome_scroll);
                             fadeOut(vv,0);
-                            vv = getInstance().findViewById(R.id.privacy_long);
+                            vv = v.findViewById(R.id.privacy_long);
                             fadeIn(vv,0,1.0f);
-                            vv = getInstance().findViewById(R.id.eulaSubTitle);
+                            vv = v.findViewById(R.id.eulaSubTitle);
                             fadeIn(vv,0,1.0f);
 
-                            Button b = (Button) getInstance().findViewById(R.id.eulaButton);
+                            Button b = (Button) v.findViewById(R.id.eulaButton);
                             b.setText(R.string.close);
                             b.setEnabled(false);
                             b.setAlpha(0.3f);
@@ -476,7 +485,7 @@ public class AnimationWorker {
                             cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                                 @Override
                                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                                    Button b = (Button) getInstance().findViewById(R.id.eulaButton);
+                                    Button b = (Button) v.findViewById(R.id.eulaButton);
                                     if(isChecked)b.setAlpha(1.0f);else b.setAlpha(0.3f);
                                     b.setEnabled(isChecked);
                                 }
@@ -487,10 +496,9 @@ public class AnimationWorker {
 
                 }
             }else{
-                  View v = getInstance().findViewById(R.id.eulaScreen);
+                  View v = getInstance().findViewById(R.id.include_eula);
                   if (v!=null) ((ConstraintLayout) v.getParent()).removeView(v);
               }
-            KartenActivity.setMapCenter();
 
             slideDown(startup, 500);
             startup.setVisibility(View.GONE);
@@ -505,13 +513,7 @@ public class AnimationWorker {
 
     public static void showStartup(){
         View startup = getInstance().findViewById(R.id.startupScreen);
-        View v = getInstance().findViewById(R.id.fab_debug);
-        if(v!=null) v.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                LogWorker.setVERBOSE(true);
-            }
-        });
+
     if(startup!=null) {
     startup.setVisibility(VISIBLE);}
     FilterWorks.refresh_filterlisten_API();
@@ -863,54 +865,16 @@ public class AnimationWorker {
 
 
         if (!startupScreen) {
+            setSTATE(STATE_SEARCH);
             SupportPlaceAutocompleteFragment f = (SupportPlaceAutocompleteFragment)fragmentManager.findFragmentById(R.id.place_autocomplete_fragment);
-            FragmentTransaction fT = fragmentManager.beginTransaction()
-                    .setCustomAnimations(R.anim.fragment_slide_in,
-                            R.anim.fragment_slide_out,
-                            R.anim.fragment_slide_in,
-                            R.anim.fragment_slide_out);
+            fragmentManager.beginTransaction().show(f).commit();
             hide_info();
             hide_fragment(FLAG_DETAILS);
-            hide_fabs();
-            if (f == null) {
-                fT.add(R.id.place_autocomplete_fragment, Fragment.instantiate(getInstance(), SupportPlaceAutocompleteFragment.class.getName()), FLAG_SEARCH).commit();
+            //show_fabs();
+            View V = getInstance().findViewById(R.id.fab_search);
+            V.setVisibility(View.GONE);
 
-            } else {
-                if (LogWorker.isVERBOSE())
-                    LogWorker.d(LOG_TAG, "Suche schon vorhanden" + f.isHidden() + " --" + f.isVisible() + "--" + f.isAdded());
-                 //replace(R.id.infoFragment, Fragment.instantiate(getInstance(), MiniInfoFragment.class.getName()), "iFragment");
-                fT.show(f).commit();
-            }
-
-
-        f = (SupportPlaceAutocompleteFragment)fragmentManager.findFragmentById(R.id.place_autocomplete_fragment);
-        if(f!=null) {
-            if (LogWorker.isVERBOSE())
-                LogWorker.d(LOG_TAG, "Suche jetzt vorhanden" + f.isHidden() + " --" + f.isVisible() + "--" + f.isAdded());
-
-            AutocompleteFilter typeFilter = new AutocompleteFilter.Builder()
-                    .setTypeFilter(AutocompleteFilter.TYPE_FILTER_CITIES)
-                    .build();
-            //f.setFilter(typeFilter);
             f.setBoundsBias(KartenActivity.mMap.getProjection().getVisibleRegion().latLngBounds);
-            f.setOnPlaceSelectedListener(new PlaceSelectionListener() {
-                @Override
-                public void onPlaceSelected(Place place) {
-
-                    if (LogWorker.isVERBOSE())
-                        LogWorker.d(LOG_TAG, "Place: " + place.getName() + "  TYPE:" + place.getPlaceTypes().contains(Place.TYPE_STREET_ADDRESS));//get place details here
-                    GeoWorks.Suchmarker(place.getLatLng(), place.getName().toString(), place.getPlaceTypes().contains(Place.TYPE_STREET_ADDRESS));
-                    //AnimationWorker.hide_mapSearch();
-
-                    // Toast.makeText(getInstance(),"Place: " + place.getName() + "  TYPE:"+place.getPlaceTypes().contains(Place.TYPE_STREET_ADDRESS),Toast.LENGTH_LONG).show();
-                }
-
-                @Override
-                public void onError(Status status) {
-                    // TODO: Handle the error.
-                    if (LogWorker.isVERBOSE()) LogWorker.e(LOG_TAG, "An error occurred: " + status);
-                }
-            });
 
 
             final View root = f.getView();
@@ -925,6 +889,8 @@ public class AnimationWorker {
                 }
             });
          }
+
+
         }
 
 
@@ -949,7 +915,7 @@ public class AnimationWorker {
                 })
         ;*/
 
-    }
+
 
 
     public static void hide_mapSearch(){
@@ -964,6 +930,7 @@ public class AnimationWorker {
             //show_fabs();
         }
         f.getView().setVisibility(View.GONE);
+
 
        /* View v = getInstance().findViewById(R.id.fab_search);
         fadeIn(v,0,1.0f);
