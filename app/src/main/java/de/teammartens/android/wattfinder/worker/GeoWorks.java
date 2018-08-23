@@ -95,6 +95,9 @@ public class GeoWorks {
         return myPosition;
     }
 
+    public static void setmyPosition(boolean moveMap) {
+        setmyPosition(getmyPosition(),getMapZoom(),moveMap);
+    }
 
     public static void setmyPosition() {
         setmyPosition(getmyPosition());
@@ -409,12 +412,23 @@ public class GeoWorks {
     }
 
     public static void Suchmarker(){
-        Suchmarker(getSuchPosition(),getSuchString(),false);
+        Suchmarker(getSuchPosition(),getSuchString(),false, true);
     }
+
+    public static void Suchmarker(boolean move){
+        Suchmarker(getSuchPosition(),getSuchString(),false, move);
+    }
+
+
     public static void Suchmarker(LatLng Coord, String Desc){
-        Suchmarker(Coord,Desc,false);
+        Suchmarker(Coord,Desc,false, true);
     }
-    public static void Suchmarker(LatLng Coord, String Desc, boolean detail_zoom){
+
+    public static void Suchmarker(LatLng Coord, String Desc, boolean detailzoom){
+        Suchmarker(Coord,Desc,detailzoom, true);
+    }
+
+    public static void Suchmarker(LatLng Coord, String Desc, boolean detail_zoom, boolean move){
 
         if (mMap != null) {
 
@@ -431,7 +445,7 @@ public class GeoWorks {
                 //AnimationWorker.show_map();
 
                 
-                movemapPosition(Coord,(detail_zoom?DETAIL_ZOOM:MY_LOCATION_ZOOM),"GeoWorks.Suchmarker");
+                if(move)movemapPosition(Coord,(detail_zoom?DETAIL_ZOOM:MY_LOCATION_ZOOM),"GeoWorks.Suchmarker");
 
             }
 

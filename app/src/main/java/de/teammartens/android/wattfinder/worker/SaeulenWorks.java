@@ -46,6 +46,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import de.teammartens.android.wattfinder.KartenActivity;
 import de.teammartens.android.wattfinder.R;
 import de.teammartens.android.wattfinder.fragments.ChargeeventDialog;
+import de.teammartens.android.wattfinder.fragments.DetailsFragment;
 import de.teammartens.android.wattfinder.model.Saeule;
 
 /**
@@ -265,11 +266,12 @@ public class SaeulenWorks {
 
             JSONObject jO = jResponse[0];
 
+
             try {
 
                 JSONArray jsonArray = jO.getJSONArray("chargelocations");
                 final int length = jsonArray.length();
-                if (LogWorker.isVERBOSE()) LogWorker.d("AsyncMarkerWorks", "Marker gefunden: "+length);
+                if (LogWorker.isVERBOSE()) LogWorker.d("AsyncMarkerWorks", "Marker gefunden: "+length + "Saulen Count" + Saeulen.size());
                 Marker_Saeule_Options.clear();
 
                 for (int i = 0; i < length; i++) {
@@ -301,6 +303,8 @@ public class SaeulenWorks {
                 //mClusterManager.addItems((Collection) Saeulen);
                 //mGMap.animateCamera(CameraUpdateFactory.zoomTo(12), 500, null);
             mClusterManager.cluster();
+            //GeoWorks.Suchmarker(false);
+            ///GeoWorks.setmyPosition(false);
 
         }
 
@@ -342,23 +346,26 @@ public static void ladeEvents(){
             if (LogWorker.isVERBOSE())
                 LogWorker.d("AsyncMarkerWorks", "JSON Response " + jResponse.toString());
             try{
-                JSONArray jA = jResponse.getJSONArray("points");
-                if(jResponse.optBoolean("success", false))
+                if(jResponse.optBoolean("success", false)) {
+                    JSONArray jA = jResponse.getJSONArray("points");
+
                     for (int i = 0; i < jA.length(); i++) {
                         JSONObject jO = jA.getJSONObject(i);
                         if (LogWorker.isVERBOSE())
                             LogWorker.d("AsyncMarkerWorks", "JSON Response ID " + jO.toString());
 
-                        Saeule S=Saeulen.get(jO.getInt("id"));
+                        Saeule S = Saeulen.get(jO.getInt("id"));
                         Integer c = jO.getInt("count");
                         if (S != null) {
                             mClusterManager.removeItem(S);
                             S.setEventCount(c);
                             mClusterManager.addItem(S);
-                            if(LogWorker.isVERBOSE()&&c>0)LogWorker.d("AsyncEventJSON",S.getID()+": EventCount:"+S.getEventCount());
-                            Saeulen.put(S.getID(),S);
+                            if (LogWorker.isVERBOSE() && c > 0)
+                                LogWorker.d("AsyncEventJSON", S.getID() + ": EventCount:" + S.getEventCount());
+                            Saeulen.put(S.getID(), S);
                         }
                     }
+                }
                 mClusterManager.cluster();
 
             } catch (JSONException jE) {
@@ -412,7 +419,7 @@ public static void ladeEvents(){
         // Initialize the manager with the context and the map.
         // (Activity extends context, so we can pass 'this' in the constructor.)
         mClusterManager = new ClusterManager<Saeule>(KartenActivity.getInstance(), KartenActivity.mMap);
-
+        mClusterManager.clearItems();
 
         mClusterManager.setOnClusterInfoWindowClickListener(new ClusterManager.OnClusterInfoWindowClickListener<Saeule>() {
             @Override
@@ -693,6 +700,9 @@ public static void ladeEvents(){
                 AnimationWorker.show_details(mSaeule);
             else
                 AnimationWorker.show_info();
+
+            DetailsFragment dF = AnimationWorker.getDetailsFragment();
+            if (dF!=null){dF.setzeSaeule(mSaeule);}
         }
     }
 
@@ -797,6 +807,10 @@ public static boolean duplicateRQ(int hash){
         letzterAbrufFilter=0;
         RQ_URL="";
         RQ_PENDING=false;
+        if(mClusterManager!=null)mClusterManager.clearItems();
+        if(Saeulen!=null)Saeulen.clear();
+        if(KartenActivity.isMapReady())KartenActivity.mMap.clear();
+
     }
 
     public static Saeule getCurrentSaeule() {
