@@ -12,7 +12,7 @@ android {
         applicationId "de.teammartens.android.wattfinder"
         minSdkVersion 15
         targetSdkVersion 26
-        versionCode 56
+        versionCode 57
         versionName '0.6.4'
         signingConfig signingConfigs.release
     }
