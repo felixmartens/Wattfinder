@@ -5,6 +5,12 @@ android {
     if(project.hasProperty("Wattfinder.signing")
             && new File(project.property("Wattfinder.signing") + ".gradle").exists()) {
         apply from: project.property("Wattfinder.signing") + ".gradle";
+    } else {
+        signingConfigs {
+            release {
+
+            }
+        }
     }
     compileSdkVersion 27
     buildToolsVersion '27.0.3'
